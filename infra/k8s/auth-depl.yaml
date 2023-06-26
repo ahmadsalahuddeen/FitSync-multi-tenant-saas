@@ -1,6 +1,6 @@
-apiVersion: app/v1
+apiVersion: apps/v1
 kind: Deployment
-metada: 
+metadata: 
   name: auth-depl
 spec:
   replicas: 1
@@ -8,17 +8,18 @@ spec:
     matchLabels:
       app: auth
   template:
-    metada:
+    metadata:
       labels:
         app: auth
     spec:
       containers:
         - name: auth
           image: ahmadsalahuddeen/auth
+          imagePullPolicy: Never
 ---
 apiVersion: v1
 kind: Service
-metada:
+metadata:
   name: auth-srv  
 spec:
   selector: 
