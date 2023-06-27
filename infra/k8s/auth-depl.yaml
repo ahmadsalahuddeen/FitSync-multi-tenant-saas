@@ -23,9 +23,9 @@ metadata:
   name: auth-srv  
 spec:
   selector: 
-    app: app
+    app: auth
   ports:
     - name: auth
       protocol: TCP
-      port: 3000
-      targetPort: 3000
+      port: 4000
+      targetPort: 4000
