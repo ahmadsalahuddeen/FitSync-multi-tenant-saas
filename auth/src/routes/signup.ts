@@ -23,7 +23,7 @@ route.post('/api/users/signup',
     if (!errors.isEmpty()) {
      throw new RequestValidationError(errors.array())
     }
-    console.log('getting here')
+   
 
     const { email, password } = req.body
     console.log(`Creating a User`)
