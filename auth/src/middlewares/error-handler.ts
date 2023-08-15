@@ -2,6 +2,7 @@ import { RequestValidationError } from '../errors/request-validation-error';
 import { DatabaseConnectionError } from '../errors/database-connection-error';
 
 import { Request, Response, NextFunction } from "express"
+import { formatDiagnostic } from 'typescript';
 
 export const errorHandler = (
   err: Error,
@@ -11,17 +12,23 @@ export const errorHandler = (
 ) => {
 
  if(err instanceof RequestValidationError){
-  console.log('handlilng this error as requeset validation error')
+ const formattedErrors = err.errors.map(error => {
+  return {message: error.msg, field: error.type }
+ })
+ return res.status(400).send({errors: formattedErrors}) 
+ 1
  }
 
 
  if( err instanceof DatabaseConnectionError){
-  console.log('handling database error')
+ return res.status(500).send({errors: [
+  {
+    message: err.reason
+  }
+ ]})
  }
 
-
   res.status(400).send({
-    message:
-      err.message
+   errors: [{message: 'something went wrong'}]
   })
-};
+}; 

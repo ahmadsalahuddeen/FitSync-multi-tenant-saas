@@ -1,10 +1,19 @@
-export class DatabaseConnectionError extends Error{
-  reason = 'datatabse connecting eror lajsdfkajsdlfk'
-  constructor(){
+export class DatabaseConnectionError extends Error {
+  statusCode = 500
+  reason = 'Error connecting to database'
+  constructor() {
     super()
 
 
 
     Object.setPrototypeOf(this, DatabaseConnectionError.prototype)
   }
+
+  serializeErrors() {
+    return [
+      { message: this.reason }
+    ]
+
+  }
+
 }
