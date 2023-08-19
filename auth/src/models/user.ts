@@ -1,4 +1,5 @@
 import mongoose, { mongo } from "mongoose";
+import { Password } from "../services/password";
 
 //interface that describes the properties to create a new User
 interface userAttrs {
@@ -32,6 +33,15 @@ const userSchema = new mongoose.Schema({
     required: true
   }
 
+})
+
+// pre hook will run whenever .save onvoked, thus hasing the password if it is modified 
+userSchema.pre('save', async function (done){
+  if(this.isModified('password')) {
+    const hashedPassword = await Password.toHash(this.get('password'))
+    this.set('password', hashedPassword)
+  }
+done();
 })
 
 

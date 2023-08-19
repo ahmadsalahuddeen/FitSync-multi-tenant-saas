@@ -8,18 +8,31 @@ import { signoutRouter } from './routes/signout'
 import { signupRouter } from './routes/signup'
 import { errorHandler } from './middlewares/error-handler'
 import { NotFoundError } from './errors/notFound-error'
+import cookieSession from 'cookie-session'
 const app = express()
+
+
+
+app.set('trust proxy', true)
 app.use(json())
+app.use(cookieSession({
+  signed: false,
+  secure: true
+}))
+
+
 
 app.use(signupRouter)
 app.use(currentUserRouter)
 app.use(signinRouter)
 app.use(signoutRouter)
 
+
+
+
 app.all('*', async () => {
   throw new NotFoundError()
 })
-
 
 app.use(errorHandler)
 
@@ -38,6 +51,5 @@ const start = async () => {
   })
 
 }
-
 
 start();

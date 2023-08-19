@@ -4,6 +4,7 @@ export class Password {
 
   static async toHash(password: string) {
 
+
     return await bcrypt.hash(password, 10)
 
   }
