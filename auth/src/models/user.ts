@@ -33,6 +33,15 @@ const userSchema = new mongoose.Schema({
     required: true
   }
 
+}, {
+  toJSON: {
+    transform(doc, ret, options) {
+        ret.id = ret._id
+        delete ret._id
+        delete ret.__v
+        delete ret.password
+    },
+  }
 })
 
 // pre hook will run whenever .save onvoked, thus hasing the password if it is modified 

@@ -32,7 +32,7 @@ route.post('/api/users/signup',
     if (emailExist) {
       throw new BadRequestError('email is already in use');
     }
-    
+
     const user = User.build({ email, password })
     await user.save();
 
@@ -40,8 +40,8 @@ route.post('/api/users/signup',
     const userJwt = jwt.sign({
       id: user.id,
       email: user.email
-
-    }, 'thisissecretkeybytheway')
+ 
+    }, process.env.JWT_KEY!)
 
     // store the token in session
     req.session = {
