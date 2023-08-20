@@ -29,7 +29,7 @@ route.post('/api/users/signin',
       throw new BadRequestError('provide a valid login credentials')
     }
 
-    const matchPassword = Password.compare(existingUser.password, password)
+    const matchPassword = await Password.compare(password, existingUser.password)
     if(!matchPassword){
       throw new BadRequestError('Incorrect password')
     }
