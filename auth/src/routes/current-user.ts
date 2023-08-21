@@ -2,11 +2,12 @@ import jwt from 'jsonwebtoken'
 import express from 'express'
 const route = express.Router()
 import { currentUser } from '../middlewares/currentUser';
+import { requireAuth } from '../middlewares/require-auth';
 
 
-route.get('/api/users/currentUser', currentUser, (req, res) => {
+route.get('/api/users/currentUser', currentUser, requireAuth, (req, res) => {
   res.send({currentUser: req.currentUser || null})
 
 })
 
-export { route as currentUserRouter }; 
+export { route as currentUserRouter };  
