@@ -9,4 +9,4 @@ route.post('/api/users/signout',
     res.send({})
   })
 
-export { route as signoutRouter }; 
+export { route as signoutRouter };  
