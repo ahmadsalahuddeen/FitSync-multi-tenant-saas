@@ -12,3 +12,12 @@ it('respond with details of current-user', async ()=>{
   .expect(200)
 expect(response.body.currentUser.email).toEqual('test@test.com')
 })
+
+it('returns null if the user is not logged In ', async()=>{
+  const response = await request(app)
+  .get('/api/users/currentuser')
+  .send()
+  .expect(200) 
+console.log(response.body.currentUser)
+  expect(response.body.currentUser).toEqual(null)
+})
