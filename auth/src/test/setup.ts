@@ -36,7 +36,7 @@ afterAll( async ()=>{
 })
 
 
-global.getAuthCookie = async ()=>{
+global.signup = async ()=>{
   const email = 'test@test.com';
   const password = 'password'
 
