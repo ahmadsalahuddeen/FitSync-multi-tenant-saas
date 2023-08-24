@@ -5,7 +5,7 @@ import { currentUser } from '../middlewares/currentUser';
 import { requireAuth } from '../middlewares/require-auth';
 
 
-route.get('/api/users/currentUser', currentUser, requireAuth, (req, res) => {
+route.get('/api/users/currentuser', currentUser, requireAuth, (req, res) => {
   res.send({currentUser: req.currentUser || null})
 
 })
