@@ -1,6 +1,4 @@
-module.exports = {
-  webpackDevMiddleware: config =>{
-1
-    return config;
-  }
-}
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+module.exports = nextConfig

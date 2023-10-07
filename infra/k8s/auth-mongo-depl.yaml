@@ -15,10 +15,12 @@ spec:
       containers:
         - name: auth-mongo
           image: mongo
+          imagePullPolicy: Never
+
 
 ---
 apiVersion: v1
-kind: Service
+kind: Service 
 metadata:
   name: auth-mongo-srv  
 spec:
