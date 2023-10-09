@@ -52,7 +52,7 @@ function Header() {
                   ))}
                   <Button className="mt-4 " size="sm" asChild variant="secondary">
                 <Link
-                  href="signin"
+                  href="/auth/signup"
                   className=" text-sm font-medium transition-colors"
                 >
                   Login
@@ -118,7 +118,7 @@ function Header() {
 
             <Button className="mr-2" size="sm" asChild variant="default">
               <Link
-                href="signin"
+                href="/auth/signup"
                 className=" text-sm font-medium transition-colors"
               >
                 Try It Free

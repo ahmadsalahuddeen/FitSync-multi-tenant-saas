@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 
 import React from 'react'
+import { SiteFooter } from '@/components/site-footer'
 
 
 const MarketingLayout = ({children}: {children: React.ReactNode}) => {
@@ -10,6 +11,7 @@ const MarketingLayout = ({children}: {children: React.ReactNode}) => {
     <div>
       <Header />
       <main className='flex-1'>{children}</main>
+      <SiteFooter/>
     </div>
   )
 }

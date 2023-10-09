@@ -36,7 +36,7 @@ const page = (props: Props) => {
             everything. Follow along as we figure this out together.
           </p>
           <div className="space-x-4">
-            <Link href="/login" className={cn(buttonVariants({ size: 'lg' }))}>
+            <Link href="/auth/signup" className={cn(buttonVariants({ size: 'lg' }))}>
               Get Free Trial
             </Link>
             <Link
