@@ -5,10 +5,11 @@ import { Button } from '../button';
 import { Dumbbell, Menu, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Sheet, SheetContent, SheetTrigger } from '../sheet';
+import { Icons } from '@/components/icons';
 
 const routes = [
   {
-    href: '/features',
+    href: '/#features',
     label: 'Features',
   },
   {
@@ -63,11 +64,12 @@ function Header() {
 
 
             <Link href="/ " className="ml-4 lg:ml-0">
-              <div className='flex '>
-<Dumbbell className='mr-2  rotate-90 text-lime-600' />
-              <h1 className="text-xl font-mono font-semibold">FITsync</h1>
+            <div className="flex ">
+      <Dumbbell className="mr-2  rotate-90 text-lime-600" 
 
-              </div>
+      />
+      <h1 className="text-xl font-sans font-semibold">FitSync</h1>
+    </div>
             </Link>
           </div>
 

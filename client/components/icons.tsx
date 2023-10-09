@@ -23,10 +23,11 @@ import {
   Twitter,
   User,
   X,
-  type Icon as LucideIcon ,
-} from "lucide-react"
+  type Icon as LucideIcon,
+  Dumbbell,
+} from 'lucide-react';
 
-export type Icon = LucideIcon
+export type Icon = LucideIcon;
 
 export const Icons = {
   logo: Command,
@@ -67,6 +68,14 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  brandIcon: ({...props}: LucideProps) => (
+    <div className="flex ">
+      <Dumbbell  className="w-6 h-6 mr-2  rotate-90 text-lime-600" 
+      {...props}
+      />
+      <h1 className=" font-sans font-semibold">FitSync</h1>
+    </div>
+  ),
   twitter: Twitter,
   check: Check,
-}
+};

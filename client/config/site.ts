@@ -3,7 +3,7 @@ import { SiteConfig } from "../types"
 export const siteConfig: SiteConfig = {
   name: "FitSync",
   description:
-    "An open source Gym management saas built using nextjs.",
+    "An open source Gym management SaaS built using nextjs.",
   url: "https://fitsync.salah.com",
   ogImage: "https://tx.shadcn.com/og.jpg",
   links: {
