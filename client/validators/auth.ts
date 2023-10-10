@@ -9,7 +9,7 @@ export const registerSchema = z.object({
   password: z.string().min(8).max(100),
   confirmPassowrd: z.string().min(8).max(100),
   country: z.string(),
-  phoneNumber: z.number().min(6).max(17),
+  phoneNumber: z.string().min(6).max(17),
   activeCustomers: z.string(),
   refer: z.string().optional(),
 });

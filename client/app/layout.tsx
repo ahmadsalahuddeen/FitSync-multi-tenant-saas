@@ -12,7 +12,6 @@ const fontSans = FontSans({
   variable: '--font-sans',
 });
 
-
 const fontHeading = localFont({
   src: '../assets/fonts/CalSans-SemiBold.woff2',
   variable: '--font-heading',
@@ -36,20 +35,16 @@ export default function RootLayout({
   return (
     <>
       <html lang="en" suppressHydrationWarning>
-        <head>
-
-
-        </head>
+        <head></head>
         <body
           className={cn(
-            ' min-h-screen bg-background font-sans antialiased',
+            'min-h-screen bg-background font-sans antialiased',
             fontSans.variable,
             fontHeading.variable
           )}
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}
-
           </ThemeProvider>
         </body>
       </html>

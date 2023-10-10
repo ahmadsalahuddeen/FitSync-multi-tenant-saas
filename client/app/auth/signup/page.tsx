@@ -1,3 +1,4 @@
+'use client';
 import Container from '@/components/ui/container';
 import React from 'react';
 import { Button } from '@/components/ui/button';
@@ -27,56 +28,200 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useForm } from 'react-hook-form';
 import { registerSchema } from '@/validators/auth';
 import { z } from 'zod';
+import { Icons } from '@/components/icons';
 
 type Props = {};
 
 const SignUp = (props: Props) => {
-  const form = useForm();
+  // schema to ts types
   type Input = z.infer<typeof registerSchema>;
 
+  // react hook form
+  const form = useForm<Input>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      activeCustomers: '',
+      businessName: '',
+      confirmPassowrd: '',
+      country: '',
+      email: '',
+      firstName: '',
+      lastName: '',
+      password: '',
+      phoneNumber: '',
+      refer: '',
+    },
+  });
+
+  console.log(form.watch())
+
+  function onSubmit(data: Input) {
+    console.log(data);
+  }
+
   return (
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ">
+   <>
+  
+    <div className=" absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ">
+   
       <Card className="w-[350px] md:w-[470px]">
         <CardHeader>
           <CardTitle>Try FitSync for free</CardTitle>
           <CardDescription className="text-muted-foreground ">
-            Explore all of TeamUp's features during your free 14-day trial.
+            Explore your free 14-day trial🔥.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" placeholder="Name of your project" />
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className=" space-y-3 ">
+              <FormField
+                control={form.control}
+                name="businessName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Business Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="refer"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Where did you hear about us?</FormLabel>
+                    <FormControl>
+                      <Input placeholder="from twitter/X?" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="md:flex gap-4">
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>First Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="John" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Last Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Doe" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="framework">Framework</Label>
-                <Select>
-                  <SelectTrigger id="framework">
-                    <SelectValue placeholder="Select" />
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email Address</FormLabel>
+                    <FormControl>
+                      <Input placeholder="you@yourdomain.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Create Password</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field} type='password'/>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassowrd"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field} type='password'/>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+ 
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field}  />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="activeCustomers"
+                render={({ field }) => (
+                 <FormItem>
+              <FormLabel>How many customers do you have?</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select " />
                   </SelectTrigger>
-                  <SelectContent position="popper">
-                    <SelectItem value="next">Next.js</SelectItem>
-                    <SelectItem value="sveltekit">SvelteKit</SelectItem>
-                    <SelectItem value="astro">Astro</SelectItem>
-                    <SelectItem value="nuxt">Nuxt.js</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </form>
+                </FormControl>
+                <SelectContent>
+                  {
+                    ['none, launching Soon', '0-100', '101-300', '301-600', '600+'].map(noOfMember =>(
+
+                      <SelectItem value={noOfMember}>{noOfMember}</SelectItem>
+                    ))
+                  }
+
+
+                </SelectContent>
+              </Select>
+              
+              <FormMessage />
+            </FormItem>
+                )}
+              />
+              <Button type="submit">Submit</Button>
+            </form>
+          </Form>
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline">Cancel</Button>
-          <Button>Deploy</Button>
-        </CardFooter>
       </Card>
     </div>
+    </>
   );
 };
 
