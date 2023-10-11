@@ -4,8 +4,8 @@ import { Dumbbell } from 'lucide-react';
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className='flex-row  items-center justify-center h-full'>
-      
+    <div className=''>
+     
       {children}
     </div>
   );
