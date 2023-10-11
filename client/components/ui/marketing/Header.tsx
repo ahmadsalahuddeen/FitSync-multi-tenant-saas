@@ -76,7 +76,7 @@ function Header() {
           {/* NavMenu */}
           <nav className="mx-6 flex items-center space-x-4 lg:space-x-6 hidden md:block">
             {routes.map((route, i) => (
-              <Button asChild variant="ghost">
+              <Button key={i*100} asChild variant="ghost">
                 <Link
                   key={i}
                   href={route.href}

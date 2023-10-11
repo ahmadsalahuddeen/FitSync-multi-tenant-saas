@@ -37,10 +37,12 @@ import { Icons } from '@/components/icons';
 import { cn, countries } from '@/lib/utils';
 import { ArrowRight, Ghost } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { easeInOut, motion, useMotionValue } from 'framer-motion';
+
 type Props = {};
 
 const SignUp = (props: Props) => {
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   const [FormStep, setFormStep] = useState(0);
 
@@ -64,15 +66,10 @@ const SignUp = (props: Props) => {
     },
   });
 
-
   const watcher = form.watch();
 
-
   function onSubmit(data: Input) {
-  
-
-    alert(JSON.stringify(data))
-
+    alert(JSON.stringify(data));
   }
 
   return (
@@ -81,21 +78,36 @@ const SignUp = (props: Props) => {
         <Card className="w-[350px] md:w-[470px]">
           <CardHeader>
             <CardTitle>
-              {FormStep === 0 ? 'Try FitSync for free' : `Setup ${watcher.businessName} `}
+          
+              {FormStep === 0
+                ? 'Try FitSync for free'
+                : `Setup ${watcher.businessName} `}
             </CardTitle>
             <CardDescription className="text-muted-foreground ">
-            {FormStep === 0 ? 'Explore your free 14-day trial🔥.' : `Just a few more details to get started📈`}
-             
+              {FormStep === 0
+                ? 'Explore your free 14-day trial🔥.'
+                : `Just a few more details to get started📈`}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className=" space-y-3 "
+                className=" relative space-y-3   overflow-x-hidden  "
               >
                 {/* First Form Step  */}
-                <div className={cn('space-y-2', { hidden: FormStep === 1 })}>
+                <motion.div
+                  className={cn(
+                    'space-y-3'
+                    //  { hidden: FormStep === 1 }
+                  )}
+                  animate={{
+                    translateX: `-${FormStep * 100}%`,
+                  }}
+                  transition={{
+                    ease: easeInOut,
+                  }}
+                >
                   {/* First and Last Name */}
                   <div className="md:flex gap-4">
                     <FormField
@@ -140,7 +152,20 @@ const SignUp = (props: Props) => {
                       </FormItem>
                     )}
                   />
-
+                  {/* phone Number */}
+                  <FormField
+                    control={form.control}
+                    name="phoneNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone Number</FormLabel>
+                        <FormControl>
+                          <Input placeholder="" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   {/* Passoword */}
                   <FormField
                     control={form.control}
@@ -170,10 +195,26 @@ const SignUp = (props: Props) => {
                       </FormItem>
                     )}
                   />
-                </div>
+                </motion.div>
 
                 {/* second Form Step  */}
-                <div className={cn('space-y-2', { hidden: FormStep === 0 })}>
+                <motion.div
+                  className={cn(
+                    'space-y-3  absolute   right-0 left-0 top-0 ',
+                    {
+                      // hidden: FormStep === 0
+                    }
+                  )}
+                  style={{
+                    translateX: `${100 - FormStep * 100}%`,
+                  }}
+                  animate={{
+                    translateX: `${100 - FormStep * 100}%`,
+                  }}
+                  transition={{
+                    ease: easeInOut,
+                  }}
+                >
                   {/* Business Name */}
                   <FormField
                     control={form.control}
@@ -212,27 +253,13 @@ const SignUp = (props: Props) => {
                               '301-600',
                               '600+',
                             ].map((noOfMember) => (
-                              <SelectItem value={noOfMember}>
+                              <SelectItem key={noOfMember} value={noOfMember}>
                                 {noOfMember}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
 
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {/* phone Number */}
-                  <FormField
-                    control={form.control}
-                    name="phoneNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone Number</FormLabel>
-                        <FormControl>
-                          <Input placeholder="" {...field} />
-                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -256,7 +283,10 @@ const SignUp = (props: Props) => {
                           </FormControl>
                           <SelectContent className="h-40">
                             {countries.map((country, i) => (
-                              <SelectItem value={country.name}>
+                              <SelectItem
+                                key={country.code}
+                                value={country.name}
+                              >
                                 {country.name}
                               </SelectItem>
                             ))}
@@ -281,15 +311,9 @@ const SignUp = (props: Props) => {
                       </FormItem>
                     )}
                   />
-                </div>
-                <div className="flex gap-4">
-                  <Button
-                    type="submit"
-                    className={cn({ hidden: FormStep === 0 })}
-                  >
-                    Submit
-                  </Button>
+                </motion.div>
 
+                <div className="flex gap-4">
                   <Button
                     type="button"
                     variant={'ghost'}
@@ -301,8 +325,10 @@ const SignUp = (props: Props) => {
                         'email',
                         'password',
                         'confirmPassowrd',
+                        'phoneNumber',
                       ]);
                       const emailState = form.getFieldState('email');
+                      const phoneState = form.getFieldState('phoneNumber');
                       const firstNameState = form.getFieldState('firstName');
                       const lastNameState = form.getFieldState('lastName');
                       const passwordState = form.getFieldState('password');
@@ -311,6 +337,7 @@ const SignUp = (props: Props) => {
 
                       // checks the validation result
                       if (!emailState.isDirty || emailState.invalid) return;
+                      if (!phoneState.isDirty || phoneState.invalid) return;
                       if (!firstNameState.isDirty || firstNameState.invalid)
                         return;
                       if (!lastNameState.isDirty || lastNameState.invalid)
@@ -320,17 +347,15 @@ const SignUp = (props: Props) => {
                       if (
                         !confirmPassowordState.isDirty ||
                         confirmPassowordState.invalid
-                      ) return;
-                      if(watcher.password !== watcher.confirmPassowrd) {
+                      )
+                        return;
+                      if (watcher.password !== watcher.confirmPassowrd) {
                         toast({
                           title: 'Password do not match',
                           variant: 'destructive',
-                          
-                          
-                        })
-                        return
+                        });
+                        return;
                       }
-                        
 
                       setFormStep(1);
                     }}
@@ -341,10 +366,19 @@ const SignUp = (props: Props) => {
                   </Button>
 
                   <Button
-                    onClick={() => setFormStep(0)}
+                    type="submit"
+                    className={cn({ hidden: FormStep === 0 })}
+                  >
+                    Submit
+                  </Button>
+
+                  <Button
                     type="button"
                     variant={'ghost'}
                     className={cn({ hidden: FormStep === 0 })}
+                    onClick={() => {
+                      setFormStep(0);
+                    }}
                   >
                     Go Back
                   </Button>
