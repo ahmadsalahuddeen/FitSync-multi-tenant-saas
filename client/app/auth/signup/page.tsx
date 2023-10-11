@@ -36,9 +36,12 @@ import { z } from 'zod';
 import { Icons } from '@/components/icons';
 import { cn, countries } from '@/lib/utils';
 import { ArrowRight, Ghost } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 type Props = {};
 
 const SignUp = (props: Props) => {
+  const { toast } = useToast()
+
   const [FormStep, setFormStep] = useState(0);
 
   // schema to ts types
@@ -61,10 +64,15 @@ const SignUp = (props: Props) => {
     },
   });
 
-  const liveName = form.watch('businessName');
+
+  const watcher = form.watch();
+
 
   function onSubmit(data: Input) {
-    console.log(data);
+  
+
+    alert(JSON.stringify(data))
+
   }
 
   return (
@@ -73,7 +81,7 @@ const SignUp = (props: Props) => {
         <Card className="w-[350px] md:w-[470px]">
           <CardHeader>
             <CardTitle>
-              {FormStep === 0 ? 'Try FitSync for free' : `Setup ${liveName} `}
+              {FormStep === 0 ? 'Try FitSync for free' : `Setup ${watcher.businessName} `}
             </CardTitle>
             <CardDescription className="text-muted-foreground ">
             {FormStep === 0 ? 'Explore your free 14-day trial🔥.' : `Just a few more details to get started📈`}
@@ -312,8 +320,17 @@ const SignUp = (props: Props) => {
                       if (
                         !confirmPassowordState.isDirty ||
                         confirmPassowordState.invalid
-                      )
-                        return;
+                      ) return;
+                      if(watcher.password !== watcher.confirmPassowrd) {
+                        toast({
+                          title: 'Password do not match',
+                          variant: 'destructive',
+                          
+                          
+                        })
+                        return
+                      }
+                        
 
                       setFormStep(1);
                     }}
