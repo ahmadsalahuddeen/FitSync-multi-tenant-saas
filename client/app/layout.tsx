@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { Inter as FontSans } from 'next/font/google';
 import localFont from '@next/font/local';
 import '@/app/globals.css';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from 'sonner';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -45,7 +45,7 @@ export default function RootLayout({
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             {children}
-            <Toaster />
+            <Toaster richColors position='top-right' />
           </ThemeProvider>
         </body>
       </html>

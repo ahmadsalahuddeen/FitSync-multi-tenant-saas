@@ -11,11 +11,12 @@ export const registerSchema = z.object({
   country: z.string(),
   phoneNumber: z
     .string()
-    .min(6, {message: 'must contain at least 8 number(s)'})
-    .max(17)
+
     .refine((val) => !isNaN(val as unknown as number), {
       message: 'phone number should be a Number ',
     }),
   activeCustomers: z.string(),
+
   refer: z.string().optional(),
 });
+ 

@@ -36,13 +36,13 @@ import { z } from 'zod';
 import { Icons } from '@/components/icons';
 import { cn, countries } from '@/lib/utils';
 import { ArrowRight, Ghost } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { Toaster, toast } from 'sonner';
 import { easeInOut, motion, useMotionValue } from 'framer-motion';
 
 type Props = {};
 
 const SignUp = (props: Props) => {
-  const { toast } = useToast();
+
 
   const [FormStep, setFormStep] = useState(0);
 
@@ -69,7 +69,7 @@ const SignUp = (props: Props) => {
   const watcher = form.watch();
 
   function onSubmit(data: Input) {
-    alert(JSON.stringify(data));
+    alert(JSON.stringify(data));  
   }
 
   return (
@@ -190,8 +190,8 @@ const SignUp = (props: Props) => {
                         <FormLabel>Confirm Password</FormLabel>
                         <FormControl>
                           <Input placeholder="" {...field} type="password" />
-                        </FormControl>
-                        <FormMessage />
+                        </FormControl>    
+                        <FormMessage /> 
                       </FormItem>
                     )}
                   />
@@ -350,10 +350,7 @@ const SignUp = (props: Props) => {
                       )
                         return;
                       if (watcher.password !== watcher.confirmPassowrd) {
-                        toast({
-                          title: 'Password do not match',
-                          variant: 'destructive',
-                        });
+                        toast.error('Password do not match',  );
                         return;
                       }
 
