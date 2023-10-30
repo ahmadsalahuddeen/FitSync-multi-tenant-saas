@@ -1,3 +1,4 @@
+'use client'
 import express, { Request, Response } from 'express'
 const route = express.Router()
 import { body, validationResult } from 'express-validator';
@@ -7,7 +8,7 @@ import { BadRequestError } from '../errors/bad-request-error';
 import jwt from 'jsonwebtoken';
 import { validateRequest } from '../middlewares/request-vaidation';
 
-route.post('/api/users/signup',
+route.post('/api/users/tenant/signup',
   [
     body('email')
       .isEmail()
@@ -22,7 +23,7 @@ route.post('/api/users/signup',
   async (req: Request, res: Response) => {
 
 
-    const { email, password } = req.body
+    const { email, password,  } = req.body
 
     const emailExist = await User.findOne({ email })
 
@@ -30,7 +31,9 @@ route.post('/api/users/signup',
       throw new BadRequestError('email is already in use');
     }
 
-    const user = User.build({ email, password })
+    const user = User.build({ email, password,
+    
+    })
     await user.save();
 
     // generate jwt token 

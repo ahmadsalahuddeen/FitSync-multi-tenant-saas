@@ -40,9 +40,9 @@ function Header() {
               <SheetContent side="left" className="w-[300px] sm:w-[400]">
                 <nav className="flex flex-col gap-4 pt-5">
                   {routes.map((route, i) => (
-                    <Button className="justify-start" asChild variant="ghost">
+                    <Button key={i} className="justify-start" asChild variant="ghost">
                       <Link
-                        key={i}
+                        key={i*10}
                         href={route.href}
                         className=" text-lg px-2 py-1 block"
                       >
@@ -78,7 +78,7 @@ function Header() {
             {routes.map((route, i) => (
               <Button key={i*100} asChild variant="ghost">
                 <Link
-                  key={i}
+                  key={i*1000}
                   href={route.href}
                   className=" text-sm text-slate-500 font-medium transition-colors"
                 >

@@ -40,15 +40,18 @@ import { cn, countries } from "@/lib/utils";
 import { ArrowRight, Ghost } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import { easeInOut, motion, useMotionValue } from "framer-motion";
+import { useRouter } from "next/navigation";
+
 
 type Props = {};
 
 const SignUp = (props: Props) => {
+  const router = useRouter()
   const [FormStep, setFormStep] = useState(0);
-
+  
   // schema to ts types
   type Input = z.infer<typeof registerSchema>;
-
+  
   // react hook form
   const form = useForm<Input>({
     resolver: zodResolver(registerSchema),
@@ -65,7 +68,8 @@ const SignUp = (props: Props) => {
       refer: "",
     },
   });
-
+  
+  const watcher = form.watch();
   const {mutate: submitForm , isLoading} = useMutation({
     mutationFn: async ({
       firstName,
@@ -79,7 +83,7 @@ const SignUp = (props: Props) => {
       phoneNumber,
       refer,
     }: Input) => {
-const response = await axios.post('/api/auth/tenant/signup',{
+const response = await axios.post(`http://fitsync.com/api/users/tenant/signup`,{
   firstName,
   lastName,
   businessName,
@@ -109,8 +113,8 @@ submitForm({
   refer: input.refer ,
 },
 {
-  onSuccess: ()=>{
-    
+  onSuccess: (response)=>{
+console.log(response)
   }
 }
 
@@ -118,7 +122,6 @@ submitForm({
 
   }
 
-  const watcher = form.watch();
   return (
     <>
       <div className=" absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ">
