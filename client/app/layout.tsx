@@ -7,7 +7,7 @@ import localFont from "@next/font/local";
 import "@/app/globals.css";
 import { Toaster } from "sonner";
 import Providers from "@/components/Providers";
-import axios from "axios";
+import Axios from "axios";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   },
 };
 
-axios.defaults.baseURL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL + "/api";
+Axios.defaults.baseURL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL + "/api";
 
 
 export default function RootLayout({

@@ -83,7 +83,7 @@ const SignUp = (props: Props) => {
       phoneNumber,
       refer,
     }: Input) => {
-const response = await axios.post(`/api/users/tenant/signup`,{
+const response = await axios.post(`/users/tenant/signup`,{
   firstName,
   lastName,
   businessName,
