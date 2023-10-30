@@ -2,6 +2,7 @@ import express from 'express'
 import 'express-async-errors'
 import mongoose from 'mongoose'
 import { json } from 'express'
+require('dotenv').config()
 
 import { currentUserRouter } from './routes/current-user'
 import { signinRouter } from './routes/signin'
@@ -10,8 +11,10 @@ import { signupRouter } from './routes/signup'
 import { errorHandler } from './middlewares/error-handler'
 import { NotFoundError } from './errors/notFound-error'
 
+
 import cookieSession from 'cookie-session'
 const app = express()
+
 
 
 
