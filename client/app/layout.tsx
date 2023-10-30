@@ -1,29 +1,30 @@
-import { ThemeProvider } from '@/components/ui/ThemeProvider';
-import './globals.css';
-import type { Metadata } from 'next';
-import { cn } from '@/lib/utils';
-import { Inter as FontSans } from 'next/font/google';
-import localFont from '@next/font/local';
-import '@/app/globals.css';
-import { Toaster } from 'sonner';
+import { ThemeProvider } from "@/components/ui/ThemeProvider";
+import "./globals.css";
+import type { Metadata } from "next";
+import { cn } from "@/lib/utils";
+import { Inter as FontSans } from "next/font/google";
+import localFont from "@next/font/local";
+import "@/app/globals.css";
+import { Toaster } from "sonner";
+import Providers from "@/components/Providers";
 
 const fontSans = FontSans({
-  subsets: ['latin'],
-  variable: '--font-sans',
+  subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 const fontHeading = localFont({
-  src: '../assets/fonts/CalSans-SemiBold.woff2',
-  variable: '--font-heading',
+  src: "../assets/fonts/CalSans-SemiBold.woff2",
+  variable: "--font-heading",
 });
 
 export const metadata: Metadata = {
-  title: 'FitSync',
-  description: 'A complete gym management SaaS',
+  title: "FitSync",
+  description: "A complete gym management SaaS",
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
   },
 };
 
@@ -38,15 +39,15 @@ export default function RootLayout({
         <head></head>
         <body
           className={cn(
-            'min-h-screen bg-background font-sans antialiased',
+            "min-h-screen bg-background font-sans antialiased",
             fontSans.variable,
-            fontHeading.variable
+            fontHeading.variable,
           )}
         >
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {/* configquered and sepreated Providers in a different file */}
+          <Providers>
             {children}
-            <Toaster richColors position='top-right' />
-          </ThemeProvider>
+            </Providers>
         </body>
       </html>
     </>

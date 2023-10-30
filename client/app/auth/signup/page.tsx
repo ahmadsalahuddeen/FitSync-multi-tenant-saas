@@ -1,7 +1,9 @@
-'use client';
-import Container from '@/components/ui/container';
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+"use client";
+import Container from "@/components/ui/container";
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import axios from 'axios';
+
 import {
   Form,
   FormControl,
@@ -10,7 +12,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from "@/components/ui/form";
 import {
   Card,
   CardContent,
@@ -18,32 +20,30 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-import { useForm } from 'react-hook-form';
-import { registerSchema } from '@/validators/auth';
-import { z } from 'zod';
-import { Icons } from '@/components/icons';
-import { cn, countries } from '@/lib/utils';
-import { ArrowRight, Ghost } from 'lucide-react';
-import { Toaster, toast } from 'sonner';
-import { easeInOut, motion, useMotionValue } from 'framer-motion';
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "react-query";
+import { useForm } from "react-hook-form";
+import { registerSchema } from "@/validators/auth";
+import { z } from "zod";
+import { Icons } from "@/components/icons";
+import { cn, countries } from "@/lib/utils";
+import { ArrowRight, Ghost } from "lucide-react";
+import { Toaster, toast } from "sonner";
+import { easeInOut, motion, useMotionValue } from "framer-motion";
 
 type Props = {};
 
 const SignUp = (props: Props) => {
-
-
   const [FormStep, setFormStep] = useState(0);
 
   // schema to ts types
@@ -53,39 +53,85 @@ const SignUp = (props: Props) => {
   const form = useForm<Input>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      activeCustomers: '',
-      businessName: '',
-      confirmPassowrd: '',
-      country: '',
-      email: '',
-      firstName: '',
-      lastName: '',
-      password: '',
-      phoneNumber: '',
-      refer: '',
+      activeCustomers: "",
+      businessName: "",
+      confirmPassowrd: "",
+      country: "",
+      email: "",
+      firstName: "",
+      lastName: "",
+      password: "",
+      phoneNumber: "",
+      refer: "",
     },
   });
 
-  const watcher = form.watch();
+  const {mutate: submitForm , isLoading} = useMutation({
+    mutationFn: async ({
+      firstName,
+      lastName,
+      businessName,
+      activeCustomers,
+      password,
+      confirmPassowrd,
+      country,
+      email,
+      phoneNumber,
+      refer,
+    }: Input) => {
+const response = await axios.post('/api/auth/tenant/signup',{
+  firstName,
+  lastName,
+  businessName,
+  activeCustomers,
+  password,
+  confirmPassowrd,
+  country,
+  email,
+  phoneNumber,
+  refer,
+})
+return response.data
+    },
+  });
 
-  function onSubmit(data: Input) {
-    alert(JSON.stringify(data));  
+  function onSubmit(input: Input) {
+submitForm({
+  firstName: input.firstName ,
+  lastName: input.lastName ,
+  businessName: input.businessName ,
+  activeCustomers: input.activeCustomers ,
+  password: input.password ,
+  confirmPassowrd: input.confirmPassowrd ,
+  country: input.country ,
+  email: input.email ,
+  phoneNumber: input.phoneNumber ,
+  refer: input.refer ,
+},
+{
+  onSuccess: ()=>{
+    
+  }
+}
+
+)
+
   }
 
+  const watcher = form.watch();
   return (
     <>
       <div className=" absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ">
         <Card className="w-[350px] md:w-[470px]">
           <CardHeader>
             <CardTitle>
-          
               {FormStep === 0
-                ? 'Try FitSync for free'
+                ? "Try FitSync for free"
                 : `Setup ${watcher.businessName} `}
             </CardTitle>
             <CardDescription className="text-muted-foreground ">
               {FormStep === 0
-                ? 'Explore your free 14-day trial🔥.'
+                ? "Explore your free 14-day trial🔥."
                 : `Just a few more details to get started📈`}
             </CardDescription>
           </CardHeader>
@@ -98,7 +144,7 @@ const SignUp = (props: Props) => {
                 {/* First Form Step  */}
                 <motion.div
                   className={cn(
-                    'space-y-3'
+                    "space-y-3",
                     //  { hidden: FormStep === 1 }
                   )}
                   animate={{
@@ -109,7 +155,7 @@ const SignUp = (props: Props) => {
                   }}
                 >
                   {/* First and Last Name */}
-                  <div className="md:flex gap-4">
+                  <div className="gap-4 md:flex">
                     <FormField
                       control={form.control}
                       name="firstName"
@@ -190,8 +236,8 @@ const SignUp = (props: Props) => {
                         <FormLabel>Confirm Password</FormLabel>
                         <FormControl>
                           <Input placeholder="" {...field} type="password" />
-                        </FormControl>    
-                        <FormMessage /> 
+                        </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -199,12 +245,9 @@ const SignUp = (props: Props) => {
 
                 {/* second Form Step  */}
                 <motion.div
-                  className={cn(
-                    'space-y-3  absolute   right-0 left-0 top-0 ',
-                    {
-                      // hidden: FormStep === 0
-                    }
-                  )}
+                  className={cn("absolute  left-0   right-0 top-0 space-y-3 ", {
+                    // hidden: FormStep === 0
+                  })}
                   style={{
                     translateX: `${100 - FormStep * 100}%`,
                   }}
@@ -247,11 +290,11 @@ const SignUp = (props: Props) => {
                           </FormControl>
                           <SelectContent>
                             {[
-                              'none, launching Soon',
-                              '0-100',
-                              '101-300',
-                              '301-600',
-                              '600+',
+                              "none, launching Soon",
+                              "0-100",
+                              "101-300",
+                              "301-600",
+                              "600+",
                             ].map((noOfMember) => (
                               <SelectItem key={noOfMember} value={noOfMember}>
                                 {noOfMember}
@@ -316,26 +359,26 @@ const SignUp = (props: Props) => {
                 <div className="flex gap-4">
                   <Button
                     type="button"
-                    variant={'ghost'}
+                    variant={"ghost"}
                     onClick={() => {
                       //triggers validation before moving next form step
                       form.trigger([
-                        'firstName',
-                        'lastName',
-                        'email',
-                        'password',
-                        'confirmPassowrd',
-                        'phoneNumber',
+                        "firstName",
+                        "lastName",
+                        "email",
+                        "password",
+                        "confirmPassowrd",
+                        "phoneNumber",
                       ]);
-                      const emailState = form.getFieldState('email');
-                      const phoneState = form.getFieldState('phoneNumber');
-                      const firstNameState = form.getFieldState('firstName');
-                      const lastNameState = form.getFieldState('lastName');
-                      const passwordState = form.getFieldState('password');
+                      const emailState = form.getFieldState("email");
+                      const phoneState = form.getFieldState("phoneNumber");
+                      const firstNameState = form.getFieldState("firstName");
+                      const lastNameState = form.getFieldState("lastName");
+                      const passwordState = form.getFieldState("password");
                       const confirmPassowordState =
-                        form.getFieldState('confirmPassowrd');
+                        form.getFieldState("confirmPassowrd");
 
-                      // checks the validation result
+                      // checks the validation result before redirecting step 2 of the form
                       if (!emailState.isDirty || emailState.invalid) return;
                       if (!phoneState.isDirty || phoneState.invalid) return;
                       if (!firstNameState.isDirty || firstNameState.invalid)
@@ -350,7 +393,7 @@ const SignUp = (props: Props) => {
                       )
                         return;
                       if (watcher.password !== watcher.confirmPassowrd) {
-                        toast.error('Password do not match',  );
+                        toast.error("Password do not match");
                         return;
                       }
 
@@ -359,7 +402,7 @@ const SignUp = (props: Props) => {
                     className={cn({ hidden: FormStep === 1 })}
                   >
                     Next Step
-                    <ArrowRight className="ml-2 w-4 h-4" />
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
 
                   <Button
@@ -371,7 +414,7 @@ const SignUp = (props: Props) => {
 
                   <Button
                     type="button"
-                    variant={'ghost'}
+                    variant={"ghost"}
                     className={cn({ hidden: FormStep === 0 })}
                     onClick={() => {
                       setFormStep(0);
