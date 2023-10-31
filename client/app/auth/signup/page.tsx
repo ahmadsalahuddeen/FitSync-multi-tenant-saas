@@ -69,6 +69,7 @@ const SignUp = (props: Props) => {
   });
 
   const watcher = form.watch();
+
   const {
     mutate: submitForm,
     isLoading,
@@ -127,13 +128,12 @@ const SignUp = (props: Props) => {
         },
         {
           onSuccess: (response) => {
-            console.log(response);
+            router.push('/dashboard')
           },
-          onError: (error:any) => {
-            error.response.data.errors.map((err:any) => {
-              <h1>{err}</h1>
+          onError: (error: any) => {
+            error.response.data.errors.map((err: any) => {
               toast.error(err.message);
-            })
+            });
           },
         },
       );
@@ -144,7 +144,6 @@ const SignUp = (props: Props) => {
 
   return (
     <>
-           
       <div className=" absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ">
         <Card className="w-[350px] md:w-[470px]">
           <CardHeader>
@@ -438,7 +437,7 @@ const SignUp = (props: Props) => {
                   >
                     Submit
                   </Button>
-                
+
                   <Button
                     type="button"
                     variant={"ghost"}
@@ -454,8 +453,6 @@ const SignUp = (props: Props) => {
             </Form>
           </CardContent>
         </Card>
-        
-
       </div>
     </>
   );
