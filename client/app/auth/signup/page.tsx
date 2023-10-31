@@ -130,7 +130,7 @@ const SignUp = (props: Props) => {
             console.log(response);
           },
           onError: (error:any) => {
-            error.response.data.errors.map((err) => {
+            error.response.data.errors.map((err:any) => {
               <h1>{err}</h1>
               toast.error(err.message);
             })
