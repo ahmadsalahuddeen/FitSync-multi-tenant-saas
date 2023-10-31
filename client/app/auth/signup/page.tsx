@@ -2,7 +2,7 @@
 import Container from "@/components/ui/container";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import axios from '@/lib/axios';
+import axios from "@/lib/axios";
 
 import {
   Form,
@@ -42,16 +42,15 @@ import { Toaster, toast } from "sonner";
 import { easeInOut, motion, useMotionValue } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-
 type Props = {};
 
 const SignUp = (props: Props) => {
-  const router = useRouter()
+  const router = useRouter();
   const [FormStep, setFormStep] = useState(0);
-  
+
   // schema to ts types
   type Input = z.infer<typeof registerSchema>;
-  
+
   // react hook form
   const form = useForm<Input>({
     resolver: zodResolver(registerSchema),
@@ -68,9 +67,14 @@ const SignUp = (props: Props) => {
       refer: "",
     },
   });
-  
+
   const watcher = form.watch();
-  const {mutate: submitForm , isLoading} = useMutation({
+  const {
+    mutate: submitForm,
+    isLoading,
+    isError,
+    error,
+  } = useMutation({
     mutationFn: async ({
       firstName,
       lastName,
@@ -83,53 +87,64 @@ const SignUp = (props: Props) => {
       phoneNumber,
       refer,
     }: Input) => {
-const response = await axios.post(`/api/users/tenant/signup`,{
-  firstName,
-  lastName,
-  businessName,
-  activeCustomers,
-  password,
-  confirmPassowrd,
-  country,
-  email,
-  phoneNumber,
-  refer,
-})
-console.log(response)
-return response
+      // try {
+
+      const response = await axios.post(`/api/users/tenant/signup`, {
+        firstName,
+        lastName,
+        businessName,
+        activeCustomers,
+        password,
+        confirmPassowrd,
+        country,
+        email,
+        phoneNumber,
+        refer,
+      });
+
+      console.log(response.data);
+
+      // } catch (err) {
+      //   console.log(err.response.data)
+      // }
     },
   });
 
   function onSubmit(input: Input) {
     try {
-      
-      submitForm({
-        firstName: input.firstName ,
-        lastName: input.lastName ,
-        businessName: input.businessName ,
-        activeCustomers: input.activeCustomers ,
-        password: input.password ,
-        confirmPassowrd: input.confirmPassowrd ,
-        country: input.country ,
-        email: input.email ,
-        phoneNumber: input.phoneNumber ,
-        refer: input.refer ,
-      },
-      {
-        onSuccess: (response)=>{
-      console.log(response)
-        }
-      }
-      
-      )
-    } catch (error) {
-      console.log(error)
+      submitForm(
+        {
+          firstName: input.firstName,
+          lastName: input.lastName,
+          businessName: input.businessName,
+          activeCustomers: input.activeCustomers,
+          password: input.password,
+          confirmPassowrd: input.confirmPassowrd,
+          country: input.country,
+          email: input.email,
+          phoneNumber: input.phoneNumber,
+          refer: input.refer,
+        },
+        {
+          onSuccess: (response) => {
+            console.log(response);
+          },
+          onError: (error:any) => {
+            error.response.data.errors.map((err) => {
+              <h1>{err}</h1>
+              toast.error(err.message);
+            })
+          },
+        },
+      );
+    } catch (err) {
+      console.log(error);
     }
-
   }
 
   return (
     <>
+           
       <div className=" absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ">
         <Card className="w-[350px] md:w-[470px]">
           <CardHeader>
@@ -304,7 +319,7 @@ return response
                               "101-300",
                               "301-600",
                               "600+",
-                            ].map((noOfMember) => (
+                            ].map((noOfMember, i) => (
                               <SelectItem key={noOfMember} value={noOfMember}>
                                 {noOfMember}
                               </SelectItem>
@@ -322,11 +337,11 @@ return response
                     control={form.control}
                     name="country"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem hidden>
                         <FormLabel>Country</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          defaultValue={"defaulCountry"}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -334,14 +349,17 @@ return response
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="h-40">
-                            {countries.map((country, i) => (
+                            <SelectItem key={"country"} value="country">
+                              country
+                            </SelectItem>
+                            {/* {countries.map((country, i) => (
                               <SelectItem
-                                key={country.code}
+                                key={country.name + country.code}
                                 value={country.name}
                               >
                                 {country.name}
                               </SelectItem>
-                            ))}
+                            ))} */}
                           </SelectContent>
                         </Select>
 
@@ -420,7 +438,7 @@ return response
                   >
                     Submit
                   </Button>
-
+                
                   <Button
                     type="button"
                     variant={"ghost"}
@@ -436,6 +454,8 @@ return response
             </Form>
           </CardContent>
         </Card>
+        
+
       </div>
     </>
   );
