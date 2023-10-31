@@ -2,7 +2,7 @@
 import Container from "@/components/ui/container";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import axios from 'axios';
+import axios from '@/lib/axios';
 
 import {
   Form,
@@ -83,7 +83,7 @@ const SignUp = (props: Props) => {
       phoneNumber,
       refer,
     }: Input) => {
-const response = await axios.post(`/users/tenant/signup`,{
+const response = await axios.post(`/api/users/tenant/signup`,{
   firstName,
   lastName,
   businessName,
@@ -95,30 +95,36 @@ const response = await axios.post(`/users/tenant/signup`,{
   phoneNumber,
   refer,
 })
-return response.data
+console.log(response)
+return response
     },
   });
 
   function onSubmit(input: Input) {
-submitForm({
-  firstName: input.firstName ,
-  lastName: input.lastName ,
-  businessName: input.businessName ,
-  activeCustomers: input.activeCustomers ,
-  password: input.password ,
-  confirmPassowrd: input.confirmPassowrd ,
-  country: input.country ,
-  email: input.email ,
-  phoneNumber: input.phoneNumber ,
-  refer: input.refer ,
-},
-{
-  onSuccess: (response)=>{
-console.log(response)
-  }
-}
-
-)
+    try {
+      
+      submitForm({
+        firstName: input.firstName ,
+        lastName: input.lastName ,
+        businessName: input.businessName ,
+        activeCustomers: input.activeCustomers ,
+        password: input.password ,
+        confirmPassowrd: input.confirmPassowrd ,
+        country: input.country ,
+        email: input.email ,
+        phoneNumber: input.phoneNumber ,
+        refer: input.refer ,
+      },
+      {
+        onSuccess: (response)=>{
+      console.log(response)
+        }
+      }
+      
+      )
+    } catch (error) {
+      console.log(error)
+    }
 
   }
 

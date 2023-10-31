@@ -16,8 +16,8 @@ const start = async () => {
     console.error(error)
   }
 
-  app.listen(3000, () => {
-    console.log('listening  port 3000 : auth ')
+  app.listen(5000, () => {
+    console.log('listening  port 5000 : auth ')
   })
 
 }

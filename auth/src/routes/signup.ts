@@ -21,7 +21,7 @@ route.post('/api/users/tenant/signup',
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-
+console.log('getting')
 
     const { email, password,  } = req.body
 

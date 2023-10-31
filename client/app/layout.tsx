@@ -29,7 +29,6 @@ export const metadata: Metadata = {
   },
 };
 
-Axios.defaults.baseURL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL + "/api";
 
 
 export default function RootLayout({

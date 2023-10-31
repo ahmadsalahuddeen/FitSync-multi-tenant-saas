@@ -2,7 +2,9 @@ import express from 'express'
 import 'express-async-errors'
 import mongoose from 'mongoose'
 import { json } from 'express'
+
 require('dotenv').config()
+
 
 import { currentUserRouter } from './routes/current-user'
 import { signinRouter } from './routes/signin'
@@ -15,10 +17,18 @@ import { NotFoundError } from './errors/notFound-error'
 import cookieSession from 'cookie-session'
 const app = express()
 
+var cors = require('cors');
+app.use(cors());
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, authorization");
+  res.setHeader("Access-Control-Allow-Methods", "GET, PATCH, POST, DELETE, PUT, OPTIONS");
+  next();
+});
 
 
 
-app.set('trust proxy', true)
+// app.set('trust proxy', true)
 app.use(json())
 app.use(cookieSession({
   signed: false,
@@ -35,7 +45,10 @@ app.use(signoutRouter)
 
 
 
-app.all('*', async () => {
+app.all('*', async (req, res) => {
+  var Url = req.protocol + '://' + req.get('host') + req.originalUrl;
+  console.log(Url)
+  console.log('hiii')
   throw new NotFoundError()
 })
 
