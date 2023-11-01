@@ -41,6 +41,7 @@ import { ArrowRight, Ghost } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import { easeInOut, motion, useMotionValue } from "framer-motion";
 import { useRouter } from "next/navigation";
+import useRequest from "@/hooks/use-request";
 
 type Props = {};
 
@@ -48,8 +49,14 @@ const SignUp = (props: Props) => {
   const router = useRouter();
   const [FormStep, setFormStep] = useState(0);
 
-  // schema to ts types
   type Input = z.infer<typeof registerSchema>;
+
+  const { doRequest } = useRequest({
+    url: "/api/users/tenant/signup",
+    method: "post",
+  });
+
+  // schema to ts types
 
   // react hook form
   const form = useForm<Input>({
@@ -70,75 +77,90 @@ const SignUp = (props: Props) => {
 
   const watcher = form.watch();
 
-  const {
-    mutate: submitForm,
-    isLoading,
-    isError,
-    error,
-  } = useMutation({
-    mutationFn: async ({
-      firstName,
-      lastName,
-      businessName,
-      activeCustomers,
-      password,
-      confirmPassowrd,
-      country,
-      email,
-      phoneNumber,
-      refer,
-    }: Input) => {
-      // try {
+  // const {
+  //   mutate: asdf,
+  //   isLoading,
+  //   isError,
+  //   error,
+  // } = useMutation({
+  //   mutationFn: async ({
+  //     firstName,
+  //     lastName,
+  //     businessName,
+  //     activeCustomers,
+  //     password,
+  //     confirmPassowrd,
+  //     country,
+  //     email,
+  //     phoneNumber,
+  //     refer,
+  //   }: Input) => {
+  //     // try {
 
-      const response = await axios.post(`/api/users/tenant/signup`, {
-        firstName,
-        lastName,
-        businessName,
-        activeCustomers,
-        password,
-        confirmPassowrd,
-        country,
-        email,
-        phoneNumber,
-        refer,
-      });
+  //     const response = await axios.post(`/api/users/tenant/signup`, {
+  //       firstName,
+  //       lastName,
+  //       businessName,
+  //       activeCustomers,
+  //       password,
+  //       confirmPassowrd,
+  //       country,
+  //       email,
+  //       phoneNumber,
+  //       refer,
+  //     });
 
-      console.log(response.data);
+  //     console.log(response.data);
 
-      // } catch (err) {
-      //   console.log(err.response.data)
-      // }
-    },
-  });
+  //     // } catch (err) {
+  //     //   console.log(err.response.data)
+  //     // }
+  //   },
+  // });
 
   function onSubmit(input: Input) {
     try {
-      submitForm(
-        {
-          firstName: input.firstName,
-          lastName: input.lastName,
-          businessName: input.businessName,
-          activeCustomers: input.activeCustomers,
-          password: input.password,
-          confirmPassowrd: input.confirmPassowrd,
-          country: input.country,
-          email: input.email,
-          phoneNumber: input.phoneNumber,
-          refer: input.refer,
-        },
-        {
-          onSuccess: (response) => {
-            router.push('/dashboard')
-          },
-          onError: (error: any) => {
-            error.response.data.errors.map((err: any) => {
-              toast.error(err.message);
-            });
-          },
-        },
-      );
+      doRequest({
+        firstName: input.firstName,
+        lastName: input.lastName,
+        businessName: input.businessName,
+        activeCustomers: input.activeCustomers,
+        password: input.password,
+        confirmPassowrd: input.confirmPassowrd,
+        country: input.country,
+        email: input.email,
+        phoneNumber: input.phoneNumber,
+        refer: input.refer,
+      },
+      {
+        onSuccess: ()=> router.push('/dashboard')
+      });
+      // asdf(
+      //   {
+      //     firstName: input.firstName,
+      //     lastName: input.lastName,
+      //     businessName: input.businessName,
+      //     activeCustomers: input.activeCustomers,
+      //     password: input.password,
+      //     confirmPassowrd: input.confirmPassowrd,
+      //     country: input.country,
+      //     email: input.email,
+      //     phoneNumber: input.phoneNumber,
+      //     refer: input.refer,
+      //   },
+      //   {
+      //     onSuccess: (response) => {
+      //       router.push('/dashboard')
+      //     },
+      //     onError: (error: any) => {
+      //       error.response.data.errors.map((err: any) => {
+      //         toast.error(err.message);
+      //       });
+      //     },
+      //   },
+      // );
     } catch (err) {
-      console.log(error);
+      console.log(err);
     }
   }
 
