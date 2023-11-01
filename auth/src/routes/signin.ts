@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import { validateRequest } from '../middlewares/request-vaidation'
 import { BadRequestError } from '../errors/bad-request-error'
 import { Password } from '../services/password'
-import { User } from '../models/user'
+import { Tenant} from '../models/tenant'
 const route = express.Router()
 
 route.post('/api/users/signin',
@@ -21,10 +21,10 @@ route.post('/api/users/signin',
       .withMessage('you must provide a password')
   ],
   validateRequest,
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response ) => {
     const {email, password} = req.body
 
-    const existingUser = await User.findOne({email})
+    const existingUser = await Tenant.findOne({email})
     if(!existingUser){
       throw new BadRequestError('provide a valid login credentials')
     }

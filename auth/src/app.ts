@@ -45,9 +45,8 @@ app.use(signoutRouter)
 
 
 app.all('*', async (req, res) => {
-  var Url = req.protocol + '://' + req.get('host') + req.originalUrl;
-  console.log(Url)
-  console.log('hiii')
+
+
   throw new NotFoundError()
 })
 
