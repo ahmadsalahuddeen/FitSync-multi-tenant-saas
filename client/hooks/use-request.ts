@@ -23,7 +23,7 @@ export default ({ url, method, onSuccess }: Props) => {
         if (onSuccess) {
           onSuccess(response.data);
         }
-      } catch (err) {
+      } catch (err: any ) {
         err.response.data.errors.map((err: any) => {
           toast.error(err.message);
         });
@@ -33,3 +33,4 @@ export default ({ url, method, onSuccess }: Props) => {
 
   return { doRequest, isLoading, isError };
 };
+``

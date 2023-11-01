@@ -1,8 +1,8 @@
 import mongoose, { mongo } from 'mongoose';
 import { Password } from '../services/password';
 
-//interface that describes the properties to create a new User
-interface userAttrs {
+//interface that describes the properties to create a new Tenant
+interface tenantAttrs {
   businessName: string;
   firstName: string;
   lastName: string;
@@ -16,14 +16,14 @@ interface userAttrs {
 }
 
 // interface that describes the properties
-// a User Model has
-interface userModel extends mongoose.Model<userDoc> {
-  build(attrs: userAttrs): userDoc;
+// a Tenant Model has
+interface tenantModel extends mongoose.Model<tenantDoc> {
+  build(attrs: tenantAttrs): tenantDoc;
 }
 
 // interface that describes the properties
-// of a User Document
-interface userDoc extends mongoose.Document {
+// of a Tenant Document
+interface tenantDoc extends mongoose.Document {
   businessName: string;
   firstName: string;
   lastName: string;
@@ -36,7 +36,7 @@ interface userDoc extends mongoose.Document {
   refer?: string;
 }
 
-const userSchema = new mongoose.Schema(
+const tenantSchema = new mongoose.Schema(
   {
     email: {
       type: String,
@@ -95,7 +95,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // pre hook will run whenever .save onvoked, thus hasing the password if it is modified
-userSchema.pre('save', async function (done) {
+tenantSchema.pre('save', async function (done) {
   if (this.isModified('password')) {
     const hashedPassword = await Password.toHash(this.get('password'));
     this.set('password', hashedPassword);
@@ -103,10 +103,10 @@ userSchema.pre('save', async function (done) {
   done();
 });
 
-userSchema.statics.build = (attrs: userAttrs) => {
-  return new User(attrs);
+tenantSchema.statics.build = (attrs: tenantAttrs) => {
+  return new Tenant(attrs);
 };
 
-const User = mongoose.model<userDoc, userModel>('User', userSchema);
+const Tenant = mongoose.model<tenantDoc, tenantModel>('Tenant', tenantSchema);
 
-export { User };
+export { Tenant };
