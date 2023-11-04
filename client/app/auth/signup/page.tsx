@@ -64,7 +64,7 @@ const SignUp = (props: Props) => {
     defaultValues: {
       activeCustomers: "",
       businessName: "",
-      confirmPassowrd: "",
+      confirmPassword: "",
       country: "",
       email: "",
       firstName: "",
@@ -89,7 +89,7 @@ const SignUp = (props: Props) => {
   //     businessName,
   //     activeCustomers,
   //     password,
-  //     confirmPassowrd,
+  //     confirmPassword,
   //     country,
   //     email,
   //     phoneNumber,
@@ -103,7 +103,7 @@ const SignUp = (props: Props) => {
   //       businessName,
   //       activeCustomers,
   //       password,
-  //       confirmPassowrd,
+  //       confirmPassword,
   //       country,
   //       email,
   //       phoneNumber,
@@ -126,7 +126,7 @@ const SignUp = (props: Props) => {
         businessName: input.businessName,
         activeCustomers: input.activeCustomers,
         password: input.password,
-        confirmPassowrd: input.confirmPassowrd,
+        confirmPassword: input.confirmPassword,
         country: input.country,
         email: input.email,
         phoneNumber: input.phoneNumber,
@@ -142,7 +142,7 @@ const SignUp = (props: Props) => {
       //     businessName: input.businessName,
       //     activeCustomers: input.activeCustomers,
       //     password: input.password,
-      //     confirmPassowrd: input.confirmPassowrd,
+      //     confirmPassword: input.confirmPassword,
       //     country: input.country,
       //     email: input.email,
       //     phoneNumber: input.phoneNumber,
@@ -275,7 +275,7 @@ const SignUp = (props: Props) => {
                   {/* confirm password */}
                   <FormField
                     control={form.control}
-                    name="confirmPassowrd"
+                    name="confirmPassword"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Confirm Password</FormLabel>
@@ -415,7 +415,7 @@ const SignUp = (props: Props) => {
                         "lastName",
                         "email",
                         "password",
-                        "confirmPassowrd",
+                        "confirmPassword",
                         "phoneNumber",
                       ]);
                       const emailState = form.getFieldState("email");
@@ -424,7 +424,7 @@ const SignUp = (props: Props) => {
                       const lastNameState = form.getFieldState("lastName");
                       const passwordState = form.getFieldState("password");
                       const confirmPassowordState =
-                        form.getFieldState("confirmPassowrd");
+                        form.getFieldState("confirmPassword");
 
                       // checks the validation result before redirecting step 2 of the form
                       if (!emailState.isDirty || emailState.invalid) return;
@@ -440,7 +440,7 @@ const SignUp = (props: Props) => {
                         confirmPassowordState.invalid
                       )
                         return;
-                      if (watcher.password !== watcher.confirmPassowrd) {
+                      if (watcher.password !== watcher.confirmPassword) {
                         toast.error("Password do not match");
                         return;
                       }

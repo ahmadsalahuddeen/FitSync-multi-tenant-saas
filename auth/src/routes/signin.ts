@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import { validateRequest } from '../middlewares/request-vaidation'
 import { BadRequestError } from '../errors/bad-request-error'
 import { Password } from '../services/password'
-import { Tenant} from '../models/tenant'
+import { Tenant} from '../models/tenantSchema'
 const route = express.Router()
 
 route.post('/api/users/signin',
@@ -36,7 +36,8 @@ route.post('/api/users/signin',
 
     const userJwt = jwt.sign({ 
       id: existingUser.id,
-      email: existingUser.email
+      email: existingUser.email,
+      role: 'ADMIN'
 
     }, process.env.JWT_KEY!)
 

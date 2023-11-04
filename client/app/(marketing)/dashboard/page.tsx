@@ -5,8 +5,8 @@ type Props = {};
 
 async function getData() {
   console.log('i am the server')
-  const res = await fetch("https://....", { cache: "no-store" });
-  const data = await res.json();
+  // const res = await fetch("https://....", { cache: "no-store" });
+  // const data = await res.json();
   return {color: 'red'};
 }
 

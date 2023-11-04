@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 interface userPayload {
   id: string,
   email: string
+  role?: string
 }
 
 declare global {
@@ -25,6 +26,7 @@ export const currentUser = (
 
 
   if (!req.session?.jwt) {
+    console.log('nojwtsecret')
     return next()
   }
 

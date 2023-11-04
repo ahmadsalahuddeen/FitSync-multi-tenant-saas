@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 const route = express.Router();
 import { body, validationResult } from 'express-validator';
 import { RequestValidationError } from '../errors/request-validation-error';
-import { Tenant} from '../models/tenant';
+import { Tenant} from '../models/tenantSchema';
 import { BadRequestError } from '../errors/bad-request-error';
 import jwt from 'jsonwebtoken';
 import { validateRequest } from '../middlewares/request-vaidation';
@@ -31,7 +31,7 @@ route.post(
       phoneNumber,
       activeCustomers,
       refer,
-      confirmPassowrd
+      confirmPassword
     } = req.body;
 
     const emailExist = await Tenant.findOne({ email });
@@ -39,7 +39,7 @@ route.post(
     if (emailExist) {
       throw new BadRequestError('email is already in use');
     }
-    if(password !== confirmPassowrd){
+    if(password !== confirmPassword){
       throw new BadRequestError('confirm password does not match')
     }
 
@@ -56,15 +56,16 @@ route.post(
     });
     await user.save();
 
+    console.log('hiiii')
     // generate jwt token
     const userJwt = jwt.sign(
       {
         id: user.id,
         email: user.email,
+        role: 'ADMIN'
       },
       process.env.JWT_KEY!
     );
-
     // store the token in session
     req.session = {
       jwt: userJwt,
