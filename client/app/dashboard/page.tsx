@@ -1,5 +1,6 @@
 import { fetchServerResponse } from "next/dist/client/components/router-reducer/fetch-server-response";
 import React from "react";
+import createApi from "@/lib/axios";
 
 type Props = {};
 

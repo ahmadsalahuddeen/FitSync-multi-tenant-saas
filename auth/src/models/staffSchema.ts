@@ -34,6 +34,7 @@ interface userDoc extends mongoose.Document {
   phoneNumber: string;
   activeCustomers: string;
   refer?: string;
+  isOwner?: boolean 
 }
 
 const userSchema = new mongoose.Schema(
@@ -71,6 +72,10 @@ const userSchema = new mongoose.Schema(
     type: String,
 
   },
+    role: {
+      type: String,
+      default: 'trainer'
+    }
   },
 
   
