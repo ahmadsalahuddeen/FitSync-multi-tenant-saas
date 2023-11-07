@@ -3,10 +3,11 @@ import express, { Request, Response } from 'express';
 const route = express.Router();
 import { body, validationResult } from 'express-validator';
 import { RequestValidationError } from '../errors/request-validation-error';
-import { Tenant} from '../models/tenantSchema';
+import { Tenant } from '../models/accountSchema';
 import { BadRequestError } from '../errors/bad-request-error';
 import jwt from 'jsonwebtoken';
 import { validateRequest } from '../middlewares/request-vaidation';
+import { User } from '../models/userSchema';
 
 route.post(
   '/api/users/tenant/signup',
@@ -20,8 +21,6 @@ route.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-
-
     const {
       email,
       password,
@@ -31,38 +30,35 @@ route.post(
       phoneNumber,
       activeCustomers,
       refer,
-      confirmPassword
+      confirmPassword,
     } = req.body;
 
-    const emailExist = await Tenant.findOne({ email });
+    const emailExist = await User.findOne({ email });
 
     if (emailExist) {
       throw new BadRequestError('email is already in use');
     }
-    if(password !== confirmPassword){
-      throw new BadRequestError('confirm password does not match')
+    if (password !== confirmPassword) {
+      throw new BadRequestError('confirm password does not match');
     }
 
-
-    const user = Tenant.build({
+    const user = User.build({
       email,
       password,
-      businessName,
+      role: 'owner',
       firstName,
       lastName,
-      phoneNumber,
-      activeCustomers,
-      refer,
     });
     await user.save();
+    
 
-    console.log('hiiii')
+    console.log('hiiii');
     // generate jwt token
     const userJwt = jwt.sign(
       {
         id: user.id,
         email: user.email,
-        role: 'ADMIN'
+        role: 'ADMIN',
       },
       process.env.JWT_KEY!
     );

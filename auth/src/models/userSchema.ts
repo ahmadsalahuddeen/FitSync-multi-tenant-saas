@@ -1,18 +1,14 @@
-import mongoose, { mongo } from 'mongoose';
+import mongoose, { Mongoose, mongo } from 'mongoose';
 import { Password } from '../services/password';
 
 //interface that describes the properties to create a new User
 interface userAttrs {
-  businessName: string;
+  accountId: string
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  confirmPassword?: string;
-  country?: string;
-  phoneNumber: string;
-  activeCustomers: string;
-  refer: string;
+  role: 'owner' | 'member'
 }
 
 // interface that describes the properties
@@ -24,21 +20,21 @@ interface userModel extends mongoose.Model<userDoc> {
 // interface that describes the properties
 // of a User Document
 interface userDoc extends mongoose.Document {
-  businessName: string;
+  accountId: string
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  confirmPassword?: string;
-  country?: string;
-  phoneNumber: string;
-  activeCustomers: string;
-  refer?: string;
-  isOwner?: boolean 
+  role: 'owner' | 'member'
 }
 
 const userSchema = new mongoose.Schema(
   {
+    accountId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Account',
+      required: true
+    },
     email: {
       type: String,
       required: true,
@@ -47,38 +43,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    
-  firstName : {
-    type: String,
-    required: true,
-  },
-  lastName : {
-    type: String,
-    required: true,
-  },
-  country : {
-    type: String,
 
-  },
-  phoneNumber : {
-    type: String,
-    required: true,
-  },
-  activeCustomers : {
-    type: String,
-    required: true,
-  },
-  refer : {
-    type: String,
-
-  },
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
     role: {
       type: String,
-      default: 'trainer'
-    }
+      enum: ['owner', 'member'],
+      default: 'member',
+    },
   },
 
-  
   {
     toJSON: {
       transform(doc, ret, options) {

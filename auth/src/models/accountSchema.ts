@@ -1,0 +1,77 @@
+import mongoose, { Schema, mongo } from 'mongoose';
+import { Password } from '../services/password';
+
+//interface that describes the properties to create a new Account
+interface accountAttrs {
+  currentPeriodEnds: Date;
+  maxCustomer?: number;
+  plan: 'starter' | 'accelarate' | 'ultimate' | 'freeTrial';
+  gyms: string[];
+  stripeSubscriptionId?: string,
+  stripeCustomerId?: string
+}
+
+// interface that describes the properties
+// a Account Model has
+interface accountModel extends mongoose.Model<accountDoc> {
+  build(attrs: accountAttrs): accountDoc;
+}
+
+// interface that describes the properties
+// of a Account Document
+interface accountDoc extends mongoose.Document {
+  currentPeriodEnds: Date;
+  maxCustomer: number;
+  plan: 'starter' | 'accelarate' | 'ultimate' | 'freeTrial';
+  gyms: string[];
+  stripeSubscriptionId?: string,
+  stripeCustomerId?: string
+}
+
+const accountSchema = new mongoose.Schema(
+  {
+    currentPeriodEnds: {
+      type: Date,
+
+    },
+    maxCustomer: {
+      type: Number
+    },
+    gyms: {
+      type: Schema.Types.ObjectId,
+      ref: 'Gym', // This should match the model name in AuthorModel
+    },
+    plan: {
+      type: String,
+      enum: ['starter' , 'accelarate' , 'ultimate', 'freeTrial']
+    }
+  },
+
+  {
+    toJSON: {
+      transform(doc, ret, options) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        delete ret.password;
+      },
+    },
+  }
+);
+
+// pre hook will run whenever .save onvoked, thus hasing the password if it is modified
+accountSchema.pre('save', async function (done) {
+  if (this.isModified('password')) {
+    const hashedPassword = await Password.toHash(this.get('password'));
+    this.set('password', hashedPassword);
+  }
+  done();
+});
+
+accountSchema.statics.build = (attrs: accountAttrs) => {
+  return new Account(attrs);
+};
+
+const Account = mongoose.model<accountDoc, accountModel>('Account', accountSchema);
+
+export { Account };

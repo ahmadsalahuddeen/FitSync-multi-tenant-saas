@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import { validateRequest } from '../middlewares/request-vaidation'
 import { BadRequestError } from '../errors/bad-request-error'
 import { Password } from '../services/password'
-import { Tenant} from '../models/tenantSchema'
+import { Tenant} from '../models/accountSchema'
 const route = express.Router()
 
 route.post('/api/users/signin',

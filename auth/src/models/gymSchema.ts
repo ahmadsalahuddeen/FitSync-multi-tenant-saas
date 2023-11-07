@@ -3,18 +3,11 @@ import { Password } from '../services/password';
 
 //interface that describes the properties to create a new Gym
 interface gymAttrs {
-  businessName: string;
-  inviteCode: string;
-  
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword?: string;
-  country?: string;
-  phoneNumber: string;
-  activeCustomers: string;
-  refer: string;
+  accountId: string
+  gymCode: string;
+  invideCode: string;
+  name: string;
+  slug: string;
 }
 
 // interface that describes the properties
@@ -26,6 +19,7 @@ interface gymModel extends mongoose.Model<gymDoc> {
 // interface that describes the properties
 // of a Gym Document
 interface gymDoc extends mongoose.Document {
+  accountId: string
   businessName: string;
   firstName: string;
   lastName: string;
@@ -40,6 +34,11 @@ interface gymDoc extends mongoose.Document {
 
 const gymSchema = new mongoose.Schema(
   {
+    accountId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Account',
+      required: true
+    },
     email: {
       type: String,
       required: true,
@@ -48,43 +47,40 @@ const gymSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    
-  businessName : {
-    type: String,
-    required: true,
-  },
-  firstName : {
-    type: String,
-    required: true,
-  },
-  lastName : {
-    type: String,
-    required: true,
-  },
-  confirmPassword : {
-    type: String,
 
-  },
-  country : {
-    type: String,
-
-  },
-  phoneNumber : {
-    type: String,
-    required: true,
-  },
-  activeCustomers : {
-    type: String,
-    required: true,
-  },
-  refer : {
-    type: String,
-
-  },
+    businessName: {
+      type: String,
+      required: true,
+    },
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
+    confirmPassword: {
+      type: String,
+    },
+    country: {
+      type: String,
+    },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
+    activeCustomers: {
+      type: String,
+      required: true,
+    },
+    refer: {
+      type: String,
+    },
   },
 
-  
   {
+    timestamps: true,
     toJSON: {
       transform(doc, ret, options) {
         ret.id = ret._id;
