@@ -1,13 +1,13 @@
-import mongoose, { mongo } from 'mongoose';
+import mongoose, { Types, mongo } from 'mongoose';
 import { Password } from '../services/password';
+import { Schema } from 'zod';
 
 //interface that describes the properties to create a new Gym
 interface gymAttrs {
-  accountId: string
-  gymCode: string;
-  invideCode: string;
+  accountId: string;
   name: string;
-  slug: string;
+  phoneNumber: string;
+  users?: Types.ObjectId[];
 }
 
 // interface that describes the properties
@@ -19,17 +19,10 @@ interface gymModel extends mongoose.Model<gymDoc> {
 // interface that describes the properties
 // of a Gym Document
 interface gymDoc extends mongoose.Document {
-  accountId: string
-  businessName: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword?: string;
-  country?: string;
+  accountId: string;
+  name: string;
   phoneNumber: string;
-  activeCustomers: string;
-  refer?: string;
+  users?: Types.ObjectId[];
 }
 
 const gymSchema = new mongoose.Schema(
@@ -37,46 +30,24 @@ const gymSchema = new mongoose.Schema(
     accountId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',
-      required: true
+      required: true,
     },
-    email: {
+    
+    name: {
       type: String,
       required: true,
     },
-    password: {
-      type: String,
-      required: true,
-    },
-
-    businessName: {
-      type: String,
-      required: true,
-    },
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
-      type: String,
-      required: true,
-    },
-    confirmPassword: {
-      type: String,
-    },
-    country: {
-      type: String,
-    },
+   
     phoneNumber: {
       type: String,
       required: true,
     },
-    activeCustomers: {
-      type: String,
-      required: true,
-    },
-    refer: {
-      type: String,
-    },
+    users: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    ]
   },
 
   {
@@ -92,14 +63,7 @@ const gymSchema = new mongoose.Schema(
   }
 );
 
-// pre hook will run whenever .save onvoked, thus hasing the password if it is modified
-gymSchema.pre('save', async function (done) {
-  if (this.isModified('password')) {
-    const hashedPassword = await Password.toHash(this.get('password'));
-    this.set('password', hashedPassword);
-  }
-  done();
-});
+
 
 gymSchema.statics.build = (attrs: gymAttrs) => {
   return new Gym(attrs);

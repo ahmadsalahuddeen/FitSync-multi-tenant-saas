@@ -4,8 +4,8 @@ import { Password } from '../services/password';
 //interface that describes the properties to create a new Account
 interface accountAttrs {
   currentPeriodEnds?: Date;
-  maxCustomer?: number;
-  plan: 'starter' | 'accelarate' | 'ultimate' | 'freeTrial';
+  maxCustomer: number;
+  subscriptionType: 'starter' | 'accelarate' | 'ultimate' | 'freeTrial';
   // gyms: string[];
   stripeSubscriptionId?: string;
   stripeCustomerId?: string;
@@ -22,8 +22,7 @@ interface accountModel extends mongoose.Model<accountDoc> {
 interface accountDoc extends mongoose.Document {
   currentPeriodEnds?: Date;
   maxCustomer: number;
-  plan: 'starter' | 'accelarate' | 'ultimate' | 'freeTrial';
-  // gyms: string[];
+  subscriptionType: 'starter' | 'accelarate' | 'ultimate' | 'freeTrial';
   stripeSubscriptionId?: string;
   stripeCustomerId?: string;
 }
@@ -40,14 +39,8 @@ const accountSchema = new mongoose.Schema(
     maxCustomer: {
       type: Number,
     },
-    // gyms: [
-    //   {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Gym',
-    //     required: true,
-    //   },
-    // ],
-    plan: {
+ 
+    subscriptionType: {
       type: String,
       enum: ['starter', 'accelarate', 'ultimate', 'freeTrial'],
     },

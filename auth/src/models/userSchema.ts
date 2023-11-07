@@ -2,8 +2,8 @@ import mongoose, { Mongoose, Schema, Types, mongo } from 'mongoose';
 import { Password } from '../services/password';
 
 type GymInfo = {
-  gymId: Types.ObjectId; // Type for Schema.Types.ObjectId
-  gymName: string;
+  gymId: string; // Type for Schema.Types.ObjectId
+  name: string;
 }
 
 //interface that describes the properties to create a new User
@@ -72,18 +72,12 @@ const userSchema = new mongoose.Schema(
           ref: 'Gym',
           required: true,
         },
-        gymName: {
+        name: {
           type: String,
         },
       },
     ],
-    users: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-      },
-    ],
+
   },
 
   {
