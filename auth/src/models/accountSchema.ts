@@ -3,12 +3,12 @@ import { Password } from '../services/password';
 
 //interface that describes the properties to create a new Account
 interface accountAttrs {
-  currentPeriodEnds: Date;
+  currentPeriodEnds?: Date;
   maxCustomer?: number;
   plan: 'starter' | 'accelarate' | 'ultimate' | 'freeTrial';
-  gyms: string[];
-  stripeSubscriptionId?: string,
-  stripeCustomerId?: string
+  // gyms: string[];
+  stripeSubscriptionId?: string;
+  stripeCustomerId?: string;
 }
 
 // interface that describes the properties
@@ -20,34 +20,41 @@ interface accountModel extends mongoose.Model<accountDoc> {
 // interface that describes the properties
 // of a Account Document
 interface accountDoc extends mongoose.Document {
-  currentPeriodEnds: Date;
+  currentPeriodEnds?: Date;
   maxCustomer: number;
   plan: 'starter' | 'accelarate' | 'ultimate' | 'freeTrial';
-  gyms: string[];
-  stripeSubscriptionId?: string,
-  stripeCustomerId?: string
+  // gyms: string[];
+  stripeSubscriptionId?: string;
+  stripeCustomerId?: string;
 }
 
 const accountSchema = new mongoose.Schema(
   {
+    stripeCustomerId: String,
+
+    stripeSubscriptionId: String,
+
     currentPeriodEnds: {
       type: Date,
-
     },
     maxCustomer: {
-      type: Number
+      type: Number,
     },
-    gyms: {
-      type: Schema.Types.ObjectId,
-      ref: 'Gym', // This should match the model name in AuthorModel
-    },
+    // gyms: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Gym',
+    //     required: true,
+    //   },
+    // ],
     plan: {
       type: String,
-      enum: ['starter' , 'accelarate' , 'ultimate', 'freeTrial']
-    }
+      enum: ['starter', 'accelarate', 'ultimate', 'freeTrial'],
+    },
   },
 
   {
+    timestamps: true,
     toJSON: {
       transform(doc, ret, options) {
         ret.id = ret._id;
@@ -72,6 +79,9 @@ accountSchema.statics.build = (attrs: accountAttrs) => {
   return new Account(attrs);
 };
 
-const Account = mongoose.model<accountDoc, accountModel>('Account', accountSchema);
+const Account = mongoose.model<accountDoc, accountModel>(
+  'Account',
+  accountSchema
+);
 
 export { Account };

@@ -1,14 +1,21 @@
-import mongoose, { Mongoose, mongo } from 'mongoose';
+import mongoose, { Mongoose, Schema, Types, mongo } from 'mongoose';
 import { Password } from '../services/password';
+
+type GymInfo = {
+  gymId: Types.ObjectId; // Type for Schema.Types.ObjectId
+  gymName: string;
+}
 
 //interface that describes the properties to create a new User
 interface userAttrs {
-  accountId: string
+  accountId: string;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  role: 'owner' | 'member'
+  role: 'owner' | 'member';
+  gyms: GymInfo[]
+
 }
 
 // interface that describes the properties
@@ -20,12 +27,13 @@ interface userModel extends mongoose.Model<userDoc> {
 // interface that describes the properties
 // of a User Document
 interface userDoc extends mongoose.Document {
-  accountId: string
+  accountId: string;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  role: 'owner' | 'member'
+  role: 'owner' | 'member';
+  gyms: GymInfo[]
 }
 
 const userSchema = new mongoose.Schema(
@@ -33,7 +41,7 @@ const userSchema = new mongoose.Schema(
     accountId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',
-      required: true
+      required: true,
     },
     email: {
       type: String,
@@ -57,6 +65,25 @@ const userSchema = new mongoose.Schema(
       enum: ['owner', 'member'],
       default: 'member',
     },
+    gyms: [
+      {
+        gymId: {
+          type: Schema.Types.ObjectId,
+          ref: 'Gym',
+          required: true,
+        },
+        gymName: {
+          type: String,
+        },
+      },
+    ],
+    users: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+    ],
   },
 
   {

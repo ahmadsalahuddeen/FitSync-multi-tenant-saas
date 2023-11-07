@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 const route = express.Router();
 import { body, validationResult } from 'express-validator';
 import { RequestValidationError } from '../errors/request-validation-error';
-import { Tenant } from '../models/accountSchema';
+import { Account, Tenant } from '../models/accountSchema';
 import { BadRequestError } from '../errors/bad-request-error';
 import jwt from 'jsonwebtoken';
 import { validateRequest } from '../middlewares/request-vaidation';
@@ -41,7 +41,9 @@ route.post(
     if (password !== confirmPassword) {
       throw new BadRequestError('confirm password does not match');
     }
-
+const account = new Account({
+  
+})
     const user = User.build({
       email,
       password,
@@ -50,7 +52,7 @@ route.post(
       lastName,
     });
     await user.save();
-    
+
 
     console.log('hiiii');
     // generate jwt token
