@@ -1,15 +1,18 @@
 import axios from "@/lib/axios";
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const handler = NextAuth({
- 
+
+
+
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       credentials: {
         email: {},
         password: {},
       },
+
       async authorize(credentials, req) {
         const res = await axios.post("/api/auth/users/signin", {
           email: credentials?.email,
@@ -26,6 +29,9 @@ const handler = NextAuth({
       },
     }),
   ],
-});
+};
 
-export { handler as GET, handler as POST };
+
+const handler = NextAuth(authOptions)
+
+export {handler as GET, handler as POST}
