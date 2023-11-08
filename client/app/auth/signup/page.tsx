@@ -52,7 +52,7 @@ const SignUp = (props: Props) => {
   type Input = z.infer<typeof registerSchema>;
 
   const { doRequest } = useRequest({
-    url: "/api/users/tenant/signup",
+    url: "/api/auth/users/tenant/signup",
     method: "post",
   });
 
@@ -97,7 +97,7 @@ const SignUp = (props: Props) => {
   //   }: Input) => {
   //     // try {
 
-  //     const response = await axios.post(`/api/users/tenant/signup`, {
+  //     const response = await axios.post(`/api/auth/users/tenant/signup`, {
   //       firstName,
   //       lastName,
   //       businessName,

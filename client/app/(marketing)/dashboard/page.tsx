@@ -12,7 +12,7 @@ type Props = {};
 const Dashboard = async (props: Props) => {
   const session = getServerSession()
 const onclick = async ()=>{
-const res = await api.get('/api/users/currentUser')
+const res = await api.get('/api/auth/users/currentUser')
 console.log(res)
 }
   

@@ -1,11 +1,11 @@
 import request from "supertest";
-import { app } from '../../app'
+import { app } from '../../../app'
 
 
 
 it('returns 201 on succefull request', async () => {
   return request(app)
-    .post('/api/users/signup')
+    .post('/api/auth/users/signup')
     .send({
       email: "test@test.test",
       password: "password"
@@ -18,7 +18,7 @@ it('returns 201 on succefull request', async () => {
 it('returns 400 on invalid email and password', async () => {
   // invalid email
   await request(app)
-    .post('/api/users/signup')
+    .post('/api/auth/users/signup')
     .send({
       email: "invalid@test",
       password: "password"
@@ -28,7 +28,7 @@ it('returns 400 on invalid email and password', async () => {
 
   // invalid pasword
   await request(app)
-    .post('/api/users/signup')
+    .post('/api/auth/users/signup')
     .send({
       email: "test@test.com",
       password: ""
@@ -39,7 +39,7 @@ it('returns 400 on invalid email and password', async () => {
 it('dissallows duplicate email', async () => {
   // invalid email
   await request(app)
-    .post('/api/users/signup')
+    .post('/api/auth/users/signup')
     .send({
       email: "test@test.com",
       password: "password"
@@ -49,7 +49,7 @@ it('dissallows duplicate email', async () => {
 
   // invalid pasword
   await request(app)
-    .post('/api/users/signup')
+    .post('/api/auth/users/signup')
     .send({
       email: "test@test.com",
       password: "password"
@@ -60,7 +60,7 @@ it('dissallows duplicate email', async () => {
 
 it('sets a cookie after succesfull signup', async () => {
   const response = await request(app)
-    .post('/api/users/signup')
+    .post('/api/auth/users/signup')
     .send({
       email: "test@test.test",
       password: "password"

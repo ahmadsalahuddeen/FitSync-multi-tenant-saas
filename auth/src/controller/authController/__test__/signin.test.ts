@@ -1,11 +1,11 @@
 import request from "supertest"
 
-import { app } from '../../app'
+import { app } from '../../../app'
 
 
 it('Fails when an invalid email is given', async () => {
   await request(app)
-    .post('/api/users/signin')
+    .post('/api/auth/users/signin')
     .send({
       email: "test@test.com",
       password: "password"
@@ -17,7 +17,7 @@ it('Fails when an invalid email is given', async () => {
 it('Fails when an wrong password is given', async () => {
   //registering
   await request(app)
-    .post('/api/users/signup')
+    .post('/api/auth/users/signup')
     .send({
       email: 'test@test.com',
       password: "password"
@@ -26,7 +26,7 @@ it('Fails when an wrong password is given', async () => {
 
   //login
   await request(app)
-    .post('/api/users/signin')
+    .post('/api/auth/users/signin')
     .send({
       email: "test@test.com",
       //providing a wrong password
@@ -37,7 +37,7 @@ it('Fails when an wrong password is given', async () => {
 
 it('responds with a cookies when given a valid credentials ', async () => {
   await request(app)
-    .post('/api/users/signup')
+    .post('/api/auth/users/signup')
     .send({
       email: 'test@test.com',
       password: "password"
@@ -46,7 +46,7 @@ it('responds with a cookies when given a valid credentials ', async () => {
 
 
   const response = await request(app)
-    .post('/api/users/signin')
+    .post('/api/auth/users/signin')
     .send({
       email: "test@test.com",
       password: "password"

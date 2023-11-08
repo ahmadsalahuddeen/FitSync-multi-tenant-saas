@@ -11,7 +11,7 @@ const handler = NextAuth({
         password: {},
       },
       async authorize(credentials, req) {
-        const res = await axios.post("/api/users/signin", {
+        const res = await axios.post("/api/auth/users/signin", {
           email: credentials?.email,
           password: credentials?.password,
         });
