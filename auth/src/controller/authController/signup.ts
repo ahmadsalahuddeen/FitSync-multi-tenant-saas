@@ -35,7 +35,7 @@ export   const tenantSignup = async  (req: Request, res: Response) => {
   }
   if (password !== confirmPassword) {
     throw new BadRequestError('confirm password does not match');
-  }
+  } 
 
   try {
     // create account, gym, user document and save to DB
@@ -71,19 +71,21 @@ export   const tenantSignup = async  (req: Request, res: Response) => {
    const payload =  {
       id: user.id,
       email: user.email,
-      role: 'ADMIN',
+      role: user.role,
     }
     // generate jwt token
-    const userJwt = jwt.sign(payload,
+    const accessToken = jwt.sign(payload,
       process.env.JWT_KEY! 
     );
     // store the token in session
     req.session = {
-      jwt: userJwt,
+      jwt: accessToken,
     };
 
+    console.log(req.session, 'session debuggin')
+
     res.status(201).send({user, backendTokens: {
-      accessToken: userJwt,
+      accessToken,
       refreshToken: jwt.sign(payload ,process.env.JWT_KEY!, {expiresIn: '7d'} )
     }});
   } catch (error) {

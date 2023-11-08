@@ -3,6 +3,7 @@ import { validateRequest } from '../middlewares/request-vaidation';
 import { tenantSignup } from '../controller/authController/signup';
 import { signout } from '../controller/authController/signout';
 import { userSignIn } from '../controller/authController/signin';
+import { getCurrentUser } from '../controller/authController/current-user';
 
 const authRoute = require('express').Router();
 
@@ -36,6 +37,7 @@ authRoute.post(
 );
 
 authRoute.post('/users/signout', signout);
+authRoute.get('/users/currentUser', getCurrentUser);
 
 
 
