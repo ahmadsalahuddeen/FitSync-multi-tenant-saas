@@ -4,6 +4,7 @@ import { tenantSignup } from '../controller/authController/signup';
 import { signout } from '../controller/authController/signout';
 import { userSignIn } from '../controller/authController/signin';
 import { getCurrentUser } from '../controller/authController/current-user';
+import auth from '../middlewares/auth';
 
 const authRoute = require('express').Router();
 
@@ -37,7 +38,7 @@ authRoute.post(
 );
 
 authRoute.post('/users/signout', signout);
-authRoute.get('/users/currentUser', getCurrentUser);
+authRoute.get('/users/currentuser',auth, getCurrentUser);
 
 
 

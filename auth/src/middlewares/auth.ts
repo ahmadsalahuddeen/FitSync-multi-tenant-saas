@@ -23,25 +23,6 @@ declare global {
   }
 }
 
-export const currentUser = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (!req.session?.jwt) {
-    console.log('nojwtsecret');
-    return next();
-  }
-
-  try {
-    const payload = jwt.verify(
-      req.session?.jwt,
-      process.env.JWT_KEY!
-    ) as userPayload;
-    req.currentUser = payload;
-  } catch (error) {}
-  next();
-};
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   try {
