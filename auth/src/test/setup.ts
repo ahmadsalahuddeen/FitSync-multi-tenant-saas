@@ -1,53 +1,62 @@
-import { MongoMemoryServer } from 'mongodb-memory-server'
-import mongoose from 'mongoose'
-import request from 'supertest'
-import { app } from '../app'
-
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import mongoose from 'mongoose';
+import request from 'supertest';
+import { app } from '../app';
 
 declare global {
-  var signup: ()=> Promise<string[]>
+  var signup: () => Promise<string[]>;
 }
 
 let mongo: any;
 
 // hook function that's going to run before all of the test
-beforeAll(async()=>{
-  process.env.JWT_KEY = 'asdfadf'
+beforeAll(async () => {
+  process.env.JWT_KEY = 'asdfadf';
   mongo = await MongoMemoryServer.create();
 
-  const mongoUri =  await mongo.getUri();
+  const mongoUri = await mongo.getUri();
 
-  await mongoose.connect(mongoUri)
+  await mongoose.connect(mongoUri);
 });
 
 // hook that run before each of the test
-beforeEach( async ()=> {
+beforeEach(async () => {
   const collections = await mongoose.connection.db.collections();
 
-  for (let collection of collections){
-    await collection.deleteMany({})
+  for (let collection of collections) {
+    await collection.deleteMany({});
   }
 });
 
 // hook that run after all the tests are complete
-afterAll( async ()=>{
+afterAll(async () => {
   await mongo.stop();
   await mongoose.connection.close();
-})
+});
 
-
-global.signup = async ()=>{
+global.signup = async () => {
   const email = 'test@test.com';
-  const password = 'password'
+  const password = 'password';
+  const businessName = 'testValue';
+  const firstName = 'testValue';
+  const lastName = 'testValue';
+  const phoneNumber = 'testValue';
+  const confirmPassword = 'password'
 
   const response = await request(app)
-  .post('/api/auth/users/signup') 
-  .send({
-    email, password
-  })
-  .expect(201)
+    .post('/api/auth/tenant/signup')
+    .send({
+      email,
+      password,
+      businessName,
+      firstName,
+      lastName,
+      phoneNumber,
+      confirmPassword
+    })
+    .expect(201);
 
   const cookie = response.get('Set-Cookie');
 
   return cookie;
-}
+};

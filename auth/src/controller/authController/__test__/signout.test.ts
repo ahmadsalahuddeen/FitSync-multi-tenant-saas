@@ -3,10 +3,15 @@ import { app } from '../../../app';
 
 it('clears the cookie after  signing out', async () => {
   await request(app)
-    .post('/api/auth/users/signup')
+    .post('/api/auth/tenant/signup')
     .send({
-      email: "test@test.test",
-      password: "password"
+      email : 'test@test.com',
+      password : 'password',
+      businessName : 'testValue',
+      firstName : 'testValue',
+      lastName : 'testValue',
+      phoneNumber : 'testValue',
+      confirmPassword : 'password'
     })
     .expect(201)
 

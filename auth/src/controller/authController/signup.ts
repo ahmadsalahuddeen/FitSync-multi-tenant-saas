@@ -23,8 +23,8 @@ export   const tenantSignup = async  (req: Request, res: Response) => {
     firstName,
     lastName,
     phoneNumber,
-    activeCustomers,
-    refer,
+    // activeCustomers,
+    // refer,
     confirmPassword,
   } = req.body;
 

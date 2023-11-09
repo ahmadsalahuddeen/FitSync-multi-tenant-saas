@@ -17,10 +17,15 @@ it('Fails when an invalid email is given', async () => {
 it('Fails when an wrong password is given', async () => {
   //registering
   await request(app)
-    .post('/api/auth/users/signup')
+    .post('/api/auth/tenant/signup')
     .send({
-      email: 'test@test.com',
-      password: "password"
+      email : 'test@test.com',
+      password : 'password',
+      businessName : 'testValue',
+      firstName : 'testValue',
+      lastName : 'testValue',
+      phoneNumber : 'testValue',
+      confirmPassword : 'password'
     })
     .expect(201)
 
@@ -37,10 +42,15 @@ it('Fails when an wrong password is given', async () => {
 
 it('responds with a cookies when given a valid credentials ', async () => {
   await request(app)
-    .post('/api/auth/users/signup')
+    .post('/api/auth/tenant/signup')
     .send({
-      email: 'test@test.com',
-      password: "password"
+      email : 'test@test.com',
+      password : 'password',
+      businessName : 'testValue',
+      firstName : 'testValue',
+      lastName : 'testValue',
+      phoneNumber : 'testValue',
+      confirmPassword : 'password'
     })
     .expect(201)
 
