@@ -13,7 +13,7 @@ type Props = {};
 const Dashboard =  (props: Props) => {
    const {data : session}  = useSession()
 
-console.log(session)
+
   
   return <div >
 
