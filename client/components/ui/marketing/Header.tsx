@@ -55,7 +55,7 @@ function Header() {
                       </Link>
                     </Button>
                   ))}
-                  {session?.user && (
+                  {!session?.user && (
                     <Button
                       className="mt-4 "
                       size="sm"
@@ -112,7 +112,7 @@ function Header() {
               <Moon className="absolute h-6 w-6 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               <span className="sr-only">Toggle Theme</span>
             </Button>
-              {session?.user && (
+              {!session?.user && (
             <div className="hidden md:block">
                 <Button className="mr-6 " size="sm" asChild variant="secondary">
                   <Link

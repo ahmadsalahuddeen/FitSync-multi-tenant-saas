@@ -5,7 +5,7 @@ import React from "react";
 
 import axios from "@/lib/axios";
 import api from "@/lib/axios";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 type Props = {};
 
@@ -15,10 +15,12 @@ const Dashboard =  (props: Props) => {
 
 
   
-  return <div>
-<h1>{}</h1>
-    
+  return <div >
+<h1 onClick={()=> signOut( {redirect: true, callbackUrl: '/'})}>
+
     {!session?.user ? 'login' : 'logout'}
+</h1>
+    
     </div>;
 };
 

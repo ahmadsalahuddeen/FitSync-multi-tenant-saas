@@ -13,31 +13,35 @@ export const authOptions: NextAuthOptions = {
       },
 
       async authorize(credentials, req) {
-        
-         
-          const response = await axios.post("/api/auth/users/signin", {
-            email: credentials?.email,
-            password: credentials?.password,
-          })
+        const response = await axios.post("/api/auth/users/signin", {
+          email: credentials?.email,
+          password: credentials?.password,
+        });
 
-   
-          const user = response?.data;
-  
-        if(user){
+        const user = response?.data;
 
+        if (user) {
           return user;
-        }else {
-          throw new Error( JSON.stringify({ errors: response.data.errors, status: false }))
+        } else {
+          throw new Error(
+            JSON.stringify({ errors: response.data.errors, status: false }),
+          );
         }
-        
-
       },
     }),
   ],
 
   callbacks: {
+    //callback to return both session and token with typsafe 
     async jwt({ token, user }) {
+      if (user) return { ...token, ...user };
+
       return token;
+    },
+    async session({ token, session }) {
+      session.user = token.user;
+      session.backendTokens = token.backendTokens;
+      return session;
     },
   },
 };

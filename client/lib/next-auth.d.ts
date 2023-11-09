@@ -25,9 +25,22 @@ interface Session {
 }
 
 
-declare module "next-auth"{ 
+// type for next-auth session
+declare module "next-auth" {
   interface Session {
     user: User;
     backendTokens: BackendTokens;
   }
+}
+
+
+
+// type for next-auth jwt token 
+import { JWT } from "next-auth/jwt";
+
+declare module "next-auth/jwt"{
+  interface JWT{
+    user: User;
+    backendTokens: BackendTokens;
   }
+}
