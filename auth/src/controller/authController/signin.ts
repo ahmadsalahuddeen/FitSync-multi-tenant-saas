@@ -35,7 +35,7 @@ export const userSignIn = async (req: Request, res: Response) => {
   };
 
   res.status(200).send({
-    existingUser,
+    user: existingUser,
     backendTokens: {
       accessToken,
       refreshToken: jwt.sign(payload, process.env.JWT_KEY!, {

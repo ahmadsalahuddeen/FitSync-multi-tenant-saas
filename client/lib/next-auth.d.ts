@@ -35,7 +35,7 @@ declare module "next-auth" {
 
 
 
-// type for next-auth jwt token 
+// type for next-auth jwt token paylaod
 import { JWT } from "next-auth/jwt";
 
 declare module "next-auth/jwt"{

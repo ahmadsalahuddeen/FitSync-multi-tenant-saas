@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-    //callback to return both session and token with typsafe 
+
     async jwt({ token, user }) {
       if (user) return { ...token, ...user };
 
