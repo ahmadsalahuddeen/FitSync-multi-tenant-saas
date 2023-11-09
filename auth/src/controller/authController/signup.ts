@@ -82,14 +82,14 @@ export   const tenantSignup = async  (req: Request, res: Response) => {
       jwt: accessToken,
     };
 
-    console.log(req.session, 'session debuggin')
+
 
     res.status(201).send({user, backendTokens: {
       accessToken,
       refreshToken: jwt.sign(payload ,process.env.JWT_KEY!, {expiresIn: '7d'} )
     }});
   } catch (error) {
-    console.log(error, 'erro while creating user');
+    console.log(error, 'error while creating user');
   }
 }
 

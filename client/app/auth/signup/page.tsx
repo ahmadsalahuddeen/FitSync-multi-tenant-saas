@@ -52,13 +52,13 @@ const SignUp = (props: Props) => {
   type Input = z.infer<typeof registerSchema>;
 
   const { doRequest } = useRequest({
-    url: "/api/auth/users/tenant/signup",
+    url: "/api/auth/tenant/signup",
     method: "post",
   });
 
   // schema to ts types
 
-  // react hook form
+  // react hook form 
   const form = useForm<Input>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -77,46 +77,6 @@ const SignUp = (props: Props) => {
 
   const watcher = form.watch();
 
-  // const {
-  //   mutate: asdf,
-  //   isLoading,
-  //   isError,
-  //   error,
-  // } = useMutation({
-  //   mutationFn: async ({
-  //     firstName,
-  //     lastName,
-  //     businessName,
-  //     activeCustomers,
-  //     password,
-  //     confirmPassword,
-  //     country,
-  //     email,
-  //     phoneNumber,
-  //     refer,
-  //   }: Input) => {
-  //     // try {
-
-  //     const response = await axios.post(`/api/auth/users/tenant/signup`, {
-  //       firstName,
-  //       lastName,
-  //       businessName,
-  //       activeCustomers,
-  //       password,
-  //       confirmPassword,
-  //       country,
-  //       email,
-  //       phoneNumber,
-  //       refer,
-  //     });
-
-  //     console.log(response.data);
-
-  //     // } catch (err) {
-  //     //   console.log(err.response.data)
-  //     // }
-  //   },
-  // });
 
   function onSubmit(input: Input) {
     try {
@@ -135,30 +95,7 @@ const SignUp = (props: Props) => {
       {
         onSuccess: ()=> router.push('/dashboard')
       });
-      // asdf(
-      //   {
-      //     firstName: input.firstName,
-      //     lastName: input.lastName,
-      //     businessName: input.businessName,
-      //     activeCustomers: input.activeCustomers,
-      //     password: input.password,
-      //     confirmPassword: input.confirmPassword,
-      //     country: input.country,
-      //     email: input.email,
-      //     phoneNumber: input.phoneNumber,
-      //     refer: input.refer,
-      //   },
-      //   {
-      //     onSuccess: (response) => {
-      //       router.push('/dashboard')
-      //     },
-      //     onError: (error: any) => {
-      //       error.response.data.errors.map((err: any) => {
-      //         toast.error(err.message);
-      //       });
-      //     },
-      //   },
-      // );
+     
     } catch (err) {
       console.log(err);
     }

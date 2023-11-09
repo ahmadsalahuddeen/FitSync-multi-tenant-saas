@@ -50,8 +50,6 @@ const SignIn = (props: Props) => {
 
   type Input = z.infer<typeof signInSchema>;
 
-
-
   // react hook form
   const form = useForm<Input>({
     resolver: zodResolver(signInSchema),
@@ -63,16 +61,24 @@ const SignIn = (props: Props) => {
 
   const watcher = form.watch();
 
-  async function onSubmit (input: Input) {
+  async function onSubmit(input: Input) {
     try {
-const response = await signIn("credentials", {
+      const response = await signIn("credentials", {
         email: input.email,
         password: input.password,
-        redirect: false
+        redirect: false,
+
+        
       });
-      if(!response?.error){
-router.push('/dashboard')
-router.refresh();
+      const error = response?.error
+      if(error){
+        if(error == 'Request failed with status code 400') toast.error('invalid email or password')
+        console.log(error)
+
+      }
+      if (!response?.error) {
+        router.push("/dashboard");
+        router.refresh();
       }
     } catch (err) {
       console.log(err);

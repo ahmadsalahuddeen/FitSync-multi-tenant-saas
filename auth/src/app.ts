@@ -1,6 +1,7 @@
 import express from 'express'
 import 'express-async-errors'
 import { json } from 'express'
+const cors = require('cors');
 
 require('dotenv').config()
 
@@ -14,8 +15,13 @@ import { NotFoundError } from './errors/notFound-error'
 import cookieSession from 'cookie-session'
 const app = express()
 
-var cors = require('cors');
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 // app.use((req, res, next) => {
 //   res.setHeader("Access-Control-Allow-Origin", "*");
 //   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, authorization");
