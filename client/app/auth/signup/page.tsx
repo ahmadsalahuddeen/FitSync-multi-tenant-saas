@@ -1,7 +1,7 @@
 "use client";
 import Container from "@/components/ui/container";
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import axios from "@/lib/axios";
 
 import {
@@ -42,6 +42,7 @@ import { Toaster, toast } from "sonner";
 import { easeInOut, motion, useMotionValue } from "framer-motion";
 import { useRouter } from "next/navigation";
 import useRequest from "@/hooks/use-request";
+import Link from "next/link";
 
 type Props = {};
 
@@ -103,19 +104,36 @@ const SignUp = (props: Props) => {
 
   return (
     <>
-      <div className=" absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 ">
-        <Card className="w-[350px] md:w-[470px]">
-          <CardHeader>
-            <CardTitle>
-              {FormStep === 0
-                ? "Try FitSync for free"
+     <div className="container flex h-auto w-screen flex-col items-center justify-center">
+        <Link
+          href="/"
+          className={cn(
+            buttonVariants({ variant: "ghost" }),
+            "absolute left-4 top-4 md:left-8 md:top-8",
+          )}
+        >
+          <>
+            <Icons.chevronLeft className="mr-2 h-4 w-4" />
+            Back
+          </>
+        </Link>
+        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px] my-40">
+          <div className="flex flex-col space-y-2 text-center">
+            <Icons.logo className="mx-auto h-6 w-6  text-green-600" />
+            <h1 className="text-2xl font-semibold tracking-tight">
+            {FormStep === 0
+                ? "Let's get started"
                 : `Setup ${watcher.businessName} `}
-            </CardTitle>
-            <CardDescription className="text-muted-foreground ">
-              {FormStep === 0
+            </h1>
+            <p className="text-sm text-muted-foreground">
+            {FormStep === 0
                 ? "Explore your free 14-day trial🔥."
                 : `Just a few more details to get started📈`}
-            </CardDescription>
+            </p>
+          </div>
+          <Card className="">
+          <CardHeader>
+           
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -145,7 +163,7 @@ const SignUp = (props: Props) => {
                         <FormItem>
                           <FormLabel>First Name</FormLabel>
                           <FormControl>
-                            <Input placeholder="John" {...field} />
+                            <Input  placeholder="John" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -411,8 +429,34 @@ const SignUp = (props: Props) => {
               </form>
             </Form>
           </CardContent>
-        </Card>
+          {FormStep == 0 && (
+            <p className="px-8 pb-6 text-center text-sm text-muted-foreground">
+              <Link
+                href="/auth/signin"
+                className="hover:text-brand underline underline-offset-4"
+              >
+                Already have an account? Sign In
+              </Link>
+            </p>
+
+          )}
+          </Card>
+
+        </div>
       </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
     </>
   );
 };

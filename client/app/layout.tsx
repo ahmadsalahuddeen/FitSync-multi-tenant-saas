@@ -29,8 +29,6 @@ export const metadata: Metadata = {
   },
 };
 
-
-
 export default function RootLayout({
   children,
 }: {
@@ -39,7 +37,21 @@ export default function RootLayout({
   return (
     <>
       <html lang="en" suppressHydrationWarning>
-        <head></head>
+        <head>
+          <link rel="icon" href="/favicon.ico" sizes="any" />
+          <link
+            rel="icon"
+            href="/icon?<generated>"
+            type="image/<generated>"
+            sizes="<generated>"
+          />
+          <link
+            rel="apple-touch-icon"
+            href="/apple-icon?<generated>"
+            type="image/<generated>"
+            sizes="<generated>"
+          />
+        </head>
         <body
           className={cn(
             "min-h-screen bg-background font-sans antialiased",
@@ -48,9 +60,7 @@ export default function RootLayout({
           )}
         >
           {/* configquered and sepreated Providers in a different file */}
-          <Providers>
-            {children}
-            </Providers>
+          <Providers>{children}</Providers>
         </body>
       </html>
     </>

@@ -99,10 +99,10 @@ export default function PricingPage() {
         </div>
       </div>
       
-      <div className="grid w-full items-start gap-10 rounded-lg border p-10 md:grid-cols-[1fr_200px]">
+      <div className=" w-full items-start gap-10 rounded-lg border p-10 md:grid-cols-[1fr_200px]">
         <div className="grid gap-6">
           <h3 className="text-xl font-bold sm:text-2xl">
-            Full features for everyone. <br />
+            Full features for everyone. 
             Never get upsold.
           </h3>
           <ul className="grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
@@ -130,17 +130,7 @@ export default function PricingPage() {
             </li>
           </ul>
         </div>
-        <div className="flex flex-col gap-4 text-center">
-          <div>
-            <h4 className="text-7xl font-bold">🏋️</h4>
-            <p className="text-sm font-medium text-muted-foreground">
-
-            </p>
-          </div>
-          <Link href="/login" className={cn(buttonVariants({ size: 'lg' }))}>
-            SIGN ME UP
-          </Link>
-        </div>
+       
       </div>
       <div className="grid w-full items-start gap-10 rounded-lg border p-10 md:grid-cols-[1fr_200px]">
         <div className="grid gap-6">
@@ -160,7 +150,7 @@ export default function PricingPage() {
       </div>
       <div className="mx-auto flex w-full max-w-[58rem] flex-col gap-4">
         <p className="max-w-[85%] leading-normal text-muted-foreground sm:leading-7">
-          FitSync is a demo app.{' '}
+          FitSync is in currently in a Test mode.{' '}
           <strong>You can test the upgrade and won&apos;t be charged.</strong>
         </p>
       </div>
