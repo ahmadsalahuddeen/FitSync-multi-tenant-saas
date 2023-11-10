@@ -1,3 +1,5 @@
+import { Icon } from "@/components/icons"
+
 export type SiteConfig = {
   name: string
   description: string
@@ -15,6 +17,5 @@ export type SideNavItem = {
   href: string;
   icon?: JSX.Element;
   submenu?: boolean;
-  submMenuItems?: SideNavItem[]
-
-}
+  subMenuItems?: SideNavItem[];
+};

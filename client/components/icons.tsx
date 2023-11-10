@@ -24,6 +24,8 @@ import {
   User,
   X,
   Dumbbell,
+  Home,
+  SettingsIcon,
   type Icon as LucideIcon,
 } from 'lucide-react';
 
@@ -50,6 +52,8 @@ export const Icons = {
   pizza: Pizza,
   sun: SunMedium,
   moon: Moon,
+  home: Home,
+
   laptop: Laptop,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
