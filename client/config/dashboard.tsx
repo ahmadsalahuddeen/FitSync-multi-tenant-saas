@@ -13,20 +13,19 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon:  <Icons.home className=" h-4 w-4"/>,
   },
   {
-    title: 'Projects',
-    href: '/projects',
-    icon: <Icons.chevronLeft className="mr-2 h-4 w-4" />,
+    title: 'Staff',
+    href: '/staff',
+    icon: <Icons.key className="mr-2 h-4 w-4" />,
     submenu: true,
     subMenuItems: [
-      { title: 'All', href: '/projects' },
-      { title: 'Web Design', href: '/projects/web-design' },
-      { title: 'Graphic Design', href: '/projects/graphic-design' },
+      { title: 'Trainer Availability', href: '/staff/availability' },
+     
     ],
   },
   {
-    title: 'Messages',
-    href: '/messages',
-    icon:<Icons.media className=" h-4 w-4"/>,
+    title: 'Customers',
+    href: '/customers',
+    icon:<Icons.users className=" h-4 w-4"/>,
   },
   {
     title: 'Settings',
@@ -34,13 +33,13 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     icon: <Icons.settings className=" h-4 w-4"/>,
     submenu: true,
     subMenuItems: [
-      { title: 'Account', href: '/settings/account' },
+      { title: 'Billing', href: '/settings/billing' },
       { title: 'Privacy', href: '/settings/privacy' },
     ],
   },
   {
-    title: 'Help',
-    href: '/help',
-    icon:<Icons.help className=" h-4 w-4"/>,
+    title: 'My personal Profile',
+    href: '/userProfile',
+    icon:<Icons.user className=" h-4 w-4"/>,
   },
 ];
