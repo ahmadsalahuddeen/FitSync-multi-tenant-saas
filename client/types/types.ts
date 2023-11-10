@@ -8,3 +8,13 @@ export type SiteConfig = {
     github: string
   }
 }
+
+
+export type SideNavItem = {
+  title: string;
+  href: string;
+  icon?: JSX.Element;
+  submenu?: boolean;
+  submMenuItems?: SideNavItem[]
+
+}
