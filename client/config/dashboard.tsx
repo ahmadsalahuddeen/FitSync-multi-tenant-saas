@@ -34,12 +34,11 @@ export const SIDENAV_ITEMS: SideNavItem[] = [
     submenu: true,
     subMenuItems: [
       { title: 'Billing', href: '/settings/billing' },
-      { title: 'Privacy', href: '/settings/privacy' },
     ],
   },
   {
     title: 'My personal Profile',
-    href: '/userProfile',
+    href: '/user-profile',
     icon:<Icons.user className=" h-4 w-4"/>,
   },
 ];

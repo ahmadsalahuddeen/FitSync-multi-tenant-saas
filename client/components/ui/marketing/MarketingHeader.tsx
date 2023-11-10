@@ -23,7 +23,7 @@ const routes = [
   },
 ];
 
-function Header() {
+function MarketingHeader() {
   const { data: session } = useSession();
   const { theme, setTheme } = useTheme();
 
@@ -151,4 +151,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default MarketingHeader;
