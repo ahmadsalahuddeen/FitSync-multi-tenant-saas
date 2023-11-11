@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils"
 import { Icons } from "@/components/icons"
 import { SIDENAV_ITEMS } from "@/config/dashboard"
 import { MobileNav } from "./mobile-nav"
+import { Menu } from "lucide-react"
 
 
 interface MainNavProps {
@@ -36,7 +37,7 @@ export function MainNav({  children }: MainNavProps) {
         className="flex items-center space-x-2 md:hidden"
         onClick={() => setShowMobileMenu(!showMobileMenu)}
       >
-        {showMobileMenu ? <Icons.close /> : <Icons.logo />}
+        {showMobileMenu ? <Icons.close /> : <Menu />}
         <span className="font-bold">Menu</span>
       </button>
       {showMobileMenu && SIDENAV_ITEMS && (
