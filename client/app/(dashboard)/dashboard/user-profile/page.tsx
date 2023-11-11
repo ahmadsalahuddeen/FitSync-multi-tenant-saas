@@ -4,7 +4,13 @@ type Props = {}
 
 const UserProfilePage = (props: Props) => {
   return (
-    <div>UserProfilePage</div>
+    <>
+    <div className='w-full h-[500px] '>UserProfilePage</div>
+    <div className='w-full h-[500px] '>UserProfilePage</div>
+    <div className='w-full h-[500px] '>UserProfilePage</div>
+    <div className='w-full h-[500px] '>UserProfilePage</div>
+    <div className='w-full h-[500px] '>UserProfilePage</div>
+    </>
   )
 }
 
