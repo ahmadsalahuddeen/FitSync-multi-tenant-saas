@@ -33,8 +33,10 @@ export default async function RootLayout({
         <div className="container flex h-16 items-center justify-between py-4">
         <MainNav />
         <div className="flex">
+<div className="hidden md:block">
 
         <GymSwithcer className="mr-4 "/>
+</div>
           <UserAccountNav
             user={{
               name: `${user.firstName} ${user.lastName}`,
@@ -58,31 +60,7 @@ export default async function RootLayout({
 
 
 
-    {/* <div className="flex flex-col space-y-6">
-      <header className="sticky top-0 z-40 border-b bg-background">
-        <div className=" container flex h-16 items-center justify-between py-6 ">
-          <div className="flex ">
-            
-          <MainNav />
-          <div className="ml-6 hidden md:block">
-            <GymSwithcer />
-          </div>
-          </div>
-          <UserAccountNav
-            user={{
-              name: `${user.firstName} ${user.lastName}`,
-              image: null,
-              email: user.email,
-            }}
-          />
-        </div>
-      </header>
-      <main>
-        
-            <SideNav />
 
-        {children}</main>
-    </div> */}
     </>
   );
 }
