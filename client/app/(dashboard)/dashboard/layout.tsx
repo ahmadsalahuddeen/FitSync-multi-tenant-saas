@@ -1,5 +1,6 @@
 import GymSwithcer from "@/components/gym-switcher";
 import { MainNav } from "@/components/main-nav";
+import { DashboardShell } from "@/components/dashboard-shell";
 import {SideNav} from "@/components/side-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { UserAccountNav } from "@/components/user-account-nav";
@@ -52,6 +53,7 @@ export default async function RootLayout({
           <SideNav  />
         </aside>
         <main className="flex w-full flex-1 flex-col overflow-hidden"> 
+
           {children}
         </main>
       </div>
