@@ -25,7 +25,7 @@ export const SideNav = (props: Props) => {
 
 
 
-const MenuItem = ({ item }: { item: SideNavItem }) => {
+export const MenuItem = ({ item }: { item: SideNavItem }) => {
   const pathname = usePathname();
   const [subMenuOpen, setSubMenuOpen] = useState(false);
   const toggleSubMenu = () => {
@@ -60,7 +60,7 @@ const MenuItem = ({ item }: { item: SideNavItem }) => {
                     key={idx}
                     href={subItem.href}
                     className={`text-sm ${
-                      subItem.href === pathname ? 'font-semibold' : ''
+                      subItem.href === pathname ? 'font-semibold  ' : ''
                     }`}
                   >
                     <span>{subItem.title}</span>
