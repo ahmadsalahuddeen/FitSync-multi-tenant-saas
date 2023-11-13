@@ -422,10 +422,10 @@ const SignUp = (props: Props) => {
                         confirmPassowordState.invalid
                       )
                         return;
-                      if (watcher.password !== watcher.confirmPassword) {
-                        toast.error("Password do not match");
-                        return;
-                      }
+                      // if (watcher.password !== watcher.confirmPassword) {
+                      //   toast.error("Password do not match");
+                      //   return;
+                      // }
 
                       setFormStep(1);
                     }}
@@ -436,6 +436,7 @@ const SignUp = (props: Props) => {
                   </Button>
 
                   <Button
+                  disabled={isLoading}
                     type="submit"
                     className={cn({ hidden: FormStep === 0 })}
                   >
