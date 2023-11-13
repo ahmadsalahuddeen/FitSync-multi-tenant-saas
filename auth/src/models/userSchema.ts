@@ -11,6 +11,8 @@ interface userAttrs {
   accountId: string;
   firstName: string;
   lastName: string;
+  image?: string;
+  bio?: string,
   email: string;
   password: string;
   role: 'owner' | 'member';
@@ -30,6 +32,8 @@ interface userDoc extends mongoose.Document {
   accountId: string;
   firstName: string;
   lastName: string;
+  image?: string;
+  bio?: string,
   email: string;
   password: string;
   role: 'owner' | 'member';
@@ -55,6 +59,12 @@ const userSchema = new mongoose.Schema(
     firstName: {
       type: String,
       required: true,
+    },
+    image: {
+      type: String,
+    },
+    bio: {
+      type: String,
     },
     lastName: {
       type: String,

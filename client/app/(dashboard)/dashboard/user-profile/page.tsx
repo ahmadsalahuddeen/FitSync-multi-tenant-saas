@@ -9,7 +9,7 @@ import React from "react";
 
 type Props = {};
 const UserProfilePage = (props: Props) => {
-  const router = useRouter();
+
   const session = getServerSession()
 
   
@@ -17,7 +17,7 @@ const UserProfilePage = (props: Props) => {
   return (
     <>
       <DashboardShell>
-        <DashboardHeader heading={` `} />
+        <DashboardHeader heading={`My Profile`} text="Manage personal account settings" />
       </DashboardShell>
     </>
   );
