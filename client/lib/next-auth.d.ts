@@ -1,12 +1,13 @@
 import NextAuth from "next-auth/next";
 
 //next-auth session object types
-interface Gym {
+export interface Gym {
   gymId: string;
   name: string;
   _id: string;
 }
-interface User {
+
+export interface User   {
   accountId: string;
   email: string;
   firstName: string;
@@ -15,6 +16,7 @@ interface User {
   gyms: Gym[];
   id: string;
 }
+
 interface BackendTokens {
   accessToken: string;
   refreshToken: string;
