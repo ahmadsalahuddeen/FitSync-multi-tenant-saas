@@ -43,6 +43,7 @@ import { easeInOut, motion, useMotionValue } from "framer-motion";
 import { useRouter } from "next/navigation";
 import useRequest from "@/hooks/use-request";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 type Props = {};
 
@@ -52,7 +53,7 @@ const SignUp = (props: Props) => {
 
   type Input = z.infer<typeof registerSchema>;
 
-  const { doRequest } = useRequest({
+  const { doRequest, isError, isLoading } = useRequest({
     url: "/api/auth/tenant/signup",
     method: "post",
   });
@@ -76,31 +77,57 @@ const SignUp = (props: Props) => {
     },
   });
 
-  const watcher = form.watch();
-
-
-  function onSubmit(input: Input) {
+  
+  
+ async function onSubmit(input: Input) {
     try {
       doRequest({
         firstName: input.firstName,
         lastName: input.lastName,
-        businessName: input.businessName,
-        activeCustomers: input.activeCustomers,
-        password: input.password,
-        confirmPassword: input.confirmPassword,
-        country: input.country,
         email: input.email,
+        password: input.password,
         phoneNumber: input.phoneNumber,
+        confirmPassword: input.confirmPassword,
+        activeCustomers: input.activeCustomers,
+        businessName: input.businessName,
+        country: input.country,
         refer: input.refer,
       },
       {
-        onSuccess: ()=> router.push('/dashboard')
-      });
-     
+        onSuccess: async()=> {
+          const response = await signIn("credentials", {
+            email: input.email,
+            password: input.password,
+            redirect: false,
+          });
+          const error = response?.error;
+          if (error) {
+            if (error == "Request failed with status code 400")
+              toast.error("invalid email or password");
+            console.log(error);
+          }
+          if (!response?.error) {
+            router.push("/dashboard");
+            router.refresh();
+          }
+          
+        },
+        onError: (error: any)=>{
+          error.response.data.errors.map((err: any) => {
+            toast.error(err.message);
+          })
+        }
+      },
+      
+      
+      
+      );
+      
     } catch (err) {
       console.log(err);
     }
   }
+  const watcher = form.watch();
 
   return (
     <>
@@ -382,7 +409,7 @@ const SignUp = (props: Props) => {
                         form.getFieldState("confirmPassword");
 
                       // checks the validation result before redirecting step 2 of the form
-                      if (!emailState.isDirty || emailState.invalid) return;
+                      if ( !emailState.isDirty || emailState.invalid) return;
                       if (!phoneState.isDirty || phoneState.invalid) return;
                       if (!firstNameState.isDirty || firstNameState.invalid)
                         return;
@@ -395,10 +422,10 @@ const SignUp = (props: Props) => {
                         confirmPassowordState.invalid
                       )
                         return;
-                      if (watcher.password !== watcher.confirmPassword) {
-                        toast.error("Password do not match");
-                        return;
-                      }
+                      // if (watcher.password !== watcher.confirmPassword) {
+                      //   toast.error("Password do not match");
+                      //   return;
+                      // }
 
                       setFormStep(1);
                     }}
@@ -409,6 +436,7 @@ const SignUp = (props: Props) => {
                   </Button>
 
                   <Button
+                  disabled={isLoading}
                     type="submit"
                     className={cn({ hidden: FormStep === 0 })}
                   >

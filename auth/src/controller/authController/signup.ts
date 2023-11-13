@@ -11,11 +11,7 @@ import { User } from '../../models/userSchema';
 import { getDateNDaysFromNow } from '../../services/date';
 import { Gym } from '../../models/gymSchema';
 
-
-
-
-
-export   const tenantSignup = async  (req: Request, res: Response) => {
+export const tenantSignup = async (req: Request, res: Response) => {
   const {
     email,
     password,
@@ -35,7 +31,7 @@ export   const tenantSignup = async  (req: Request, res: Response) => {
   }
   if (password !== confirmPassword) {
     throw new BadRequestError('confirm password does not match');
-  } 
+  }
 
   try {
     // create account, gym, user document and save to DB
@@ -68,28 +64,28 @@ export   const tenantSignup = async  (req: Request, res: Response) => {
     gym.users = [user.id];
     await gym.save();
 
-   const payload =  {
+    const payload = {
       id: user.id,
       email: user.email,
       role: user.role,
-    }
+    };
     // generate jwt token
-    const accessToken = jwt.sign(payload,
-      process.env.JWT_KEY! 
-    );
+    const accessToken = jwt.sign(payload, process.env.JWT_KEY!);
     // store the token in session
     req.session = {
       jwt: accessToken,
     };
 
-
-
-    res.status(201).send({user, backendTokens: {
-      accessToken,
-      refreshToken: jwt.sign(payload ,process.env.JWT_KEY!, {expiresIn: '7d'} )
-    }});
+    res.status(201).send({
+      user,
+      backendTokens: {
+        accessToken,
+        refreshToken: jwt.sign(payload, process.env.JWT_KEY!, {
+          expiresIn: '7d',
+        }),
+      },
+    });
   } catch (error) {
     console.log(error, 'error while creating user');
   }
-}
-
+};
