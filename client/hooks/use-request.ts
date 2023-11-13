@@ -7,7 +7,7 @@ type Props = {
   url: string;
   method: "post" | "get";
   onSuccess?: (responeData: any) => void;
-};
+}; 
 export default ({ url, method, onSuccess }: Props) => {
   const [errors, setErrors] = React.useState(null);
   const {
