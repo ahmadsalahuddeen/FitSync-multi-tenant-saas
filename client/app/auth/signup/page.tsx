@@ -91,7 +91,7 @@ const SignUp = (props: Props) => {
           phoneNumber: input.phoneNumber,
           confirmPassword: input.confirmPassword,
           activeCustomers: input.activeCustomers,
-          businessName: input.businessName,
+          businessName: input.businessName, 
           country: input.country,
           refer: input.refer,
         });
