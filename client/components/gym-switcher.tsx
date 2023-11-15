@@ -211,5 +211,6 @@ export default function GymSwitcher({ className }: GymSwitcherProps) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    
   )
 }

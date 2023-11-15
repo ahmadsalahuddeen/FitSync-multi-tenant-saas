@@ -13,12 +13,12 @@ import { MobileNav } from "./mobile-nav"
 import { Menu } from "lucide-react"
 
 
-interface MainNavProps {
+interface HeaderNavProps {
 
   children?: React.ReactNode
 }
 
-export function MainNav({  children }: MainNavProps) {
+export function HeaderNav({  children }: HeaderNavProps) {
   const segment = useSelectedLayoutSegment()
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false)
 
@@ -40,6 +40,7 @@ export function MainNav({  children }: MainNavProps) {
         {showMobileMenu ? <Icons.close /> : <Menu />}
         <span className="font-bold">Menu</span>
       </button>
+      
       {showMobileMenu && SIDENAV_ITEMS && (
         <MobileNav items={SIDENAV_ITEMS}>{children}</MobileNav>
       )}
