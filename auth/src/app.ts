@@ -39,8 +39,10 @@ app.use(cookieSession({
 }))
 
 import {authRoute} from './routes/authRoute'
+import { gymRoute } from './routes/gymRoute';
 
 app.use('/api/auth', authRoute )
+app.use('/api/gym', gymRoute)
 
 
 

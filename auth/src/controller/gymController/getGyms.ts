@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 import { NotAuthorizedError } from '../../errors/not-authorized-error';
 import { Gym } from '../../models/gymSchema';
-import { CustomError } from '../../errors/custom-error';
+import { DatabaseOperationError } from '../../errors/databse-operation-error';
+import { BadRequestError } from '../../errors/bad-request-error';
 
 export const getAllGyms = async (req: Request, res: Response) => {
   try {
     if (!req.currentUser) {
-      throw new NotAuthorizedError();
+      throw new BadRequestError('no Req.currenUser / not authorized');
     }
 
     const { role, accountId, id } = req.currentUser;
@@ -20,7 +21,6 @@ export const getAllGyms = async (req: Request, res: Response) => {
       res.status(200).send({ gyms });
     }
   } catch (error) {
-    console.log(error);
-    
+    throw new DatabaseOperationError('Error while getting all gyms');
   }
 };
