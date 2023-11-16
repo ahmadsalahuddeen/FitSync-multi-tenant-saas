@@ -1,10 +1,15 @@
 import axios from "@/lib/axios";
 import NextAuth, { NextAuthOptions, getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { toast } from "sonner";
 
 export const authOptions: NextAuthOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -32,7 +37,6 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-
     async jwt({ token, user }) {
       if (user) return { ...token, ...user };
 

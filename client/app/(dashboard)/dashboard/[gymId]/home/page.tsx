@@ -1,10 +1,17 @@
+import { getCurrentUser } from '@/lib/session'
 import React from 'react'
 
 type Props = {}
 
-const HomePage = (props: Props) => {
+const HomePage = async (props: Props) => {
+
+  const user = await getCurrentUser()
   return (
-    <div>HomePage</div>
+    
+    <div>
+
+<h1>{`${user?.firstName} ${user?.lastName}`}</h1>
+    </div>
   )
 }
 

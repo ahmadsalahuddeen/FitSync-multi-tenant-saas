@@ -51,7 +51,7 @@ import {
 // TODO: fetch all gyms related to the user and update the dummy values
 const groups = [
   {
-    label: "Personal Account",
+    label: "Gyms",
     teams: [
       {
         label: "Power Fitness",
@@ -72,6 +72,19 @@ const groups = [
       },
     ],
   },
+  {
+    label: "Gysdfms",
+    teams: [
+      {
+        label: "Acme sdfInc.",
+        value: "acmsdfe-inc",
+      },
+      {
+        label: "Monssdfters Inc.",
+        value: "monssdfters",
+      },
+    ],
+  },
 ]
 
 type Gym = (typeof groups)[number]["teams"][number]
@@ -82,7 +95,7 @@ interface GymSwitcherProps extends PopoverTriggerProps {}
 
 export default function GymSwitcher({ className }: GymSwitcherProps) {
 
-  
+
   const [gymName, setGymName] = React.useState('')
   const [open, setOpen] = React.useState(false)
   const [showNewGymDialog, setShowNewGymDialog] = React.useState(false)

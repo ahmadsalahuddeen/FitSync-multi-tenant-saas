@@ -8,6 +8,8 @@ interface gymAttrs {
   name: string;
   phoneNumber: string;
   users?: Types.ObjectId[];
+  image?: string
+
 }
 
 // interface that describes the properties
@@ -23,6 +25,7 @@ interface gymDoc extends mongoose.Document {
   name: string;
   phoneNumber: string;
   users?: Types.ObjectId[];
+  image?: string
 }
 
 const gymSchema = new mongoose.Schema(
@@ -31,6 +34,9 @@ const gymSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',
       required: true,
+    },
+    image: {
+      type: String
     },
     
     name: {
