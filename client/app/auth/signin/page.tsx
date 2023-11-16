@@ -21,11 +21,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
+
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
+
+
 
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { signInSchema } from "@/validators/auth";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
@@ -38,6 +47,7 @@ type Props = {};
 const SignIn = (props: Props) => {
   const router = useRouter();
   const [FormStep, setFormStep] = useState(0);
+  const [error, setError] = useState<string | null >(null);
 
   type Input = z.infer<typeof signInSchema>;
 
@@ -64,8 +74,7 @@ const SignIn = (props: Props) => {
 
       }else{
         console.log("Error:", response)
-
-        toast.error("invalid email or password");
+setError("Your email or passowrd is wrong!")
       }
    
     } catch (err) {
@@ -98,8 +107,15 @@ const SignIn = (props: Props) => {
               Enter your email to sign in to your account
             </p>
           </div>
-          <Card className="border-none  ">
+          <Card className="border-none border-0 ">
             <CardContent>
+          {error && (
+              <Alert variant="destructive" className="mb-4">
+              <ExclamationTriangleIcon className="h-3 w-3" />
+              <AlertDescription className="text-xs">{error}</AlertDescription>
+              
+            </Alert>
+          )}
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
@@ -139,6 +155,14 @@ const SignIn = (props: Props) => {
                         </FormItem>
                       )}
                     />
+                          <p className=" text-start text-xs text-muted-foreground">
+              <Link
+                href="/auth/signup"
+                className="hover:text-brand underline underline-offset-4"
+              >
+                Forgot password? 
+              </Link>
+            </p>
 
                     <div className="flex gap-4">
                       <Button className="flex-1	" type="submit">
@@ -148,7 +172,7 @@ const SignIn = (props: Props) => {
                   </div>
                 </form>
               </Form>
-              <div className="grid gap-4 pt-5">
+              <div className="grid gap-4 mt-6">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t" />
