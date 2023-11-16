@@ -59,16 +59,15 @@ const SignIn = (props: Props) => {
         password: input.password,
         redirect: false,
       });
-      const error = response?.error;
-      if (error) {
-        if (error == "Request failed with status code 400")
-          toast.error("invalid email or password");
-        console.log(error);
-      }
-      if (!response?.error) {
+      if(response && !response.error){
         router.push("/dashboard");
-        router.refresh();
+
+      }else{
+        console.log("Error:", response)
+
+        toast.error("invalid email or password");
       }
+   
     } catch (err) {
       console.log(err);
     }
@@ -149,6 +148,28 @@ const SignIn = (props: Props) => {
                   </div>
                 </form>
               </Form>
+              <div className="grid gap-4 pt-5">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-6">
+                  <Button variant="outline">
+                    <Icons.gitHub className="mr-2 h-4 w-4" />
+                    Github
+                  </Button>
+                  <Button variant="outline">
+                    <Icons.google className="mr-2 h-4 w-4" />
+                    Google
+                  </Button>
+                </div>
+              </div>
             </CardContent>
             <p className="px-8 text-center text-sm text-muted-foreground">
               <Link
@@ -159,10 +180,8 @@ const SignIn = (props: Props) => {
               </Link>
             </p>
           </Card>
-
         </div>
       </div>
-
     </>
   );
 };
