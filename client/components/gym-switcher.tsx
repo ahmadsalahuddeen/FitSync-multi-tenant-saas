@@ -81,6 +81,9 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 interface GymSwitcherProps extends PopoverTriggerProps {}
 
 export default function GymSwitcher({ className }: GymSwitcherProps) {
+
+  
+  const [gymName, setGymName] = React.useState('')
   const [open, setOpen] = React.useState(false)
   const [showNewGymDialog, setShowNewGymDialog] = React.useState(false)
   const [selectedGym, setSelectedGym] = React.useState<Gym>(
@@ -177,9 +180,9 @@ export default function GymSwitcher({ className }: GymSwitcherProps) {
           <div className="space-y-4 py-2 pb-4">
             <div className="space-y-2">
               <Label htmlFor="name">Gym name</Label>
-              <Input id="name" placeholder="Acme Fit." />
+              <Input id="name" placeholder="Gym Name." value={gymName} onChange={(e)=>{setGymName(e.target.value)}} />
             </div>
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="plan">Subscription plan</Label>
               <Select>
                 <SelectTrigger>
@@ -200,7 +203,7 @@ export default function GymSwitcher({ className }: GymSwitcherProps) {
                   </SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
           </div>
         </div>
         <DialogFooter>
@@ -211,6 +214,6 @@ export default function GymSwitcher({ className }: GymSwitcherProps) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-    
+     
   )
 }

@@ -65,6 +65,7 @@ export const tenantSignup = async (req: Request, res: Response) => {
     await gym.save();
 
     const payload = {
+      accountId: account.id,
       id: user.id,
       email: user.email,
       role: user.role,

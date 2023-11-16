@@ -19,3 +19,9 @@ export type SideNavItem = {
   submenu?: boolean;
   subMenuItems?: SideNavItem[];
 };
+
+export type gym = {
+  accountId: string,
+  name: string,
+  
+}

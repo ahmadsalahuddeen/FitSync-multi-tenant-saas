@@ -1,3 +1,5 @@
+'use client'
+
 
 import { fetchServerResponse } from "next/dist/client/components/router-reducer/fetch-server-response";
 import React from "react";
@@ -8,24 +10,28 @@ import api from "@/lib/axios";
 import { signOut, useSession } from "next-auth/react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { getCurrentUser } from "@/lib/session";
 import { notFound, redirect } from "next/navigation";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
+import {  useGymStore } from "@/store/gym";
 
 type Props = {};
 
 
 
-const Dashboard = async (props: Props) => {
+const Dashboard =  (props: Props) => {
    
-const user = await getCurrentUser()
+const {data:session} =  useSession()
 
-if(!user){
+if(!session?.user){
     return  redirect('/auth/signin')
 }  
+const gym = useGymStore((state) => state.gym);
+if(gym === null){
+  const gymData = session?.user.gyms[0]
+  const setGym = useGymStore((state) => state.setGym);
+  setGym(gymData)
 
-const gym = user.gyms[0]
-
+}
 if(!gym) return(
     <EmptyPlaceholder>
     <EmptyPlaceholder.Icon name="post" />
@@ -38,7 +44,7 @@ if(!gym) return(
   </EmptyPlaceholder>
 )
 
-redirect(`${gym.gymId}`)
-};
+redirect(`/dashboard/${gym.gymId}/home`)
+};  
 
 export default Dashboard;

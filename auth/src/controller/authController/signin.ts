@@ -23,6 +23,7 @@ export const userSignIn = async (req: Request, res: Response) => {
   }
 
   const payload = {
+    accountId: existingUser.accountId,
     id: existingUser.id,
     email: existingUser.email,
     role: existingUser.role,

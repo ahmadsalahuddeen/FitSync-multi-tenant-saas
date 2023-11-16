@@ -1,21 +1,24 @@
 'use client'
-import { SIDENAV_ITEMS } from "@/config/dashboard";
 import React, { useState } from "react";
 import { SideNavItem } from "@/types/types";
 
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { Icons } from "./icons";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
-type Props = {};
+import { menuItems } from "@/config/dashboard";
+type Props = {
+  params: {gymId: string}
+};
 
-export const SideNav = (props: Props) => {
+export const SideNav = ({params}: Props) => {
+const menu = menuItems(params.gymId)
   return (
   <div className="grid items-start  gap-2 fixed  ">
 
 
-      {SIDENAV_ITEMS.map((item, idx) => {
+      {menu.map((item, idx) => {
         return <MenuItem key={idx} item={item} />;
       })}
   </div>

@@ -6,6 +6,7 @@ import { BadRequestError } from '../errors/bad-request-error';
 import { NotAuthorizedError } from '../errors/not-authorized-error';
 
 type userPayload = {
+  accountId: string,
   id: string;
   email: string;
   role?: string;
