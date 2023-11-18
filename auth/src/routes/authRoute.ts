@@ -24,14 +24,7 @@ authRoute.post(
   userSignIn
 );
 authRoute.post(
-  '/users/oauth-signin',
-
-  [
-    body('email').isEmail().withMessage('please provide a valid email'),
-
-    
-  ],
-  validateRequest,
+  '/oauth-signin',
   oauthSignIn
 );
 

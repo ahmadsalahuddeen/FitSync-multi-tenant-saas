@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import { toast } from "sonner";
+import { CloudFog } from "lucide-react";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -13,10 +14,11 @@ export const authOptions: NextAuthOptions = {
       profile(profile) {
         return {
           id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
           firstName: profile.given_name,
           lastName: profile.family_name,
-          email: profile.email,
-          image: profile.image,
         };
       },
     }),
@@ -55,31 +57,33 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider == "credentials") {
         return true;
       }
-      if (account?.provider == "google") {
-        try {
-          const googleAuthData = {
-            email: profile?.email, 
-            image: profile?.image,
-            name: profile?.name,
-          };
-        } catch (error) {
-          console.log("error in google provider callback nextauth", error);
-        }
 
-        return true;
+      if (account?.provider === "google" || account?.provider === "github") {
+        const email = profile?.email;
+        const image = profile?.image;
+        const name = profile?.name;
+
+        const response = await axios.post("/api/auth/oauth-signin", {
+          email,
+          image,
+          name,
+        });
+
+        if (response.data.error) console.log("errro", response.data.error);
+        const userData = response?.data;
+        
+     
+          Object.assign(user, response?.data);
+          return true;
+        
       }
-      if (account?.provider == "github") {
-        try {
-        } catch (error) {
-          console.log("error in github provider callback nextauth", error);
-        }
-        return true;
-      }
+      
       return false;
     },
     async jwt({ token, user }) {
+      console.log(user, "user")
       if (user) return { ...token, ...user };
-
+// console.log(token, "token")
       return token;
     },
     async session({ token, session }) {
