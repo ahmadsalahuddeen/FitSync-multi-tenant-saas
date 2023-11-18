@@ -54,8 +54,7 @@ export const tenantSignup = async (req: Request, res: Response) => {
       email,
       password,
       role: 'owner',
-      firstName,
-      lastName,
+   name: `${firstName} ${lastName}`,
       gyms: [{ gymId: gym.id, name: gym.name }],
     });
     await user.save();

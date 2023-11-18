@@ -183,7 +183,7 @@ const SignIn = (props: Props) => {
                     Github
                   </Button>
                   <Button variant="outline"
-                  onClick={()=> signIn('google')}>
+                  onClick={()=> signIn('github')}
                   
                   >
                     
