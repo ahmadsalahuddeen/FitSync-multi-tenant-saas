@@ -9,14 +9,15 @@ type GymInfo = {
 //interface that describes the properties to create a new User
 interface userAttrs {
   accountId: string;
-  firstName: string;
-  lastName: string;
+  name: string
+  // firstName: string;
+  // lastName: string;
   image?: string;
   bio?: string,
   email: string;
-  password: string;
+  password?: string;
   role: 'owner' | 'member';
-  gyms: GymInfo[]
+  gyms?: GymInfo[]
 
 }
 
@@ -30,14 +31,15 @@ interface userModel extends mongoose.Model<userDoc> {
 // of a User Document
 interface userDoc extends mongoose.Document {
   accountId: string;
-  firstName: string;
-  lastName: string;
+  name: string;
+  // firstName: string;
+  // lastName: string;
   image?: string;
   bio?: string,
   email: string;
-  password: string;
+  password?: string;
   role: 'owner' | 'member';
-  gyms: GymInfo[]
+  gyms?: GymInfo[]
 }
 
 const userSchema = new mongoose.Schema(
@@ -53,22 +55,25 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      
     },
-
-    firstName: {
-      type: String,
-      required: true,
-    },
+name: {
+  type: String,
+  required: true
+},
+    // firstName: {
+    //   type: String,
+    //   required: true,
+    // },
+    // lastName: {
+    //   type: String,
+    //   required: true,
+    // },
     image: {
       type: String,
     },
     bio: {
       type: String,
-    },
-    lastName: {
-      type: String,
-      required: true,
     },
     role: {
       type: String,
@@ -80,7 +85,7 @@ const userSchema = new mongoose.Schema(
         gymId: {
           type: Schema.Types.ObjectId,
           ref: 'Gym',
-          required: true,
+
         },
         name: {
           type: String,
@@ -105,7 +110,7 @@ const userSchema = new mongoose.Schema(
 // pre hook will run whenever .save onvoked, thus hasing the password if it is modified
 userSchema.pre('save', async function (done) {
   if (this.isModified('password')) {
-    const hashedPassword = await Password.toHash(this.get('password'));
+    const hashedPassword = await Password.toHash(this.get('password') as string);
     this.set('password', hashedPassword);
   }
   done();

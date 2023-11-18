@@ -12,7 +12,7 @@ type userPayload = {
   role?: string;
   backendTokens: {
     accessToken: string;
-    refreshToken: string;
+    refreshToken?: string;
   };
 };
 

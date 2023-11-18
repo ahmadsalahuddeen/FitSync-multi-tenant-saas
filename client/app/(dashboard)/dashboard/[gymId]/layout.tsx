@@ -36,7 +36,7 @@ export default async function RootLayout({
       <div className="flex min-h-screen flex-col space-y-6">
         <header className="sticky top-0 z-40 border-b bg-background">
           <div className="container flex h-16 items-center justify-between py-4">
-            <HeaderNav />
+            <HeaderNav params={params} />
             <div className="flex">
               <div className="hidden justify-between gap-4 px-4 md:block">
                 <GymSwithcer className="mr-4 " />

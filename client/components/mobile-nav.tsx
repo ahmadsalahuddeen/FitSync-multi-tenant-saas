@@ -9,16 +9,18 @@ import { useLockBody } from "@/hooks/use-lock-body"
 import { Icons } from "@/components/icons"
 import { MenuItem } from "./side-nav";
 import GymSwitcher from "./gym-switcher";
+import { menuItems } from "@/config/dashboard";
 
 interface MobileNavProps {
-  items: SideNavItem[]
+  params: {gymId: string}
   children?: React.ReactNode
 }
 
-export function MobileNav({ items, children }: MobileNavProps) {
+export function MobileNav({ params , children }: MobileNavProps) {
   useLockBody()
+  const menu = menuItems(params.gymId)
 
-  return (
+  return ( 
     <div
       className={cn(
         "fixed inset-0 top-16 z-50 grid h-[calc(100vh-4rem)] grid-flow-row auto-rows-max overflow-auto p-6 pb-32 shadow-md animate-in slide-in-from-bottom-80 md:hidden"
@@ -30,7 +32,7 @@ export function MobileNav({ items, children }: MobileNavProps) {
           <span className="font-bold">{siteConfig.name}</span>
         </Link>
         <nav className="grid grid-flow-row auto-rows-max text-sm">
-          {items.map((item, idx) => {
+          {menu.map((item, idx) => {
         return <MenuItem key={idx} item={item} />;
       })}
 

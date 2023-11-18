@@ -8,20 +8,20 @@ import { useSelectedLayoutSegment } from "next/navigation"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { Icons } from "@/components/icons"
-import { SIDENAV_ITEMS } from "@/config/dashboard"
+import { menuItems } from "@/config/dashboard"
 import { MobileNav } from "./mobile-nav"
 import { Menu } from "lucide-react"
 
 
 interface HeaderNavProps {
-
+  params: {gymId: string}
   children?: React.ReactNode
 }
 
-export function HeaderNav({  children }: HeaderNavProps) {
+export function HeaderNav({ params, children }: HeaderNavProps) {
   const segment = useSelectedLayoutSegment()
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false)
-
+ 
   return (
     <div className="flex gap-6 md:gap-10">
       <Link href="/" className="hidden items-center space-x-2 md:flex">
@@ -41,8 +41,8 @@ export function HeaderNav({  children }: HeaderNavProps) {
         <span className="font-bold">Menu</span>
       </button>
       
-      {showMobileMenu && SIDENAV_ITEMS && (
-        <MobileNav items={SIDENAV_ITEMS}>{children}</MobileNav>
+      {showMobileMenu && params && (
+        <MobileNav params={params}>{children}</MobileNav>
       )}
      
     </div>

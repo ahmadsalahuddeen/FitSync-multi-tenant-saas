@@ -5,6 +5,7 @@ import { signout } from '../controller/authController/signout';
 import { userSignIn } from '../controller/authController/signin';
 import { getCurrentUser } from '../controller/authController/current-user';
 import auth from '../middlewares/auth';
+import { oauthSignIn } from '../controller/authController/oauthSignIn';
 
 const authRoute = require('express').Router();
 
@@ -21,6 +22,17 @@ authRoute.post(
   ],
   validateRequest,
   userSignIn
+);
+authRoute.post(
+  '/users/oauth-signin',
+
+  [
+    body('email').isEmail().withMessage('please provide a valid email'),
+
+    
+  ],
+  validateRequest,
+  oauthSignIn
 );
 
 authRoute.post(

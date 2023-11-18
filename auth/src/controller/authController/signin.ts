@@ -13,9 +13,10 @@ export const userSignIn = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   const existingUser = await User.findOne({ email });
-  if (!existingUser) {
+  if (!existingUser?.password  || !existingUser ) {
     throw new BadRequestError('provide a valid login credentials');
   }
+
 
   const matchPassword = await Password.compare(password, existingUser.password);
   if (!matchPassword) {

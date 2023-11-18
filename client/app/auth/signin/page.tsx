@@ -21,15 +21,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert"
-
-
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -47,7 +41,7 @@ type Props = {};
 const SignIn = (props: Props) => {
   const router = useRouter();
   const [FormStep, setFormStep] = useState(0);
-  const [error, setError] = useState<string | null >(null);
+  const [error, setError] = useState<string | null>(null);
 
   type Input = z.infer<typeof signInSchema>;
 
@@ -69,14 +63,12 @@ const SignIn = (props: Props) => {
         password: input.password,
         redirect: false,
       });
-      if(response && !response.error){
+      if (response && !response.error) {
         router.push("/dashboard");
-
-      }else{
-        console.log("Error:", response)
-setError("Your email or passowrd is wrong!")
+      } else {
+        console.log("Error:", response);
+        setError("Your email or passowrd is wrong!");
       }
-   
     } catch (err) {
       console.log(err);
     }
@@ -107,15 +99,16 @@ setError("Your email or passowrd is wrong!")
               Enter your email to sign in to your account
             </p>
           </div>
-          <Card className="border-none border-0 ">
+          <Card className="border-0 border-none ">
             <CardContent>
-          {error && (
-              <Alert variant="destructive" className="mb-4">
-              <ExclamationTriangleIcon className="h-3 w-3" />
-              <AlertDescription className="text-xs">{error}</AlertDescription>
-              
-            </Alert>
-          )}
+              {error && (
+                <Alert variant="destructive" className="mb-4">
+                  <ExclamationTriangleIcon className="h-3 w-3" />
+                  <AlertDescription className="text-xs">
+                    {error}
+                  </AlertDescription>
+                </Alert>
+              )}
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
@@ -155,14 +148,14 @@ setError("Your email or passowrd is wrong!")
                         </FormItem>
                       )}
                     />
-                          <p className=" text-start text-xs text-muted-foreground">
-              <Link
-                href="/auth/signup"
-                className="hover:text-brand underline underline-offset-4"
-              >
-                Forgot password? 
-              </Link>
-            </p>
+                    <p className=" text-start text-xs text-muted-foreground">
+                      <Link
+                        href="/auth/signup"
+                        className="hover:text-brand underline underline-offset-4"
+                      >
+                        Forgot password?
+                      </Link>
+                    </p>
 
                     <div className="flex gap-4">
                       <Button className="flex-1	" type="submit">
@@ -172,7 +165,7 @@ setError("Your email or passowrd is wrong!")
                   </div>
                 </form>
               </Form>
-              <div className="grid gap-4 mt-6">
+              <div className="mt-6 grid gap-4">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t" />
@@ -184,11 +177,16 @@ setError("Your email or passowrd is wrong!")
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-6">
-                  <Button variant="outline">
+                  <Button variant="outline"
+                  onClick={()=> signIn('github')}>
                     <Icons.gitHub className="mr-2 h-4 w-4" />
                     Github
                   </Button>
-                  <Button variant="outline">
+                  <Button variant="outline"
+                  onClick={()=> signIn('google')}>
+                  
+                  >
+                    
                     <Icons.google className="mr-2 h-4 w-4" />
                     Google
                   </Button>
