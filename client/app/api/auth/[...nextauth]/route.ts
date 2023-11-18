@@ -73,7 +73,7 @@ export const authOptions: NextAuthOptions = {
         const userData = response?.data;
         
      
-          Object.assign(user, response?.data);
+         await  Object.assign(user, userData);
           return true;
         
       }
@@ -81,7 +81,7 @@ export const authOptions: NextAuthOptions = {
       return false;
     },
     async jwt({ token, user }) {
-      console.log(user, "user")
+      // console.log(user, "user")
       if (user) return { ...token, ...user };
 // console.log(token, "token")
       return token;

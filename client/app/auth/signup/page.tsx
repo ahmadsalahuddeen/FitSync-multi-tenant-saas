@@ -143,7 +143,7 @@ const SignUp = (props: Props) => {
             Back
           </>
         </Link>
-        <div className="mx-auto my-40 flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+        <div className="mx-auto my-[5rem] flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
             <Icons.logo className="mx-auto h-6 w-6  text-green-600" />
             <h1 className="text-2xl font-semibold tracking-tight">
@@ -157,9 +157,12 @@ const SignUp = (props: Props) => {
                 : `Just a few more details to get started📈`}
             </p>
           </div>
-          <Card className="">
+          
+          <Card className="border-none">
+            
             <CardHeader></CardHeader>
             <CardContent>
+              
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
@@ -392,7 +395,7 @@ const SignUp = (props: Props) => {
                   <div className="flex gap-4">
                     <Button
                       type="button"
-                      variant={"ghost"}
+                      variant={"secondary"}
                       onClick={() => {
                         //triggers validation before moving next form step
                         form.trigger([
@@ -470,6 +473,33 @@ const SignUp = (props: Props) => {
                   </div>
                 </form>
               </Form>
+              <div className="mt-6 grid gap-4">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-6">
+                  <Button variant="outline"
+                  onClick={()=> signIn('github')}>
+                    <Icons.gitHub className="mr-2 h-4 w-4" />
+                    Github
+                  </Button>
+                  <Button variant="outline"
+                  onClick={()=> signIn('google')}
+                  
+                  >
+                    
+                    <Icons.google className="mr-2 h-4 w-4" />
+                    Google
+                  </Button>
+                </div>
+              </div>
             </CardContent>
             {FormStep == 0 && (
               <p className="px-8 pb-6 text-center text-sm text-muted-foreground">

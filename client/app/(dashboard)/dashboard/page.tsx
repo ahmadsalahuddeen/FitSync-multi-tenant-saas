@@ -13,26 +13,30 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { notFound, redirect } from "next/navigation";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import {  useGymStore } from "@/store/gym";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
 
 
 const Dashboard =  (props: Props) => {
-   
-const {data:session} =  useSession()
+   const router = useRouter()
+  //  router.refresh()
+  const {data:session} =  useSession()
+  console.log(session)
+  if(!session?.user){
+    router.refresh()
+      return  redirect('/auth/signin')
+  }  
+  const gym =  useGymStore((state) => state.gym);
+  if(gym === null){
+    const gymData = session?.user.gyms[0]
+    const setGym = useGymStore((state) => state.setGym);
+    setGym(gymData)
+  
+  }
 
-if(!session?.user){
-    return  redirect('/auth/signin')
-}  
-const gym = useGymStore((state) => state.gym);
-if(gym === null){
-  const gymData = session?.user.gyms[0]
-  const setGym = useGymStore((state) => state.setGym);
-  setGym(gymData)
-
-}
-if(!gym) return(
+if(!gym?.gymId) return(
     <EmptyPlaceholder>
     <EmptyPlaceholder.Icon name="post" />
     <EmptyPlaceholder.Title>No gyms created</EmptyPlaceholder.Title>
