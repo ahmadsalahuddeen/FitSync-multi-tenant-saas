@@ -14,6 +14,8 @@ interface userAttrs {
   // lastName: string;
   image?: string;
   bio?: string,
+  forgotPasswordToken?: String,
+  forgotPasswordTokenExpiry?: Date,
   email: string;
   password?: string;
   role: 'owner' | 'member';
@@ -36,6 +38,8 @@ interface userDoc extends mongoose.Document {
   // lastName: string;
   image?: string;
   bio?: string,
+  forgotPasswordToken?: String,
+  forgotPasswordTokenExpiry?: Date,
   email: string;
   password?: string;
   role: 'owner' | 'member';
@@ -80,6 +84,10 @@ name: {
       enum: ['owner', 'member'],
       default: 'member',
     },
+    forgotPasswordToken: String,
+    forgotPasswordTokenExpiry: Date,
+
+
     gyms: [
       {
         gymId: {
