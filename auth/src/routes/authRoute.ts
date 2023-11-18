@@ -23,9 +23,17 @@ authRoute.post(
   validateRequest,
   userSignIn
 );
+
+// route for validating add updating user signed with google || github provider
 authRoute.post(
   '/oauth-signin',
   oauthSignIn
+);
+
+
+authRoute.post(
+  '/request-otp',
+  requestOtp
 );
 
 authRoute.post(
