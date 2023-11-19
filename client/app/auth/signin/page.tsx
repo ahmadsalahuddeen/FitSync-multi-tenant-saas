@@ -150,7 +150,7 @@ const SignIn = (props: Props) => {
                     />
                     <p className=" text-start text-xs text-muted-foreground">
                       <Link
-                        href="/auth/signup"
+                        href="/auth/forgot-password"
                         className="hover:text-brand underline underline-offset-4"
                       >
                         Forgot password?

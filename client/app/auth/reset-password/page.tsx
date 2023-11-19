@@ -93,6 +93,7 @@ router.push(url)
       console.log(err);
     }
   }
+  const watcher = passwordForm.watch();
 
   return (
     <>
@@ -171,7 +172,7 @@ router.push(url)
                       <Button
                       disabled={isLoading}
                       className="flex-1	" type="submit">
-                        {isLoading ? 'Sending an OTP':'Send OTP'}
+                        {isLoading ? 'Sending an OTP':'Change Password'}
                       </Button>
                     </div>
                   </div>

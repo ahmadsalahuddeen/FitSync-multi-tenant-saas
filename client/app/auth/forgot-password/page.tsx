@@ -79,7 +79,7 @@ const ForgotPassword = (props: Props) => {
     
     },
     onSuccess: ()=>{
-      console.log('slllllllllllllllllllllllllllll', userEmail)
+
       const url =  `/auth/verify-otp?email=${userEmail}`
 router.push(url)
     },

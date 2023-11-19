@@ -1,6 +1,6 @@
 "use client";
 import Container from "@/components/ui/container";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import axios from "@/lib/axios";
 
@@ -34,11 +34,12 @@ type Props = {};
 const verifyOtp = (props: Props) => {
   // email passed from previos page
   const searchParams = useSearchParams();
-  const userEmail = searchParams.get("email");
+  const userEmail = searchParams.get("email") as string;
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
-
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
   // zod types
   type OtpInput = z.infer<typeof otpZod>;
 
@@ -50,6 +51,63 @@ const verifyOtp = (props: Props) => {
     },
   });
 
+  //use effect for resend otp interval
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds(seconds - 1);
+      }
+
+      if (seconds === 0) {
+        if (minutes === 0) {
+          clearInterval(interval);
+        } else {
+          setSeconds(59);
+          setMinutes(minutes - 1);
+        }
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [seconds]);
+
+
+
+
+// query mutation fn to resend otp
+const {
+    
+  mutate: resendOtp,
+isLoading: newOtpLoading
+
+
+} = useMutation({
+  
+  mutationFn: async (email: string) => {
+      const otp = await axios.post("/api/auth/forgot-password", {
+        email,
+      });
+  
+  },
+  onSuccess: ()=>{
+setSeconds(30)
+    toast.success('A new OTP is on your way!')
+  },
+
+  onError: (err: any) => {
+    setError(err.response.data)
+      toast.error(err.response.data);
+  },
+});
+
+
+
+
+
+
+  // query function to verify otp
   const {
     mutate: verifyOtp,
     isLoading,
@@ -57,11 +115,11 @@ const verifyOtp = (props: Props) => {
     isError,
   } = useMutation({
     mutationFn: async (input: OtpInput) => {
-      const {data} = await axios.post("/api/auth/verify-otp", {
+      const { data } = await axios.post("/api/auth/verify-otp", {
         otp: input.otp,
-        email: userEmail
+        email: userEmail,
       });
-      return data
+      return data;
     },
     onSuccess: (data) => {
       router.push(`/auth/reset-password?email=${userEmail}`);
@@ -81,6 +139,10 @@ const verifyOtp = (props: Props) => {
     }
   }
 
+  async function handleResendOtp() {
+await resendOtp(userEmail)
+
+  }
   return (
     <>
       <div className="container flex h-screen w-screen flex-col items-center justify-center">
@@ -103,7 +165,7 @@ const verifyOtp = (props: Props) => {
               Verify OTP !✅
             </h1>
             <p className="text-sm text-muted-foreground">
-              Check your email, spam folder too.
+              Kindly enter the 4-digit OTP sent to <br /> <b>{userEmail}</b>.
             </p>
           </div>
           <Card className="border-0 border-none ">
@@ -129,9 +191,11 @@ const verifyOtp = (props: Props) => {
                       name="otp"
                       render={({ field }) => (
                         <FormItem>
-
                           <FormControl>
-                            <Input placeholder="Enter Four digit OTP" {...field} />
+                            <Input
+                              placeholder="Enter Four digit OTP"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -152,13 +216,16 @@ const verifyOtp = (props: Props) => {
               </Form>
             </CardContent>
             <p className="px-8 text-center text-xs  text-muted-foreground">
-            Email: <b> {userEmail}</b> <br />
-              <Link
-                href="/auth/forgot-password"
-                className="hover:text-brand  underline underline-offset-4"
+              Didn't recieve the email? <br />
+              <Button
+                variant="link"
+                disabled={seconds > 0 || minutes > 0 || newOtpLoading}
+                onClick={() => {handleResendOtp()}}
+                className="hover:text-brand  m-0 px-2 underline  underline-offset-4"
               >
-                wanna change email? tap here.
-              </Link>
+                Resend OTP
+              </Button>
+              in <b> {seconds}</b> seconds
             </p>
           </Card>
         </div>
