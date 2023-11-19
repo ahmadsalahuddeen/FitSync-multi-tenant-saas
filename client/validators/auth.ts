@@ -25,3 +25,24 @@ export const signInSchema = z.object({
   password: z.string().min(8).max(100),
   
 })
+
+export const passwordZod = z.object({
+
+  password: z.string().min(8).max(100),
+  confirmPassword: z.string().min(8).max(100),
+})
+
+export const otpZod = z.object({
+
+  otp: z.string().length(4),
+
+})
+
+export const emailZod = z.object({
+
+  email: z.string().email()
+
+})
+
+
+

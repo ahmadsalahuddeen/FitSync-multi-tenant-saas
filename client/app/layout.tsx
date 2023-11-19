@@ -8,6 +8,7 @@ import "@/app/globals.css";
 import { Toaster } from "sonner";
 import Providers from "@/components/Providers";
 import Axios from "axios";
+import {ReactQueryDevtools} from "@tanstack/react-query-devtools"
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -60,7 +61,8 @@ export default function RootLayout({
           )}
         >
           {/* configquered and sepreated Providers in a different file */}
-          <Providers>{children}</Providers>
+          <Providers>{children}
+          </Providers>
         </body>
       </html>
     </>
