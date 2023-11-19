@@ -38,16 +38,18 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
 import { useMutation, useQuery } from "react-query";
+
 type Props = {};
+
 const ForgotPassword = (props: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const userEmail = searchParams.get("email");
+
   const [error, setError] = useState<string | null>(null);
 
   // zod types
   type PasswordInput = z.infer<typeof passwordZod>;
-  // type PasswordInput = z.infer<typeof passwordZod>;
 
   // react hook form
   const passwordForm = useForm<PasswordInput>({
@@ -58,42 +60,48 @@ const ForgotPassword = (props: Props) => {
     },
   });
 
+  // query fn to handle reset password api
   const {
-    
-    mutate: requestOtp,
+    mutate: resetPassword,
     isLoading,
 
     isError,
   } = useMutation({
-    
     mutationFn: async (input: PasswordInput) => {
-        const otp = await axios.post("/api/auth/forgot-password", {
-          email: input.password,
-        });
-    
+      const otp = await axios.post("/api/auth/reset-password", {
+        email: input.password,
+        newPassword: input.password,
+      });
     },
-    onSuccess: ()=>{
-      const url =  `/auth/verify-otp?email=${userEmail}`
-router.push(url)
+    onSuccess: () => {
+      const url = `/auth/verify-otp?email=${userEmail}`;
+      router.push(url);
     },
 
     onError: (err: any) => {
-      setError(err.response.data)
-        toast.error(err.response.data);
+      setError(err.response.data);
+      toast.error(err.response.data);
     },
   });
 
 
-
-  async function onEmailSubmit(input: PasswordInput) {
+  // handle password form submit
+  async function onPasswordSubmit(input: PasswordInput) {
     try {
-
-      await requestOtp(input)
+     
+      if (input.password !== input.confirmPassword) {
+        setError("confirm Password do not match");
+        toast.error("Password do not match");
+        return;
+      }
+      console.log("ddddddddddddddddddddddddd");
+      await resetPassword(input);
     } catch (err) {
       console.log(err);
     }
   }
-  const watcher = passwordForm.watch();
+
+
 
   return (
     <>
@@ -116,9 +124,7 @@ router.push(url)
             <h1 className="text-2xl  font-semibold tracking-tight">
               Reset your password 🙈
             </h1>
-            <p className="text-sm text-muted-foreground">
-              
-            </p>
+            <p className="text-sm text-muted-foreground"></p>
           </div>
           <Card className="border-0 border-none ">
             <CardContent>
@@ -133,7 +139,7 @@ router.push(url)
 
               <Form {...passwordForm}>
                 <form
-                  onSubmit={passwordForm.handleSubmit(onEmailSubmit)}
+                  onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}
                   className=" relative space-y-3     "
                 >
                   <div className={cn("space-y-3")}>
@@ -168,11 +174,12 @@ router.push(url)
                     />
 
                     <div className="flex gap-4">
-
                       <Button
-                      disabled={isLoading}
-                      className="flex-1	" type="submit">
-                        {isLoading ? 'Sending an OTP':'Change Password'}
+                        disabled={isLoading}
+                        className="flex-1	"
+                        type="submit"
+                      >
+                        {isLoading ? "changing..." : "Change Password"}
                       </Button>
                     </div>
                   </div>
