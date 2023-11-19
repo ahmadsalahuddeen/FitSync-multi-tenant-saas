@@ -1,10 +1,10 @@
 import { User } from '../models/userSchema';
 import { sendMail } from './email';
 
-const generateOtp = async () => {
+export const generateOtp =  async() => {
   try {
     const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
-    return otp;
+    return Promise.resolve(otp);
   } catch (error) {
     throw error;
   }
@@ -29,7 +29,7 @@ export const sendOtp = async ({
     // clear any old record
     await User.findOneAndUpdate(
       { email },
-      { $set: { forgotPasswordToken: null, forgotPasswordTokenExpiry: null } }
+      { $set: { forgotPasswordToken: null, forgotPasswordTokenExpiry: null } }, {new: true}
     );
 
     // genearte OTP pin
@@ -49,7 +49,7 @@ export const sendOtp = async ({
       { email },
       {
         $set: {
-          forgotPasswordToken: generateOtp,
+          forgotPasswordToken: generatedOtp,
           forgotPasswordTokenExpiry: Date.now() + 3600000 * +duration,
         },
       }, {new: true}
