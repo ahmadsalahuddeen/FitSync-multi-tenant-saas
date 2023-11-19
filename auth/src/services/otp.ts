@@ -1,4 +1,5 @@
 import { User } from '../models/userSchema';
+import { sendMail } from './email';
 
 const generateOtp = async () => {
   try {
@@ -9,7 +10,7 @@ const generateOtp = async () => {
   }
 };
 
-const sendOtp = async ({
+export const sendOtp = async ({
   email,
   subject,
   message,
@@ -33,5 +34,35 @@ const sendOtp = async ({
 
     // genearte OTP pin
     const generatedOtp = await generateOtp();
-  } catch (error) {}
+
+    const mailOptions = {
+      to: email,
+      subject,
+      html: `<p>${message}</p><b>${generatedOtp}</b>`,
+    };
+
+    // send mail 
+    await sendMail(mailOptions);
+
+    // update user data with otp data
+    const user = await User.findOneAndUpdate(
+      { email },
+      {
+        $set: {
+          forgotPasswordToken: generateOtp,
+          forgotPasswordTokenExpiry: Date.now() + 3600000 * +duration,
+        },
+      }, {new: true}
+    );
+
+    const createdOtpRecord = {
+      email: user?.email,
+      forgotPasswordToken: user?.forgotPasswordToken,
+      forgotPasswordTokenExpiry: user?.forgotPasswordTokenExpiry,
+    };
+
+    return createdOtpRecord;
+  } catch (error) {
+    throw error;
+  }
 };

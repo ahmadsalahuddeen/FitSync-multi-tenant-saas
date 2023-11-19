@@ -5,12 +5,12 @@ export async function sendMail({
   to,
   name,
   subject,
-  body,
+  html,
 }: {
   to: string;
-  name: string;
+  name?: string;
   subject: string;
-  body: string;
+  html: string;
 }) {
   const { SMTP_PASSWROD, SMTP_EMAIL } = process.env;
 
@@ -38,7 +38,7 @@ export async function sendMail({
       from: SMTP_EMAIL,
       to,
       subject,
-      html: body,
+      html
     });
     console.log("mail: ",sendResult);
   } catch (error) {
