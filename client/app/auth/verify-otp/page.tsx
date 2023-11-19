@@ -13,14 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -28,75 +21,59 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { set, useForm } from "react-hook-form";
-import { emailZod, otpZod } from "@/validators/auth";
+import { useForm } from "react-hook-form";
+import { otpZod } from "@/validators/auth";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
 import { useMutation, useQuery } from "react-query";
 type Props = {};
-const ForgotPassword = (props: Props) => {
+const verifyOtp = (props: Props) => {
+  // email passed from previos page
+  const searchParams = useSearchParams();
+  const userEmail = searchParams.get("email");
   const router = useRouter();
-  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  console.log('oooooooooooooooooooooooo', userEmail)
   // zod types
-  type EmailInput = z.infer<typeof emailZod>;
-  // type PasswordInput = z.infer<typeof passwordZod>;
+  type OtpInput = z.infer<typeof otpZod>;
 
   // react hook form
-  const emailForm = useForm<EmailInput>({
-    resolver: zodResolver(emailZod),
+  const otpForm = useForm<OtpInput>({
+    resolver: zodResolver(otpZod),
     defaultValues: {
-      email: "",
+      otp: "",
     },
   });
 
-  // const passwordForm = useForm<PasswordInput>({
-  //   resolver: zodResolver(passwordZod),
-  //   defaultValues: {
-  //     password: "",
-  //     confirmPassword: "",
-  //   },
-  // });
-
   const {
-    
     mutate: requestOtp,
     isLoading,
 
     isError,
   } = useMutation({
-    
-    mutationFn: async (input: EmailInput) => {
-        const otp = await axios.post("/api/auth/forgot-password", {
-          email: input.email,
-        });
-    
+    mutationFn: async (input: OtpInput) => {
+      const otp = await axios.post("/api/auth/forgot-password", {
+        otp: input.otp,
+      });
     },
-    onSuccess: ()=>{
-      console.log('slllllllllllllllllllllllllllll', userEmail)
-      const url =  `/auth/verify-otp?email=${userEmail}`
-router.push(url)
+    onSuccess: () => {
+      router.push(`auth/verify-otp?email="sadfsdf"`);
     },
 
     onError: (err: any) => {
-      setError(err.response.data)
-        toast.error(err.response.data);
+      setError(err.response.data);
+      toast.error(err.response.data);
     },
   });
 
-
-
-  async function onEmailSubmit(input: EmailInput) {
+  async function onEmailSubmit(input: any) {
     try {
-      await setUserEmail(input.email)
-
-      await requestOtp(input)
+      await requestOtp(input);
     } catch (err) {
       console.log(err);
     }
@@ -139,16 +116,16 @@ router.push(url)
                 </Alert>
               )}
 
-              <Form {...emailForm}>
+              <Form {...otpForm}>
                 <form
-                  onSubmit={emailForm.handleSubmit(onEmailSubmit)}
+                  onSubmit={otpForm.handleSubmit(onEmailSubmit)}
                   className=" relative space-y-3     "
                 >
                   <div className={cn("space-y-3")}>
                     {/* Email */}
                     <FormField
-                      control={emailForm.control}
-                      name="email"
+                      control={otpForm.control}
+                      name="otp"
                       render={({ field }) => (
                         <FormItem>
                           {/* <FormLabel>Email Address</FormLabel> */}
@@ -161,11 +138,12 @@ router.push(url)
                     />
 
                     <div className="flex gap-4">
-
                       <Button
-                      disabled={isLoading}
-                      className="flex-1	" type="submit">
-                        {isLoading ? 'Sending an OTP':'Send OTP'}
+                        disabled={isLoading}
+                        className="flex-1	"
+                        type="submit"
+                      >
+                        {isLoading ? "Sending an OTP" : "Send OTP"}
                       </Button>
                     </div>
                   </div>
@@ -187,4 +165,4 @@ router.push(url)
   );
 };
 
-export default ForgotPassword;
+export default verifyOtp;
