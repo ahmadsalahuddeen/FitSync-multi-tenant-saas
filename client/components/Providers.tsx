@@ -1,8 +1,8 @@
 "use client";
-import {ReactQueryDevtools} from "@tanstack/react-query-devtools"
+
 
 import React from "react";
-import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import {
   ThemeProvider as NextThemesProvider,
   ThemeProvider,
@@ -27,7 +27,7 @@ const Providers = ({ children, ...props }: ThemeProviderProps) => {
         </SessionProvider>
         <Toaster richColors position="top-right" />
       </ThemeProvider>
-      <ReactQueryDevtools/>
+
     </QueryClientProvider>
   );
 };

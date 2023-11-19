@@ -29,13 +29,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { set, useForm } from "react-hook-form";
-import {
-  emailZod,
-
-  otpZod,
-  passwordZod,
-
-} from "@/validators/auth";
+import { emailZod, otpZod } from "@/validators/auth";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -43,19 +37,17 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "react-query";
 type Props = {};
 const ForgotPassword = (props: Props) => {
   const router = useRouter();
   const [FormStep, setFormStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  
 
-
-  // zod types 
+  // zod types
   type OtpInput = z.infer<typeof otpZod>;
   type EmailInput = z.infer<typeof emailZod>;
-  type PasswordInput = z.infer<typeof passwordZod>;
+  // type PasswordInput = z.infer<typeof passwordZod>;
 
   // react hook form
   const emailForm = useForm<EmailInput>({
@@ -64,51 +56,42 @@ const ForgotPassword = (props: Props) => {
       email: "",
     },
   });
-  const otpForm = useForm<OtpInput>({
-    resolver: zodResolver(otpZod),
-    defaultValues: {
-      otp: "",
-    },
-  });
-  const passwordForm = useForm<PasswordInput>({
-    resolver: zodResolver(passwordZod),
-    defaultValues: {
-      password: "",
-      confirmPassword: "",
-    },
-  });
-
-
+  // const otpForm = useForm<OtpInput>({
+  //   resolver: zodResolver(otpZod),
+  //   defaultValues: {
+  //     otp: "",
+  //   },
+  // });
+  // const passwordForm = useForm<PasswordInput>({
+  //   resolver: zodResolver(passwordZod),
+  //   defaultValues: {
+  //     password: "",
+  //     confirmPassword: "",
+  //   },
+  // });
 
   const {
+    
     mutate: requestOtp,
-    
+    isLoading,
+
     isError,
-    
   } = useMutation({
     mutationFn: async (input: EmailInput) => {
-      try {
-        const otp = await axios.post("/api/auth/tenant/signup", {
-         email: input.email
+        const otp = await axios.post("/api/auth/forgot-password", {
+          email: input.email,
         });
-
-
-       
-       
-      } catch (err: any) {
-        err.response.data.errors.map((err: any) => {
-          toast.error(err.message);
-        });
-      }
+    
+    },
+    onSuccess: ()=>{
+router.push('auth/verify-otp')
     },
 
-    onError: (error: any) => {
-      error.response.data.errors.map((err: any) => {
-        toast.error(err.message);
-      });
+    onError: (err: any) => {
+      setError(err.response.data)
+        toast.error(err.response.data);
     },
   });
-
 
 
 
@@ -139,10 +122,11 @@ const ForgotPassword = (props: Props) => {
           <div className="flex flex-col space-y-2 text-center">
             {/* <Icons.logo className="mx-auto h-6 w-6  text-green-600" /> */}
             <h1 className="text-2xl  font-semibold tracking-tight">
-              Forgot your Password ? 👀 
+              Forgot your Password ? 👀
             </h1>
             <p className="text-sm text-muted-foreground">
-            Enter your user account's email address and we will send you an OTP .
+              Enter your user account's email address and we will send you an
+              OTP .
             </p>
           </div>
           <Card className="border-0 border-none ">
@@ -177,18 +161,17 @@ const ForgotPassword = (props: Props) => {
                       )}
                     />
 
-                    
-                
-
                     <div className="flex gap-4">
-                      <Button className="flex-1	" type="submit">
-                        send OTP
+
+                      <Button
+                      disabled={isLoading}
+                      className="flex-1	" type="submit">
+                        {isLoading ? 'Sending an OTP':'Send OTP'}
                       </Button>
                     </div>
                   </div>
                 </form>
               </Form>
-     
             </CardContent>
             <p className="px-8 text-center text-sm text-muted-foreground">
               <Link

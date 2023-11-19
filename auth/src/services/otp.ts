@@ -27,12 +27,19 @@ duration: number
       throw Error('provide values for email, subject, message');
     }
 
+const existingUser = await User.findOne({email})
+if(!existingUser){
+  throw new BadRequestError("Provide a valid registered email")
+}
+
     // clear any old record
-    await User.findOneAndUpdate(
+    const userData = await User.findOneAndUpdate(
       { email },
       { $set: { forgotPasswordToken: null, forgotPasswordTokenExpiry: null } },
       { new: true }
     );
+
+  
 
     // genearte OTP pin
     const generatedOtp = await generateOtp();
@@ -100,16 +107,19 @@ duration: number
 export const verifyOtpHelper = async ({
   email,
   otp,
+
 }: {
   email: string;
   otp: string;
+
 }) => {
   try {
-    if (!(email && otp)) {
+    if (!(email && otp )) {
       throw new BadRequestError('please values for email, otp');
     }
 
     const user = await User.findOne({ email });
+    
     if (user?.forgotPasswordToken == null) {
       throw new BadRequestError('No otp token found.');
     }

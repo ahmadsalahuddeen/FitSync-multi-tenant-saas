@@ -1,6 +1,6 @@
 import axios from "@/lib/axios";
 import React from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from "react-query";
 import { toast } from "sonner";
 
 type Props = {

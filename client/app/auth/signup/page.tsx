@@ -31,7 +31,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from "react-query";
 import { useForm } from "react-hook-form";
 import { registerSchema } from "@/validators/auth";
 import { z } from "zod";
@@ -77,8 +77,9 @@ const SignUp = (props: Props) => {
 
   const {
     mutate: doRequest,
-    
+     
     isError,
+    
     error,
   } = useMutation({
     mutationFn: async (input: Input) => {
