@@ -12,14 +12,14 @@ export async function sendMail({
   subject: string;
   body: string;
 }) {
-  const { SMTP_PASSWROD, SMTP_EMAIL } = process.env;
+  const { SMTP_PASSWORD, SMTP_EMAIL } = process.env;
 
   // creating a transport object using the nodemailer
   const transport = nodemailer.createTransport({
     service: "gmail",
     auth: {
       user: SMTP_EMAIL,
-      pass: SMTP_PASSWROD,
+      pass: SMTP_PASSWORD,
     },
   });
 

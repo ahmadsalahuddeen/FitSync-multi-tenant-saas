@@ -12,15 +12,17 @@ export async function sendMail({
   subject: string;
   html: string;
 }) {
-  const { SMTP_PASSWROD, SMTP_EMAIL } = process.env;
+
 
   // creating a transport object using the nodemailer
   const transport = nodemailer.createTransport({
-    service: "gmail",
+    service: 'gmail', 
+
     auth: {
-      user: SMTP_EMAIL,
-      pass: SMTP_PASSWROD,
+      user:process.env.SMTP_EMAIL,
+      pass: process.env.SMTP_PASSWORD,
     },
+    authMethod: "PLAIN"
   });
 
   //  verifying the transport object/ cheking if it can reach smtp server
@@ -35,7 +37,7 @@ export async function sendMail({
   // sending email using transport object
   try {
     const sendResult = await transport.sendMail({
-      from: SMTP_EMAIL,
+      from: process.env.SMTP_EMAIL,
       to,
       subject,
       html
