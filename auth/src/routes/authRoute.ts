@@ -33,7 +33,7 @@ authRoute.post(
 
 // get otp
 authRoute.post(
-  '/otp',
+  '/forgot-password',
   requestOtp
 );
 // verify otp

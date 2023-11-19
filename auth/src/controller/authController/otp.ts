@@ -3,9 +3,9 @@ import { sendOtp, verifyOtpHelper } from '../../services/otp';
 
 export const requestOtp = async (req: Request, res: Response) => {
   try {
-    const { email, subject, message, duration } = req.body;
+    const { email } = req.body;
 
-    const createdOtp = await sendOtp({ email, subject, message, duration });
+    const createdOtp = await sendOtp({ email, subject: "Password Reset Verification Code: Use Within 5 Minutes", duration : 1 });
 
     res.status(200).send(createdOtp);
   } catch (error: any) {
@@ -13,6 +13,8 @@ export const requestOtp = async (req: Request, res: Response) => {
     res.status(400).send(error.message);
   }
 };
+
+
 export const   verifyOtp = async (req: Request, res: Response) => {
   try {
     const { email, otp } = req.body;

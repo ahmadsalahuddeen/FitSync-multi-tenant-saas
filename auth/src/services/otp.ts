@@ -15,16 +15,15 @@ export const generateOtp = async () => {
 export const sendOtp = async ({
   email,
   subject,
-  message,
-  duration = 1,
+
+  duration 
 }: {
   email: string;
   subject: string;
-  message: string;
-  duration: number;
+duration: number
 }) => {
   try {
-    if (!(email && subject && message)) {
+    if (!(email && subject )) {
       throw Error('provide values for email, subject, message');
     }
 
