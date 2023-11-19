@@ -13,7 +13,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -21,61 +28,67 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useForm } from "react-hook-form";
-import { otpZod } from "@/validators/auth";
+import { set, useForm } from "react-hook-form";
+import { emailZod, otpZod, passwordZod } from "@/validators/auth";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { redirect, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
 import { useMutation, useQuery } from "react-query";
 type Props = {};
-const verifyOtp = (props: Props) => {
-  // email passed from previos page
+const ForgotPassword = (props: Props) => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const userEmail = searchParams.get("email");
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
-
   // zod types
-  type OtpInput = z.infer<typeof otpZod>;
+  type PasswordInput = z.infer<typeof passwordZod>;
+  // type PasswordInput = z.infer<typeof passwordZod>;
 
   // react hook form
-  const otpForm = useForm<OtpInput>({
-    resolver: zodResolver(otpZod),
+  const passwordForm = useForm<PasswordInput>({
+    resolver: zodResolver(passwordZod),
     defaultValues: {
-      otp: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
   const {
-    mutate: verifyOtp,
+    
+    mutate: requestOtp,
     isLoading,
 
     isError,
   } = useMutation({
-    mutationFn: async (input: OtpInput) => {
-      const {data} = await axios.post("/api/auth/verify-otp", {
-        otp: input.otp,
-        email: userEmail
-      });
-      return data
+    
+    mutationFn: async (input: PasswordInput) => {
+        const otp = await axios.post("/api/auth/forgot-password", {
+          email: input.password,
+        });
+    
     },
-    onSuccess: (data) => {
-      router.push(`/auth/reset-password?email=${userEmail}`);
+    onSuccess: ()=>{
+      const url =  `/auth/verify-otp?email=${userEmail}`
+router.push(url)
     },
 
     onError: (err: any) => {
-      setError(err.response.data);
-      toast.error(err.response.data);
+      setError(err.response.data)
+        toast.error(err.response.data);
     },
   });
 
-  async function onOtpSubmit(input: any) {
+
+
+  async function onEmailSubmit(input: PasswordInput) {
     try {
-      await verifyOtp(input);
+
+      await requestOtp(input)
     } catch (err) {
       console.log(err);
     }
@@ -85,7 +98,7 @@ const verifyOtp = (props: Props) => {
     <>
       <div className="container flex h-screen w-screen flex-col items-center justify-center">
         <Link
-          href="/auth/forgot-password"
+          href="/"
           className={cn(
             buttonVariants({ variant: "ghost" }),
             "absolute left-4 top-4 md:left-8 md:top-8",
@@ -100,10 +113,10 @@ const verifyOtp = (props: Props) => {
           <div className="flex flex-col space-y-2 text-center">
             {/* <Icons.logo className="mx-auto h-6 w-6  text-green-600" /> */}
             <h1 className="text-2xl  font-semibold tracking-tight">
-              Verify OTP !✅
+              Reset your password 🙈
             </h1>
             <p className="text-sm text-muted-foreground">
-              Check your email, spam folder too.
+              
             </p>
           </div>
           <Card className="border-0 border-none ">
@@ -117,21 +130,36 @@ const verifyOtp = (props: Props) => {
                 </Alert>
               )}
 
-              <Form {...otpForm}>
+              <Form {...passwordForm}>
                 <form
-                  onSubmit={otpForm.handleSubmit(onOtpSubmit)}
+                  onSubmit={passwordForm.handleSubmit(onEmailSubmit)}
                   className=" relative space-y-3     "
                 >
                   <div className={cn("space-y-3")}>
-                    {/* OTP */}
+                    {/* Passoword */}
                     <FormField
-                      control={otpForm.control}
-                      name="otp"
+                      control={passwordForm.control}
+                      name="password"
                       render={({ field }) => (
                         <FormItem>
-
+                          <FormLabel>new password</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter Four digit OTP" {...field} />
+                            <Input placeholder="" {...field} type="password" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* confirm password */}
+                    <FormField
+                      control={passwordForm.control}
+                      name="confirmPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>confirm new password</FormLabel>
+                          <FormControl>
+                            <Input placeholder="" {...field} type="password" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -139,25 +167,23 @@ const verifyOtp = (props: Props) => {
                     />
 
                     <div className="flex gap-4">
+
                       <Button
-                        disabled={isLoading}
-                        className="flex-1	"
-                        type="submit"
-                      >
-                        {isLoading ? "Verifying" : "Verify"}
+                      disabled={isLoading}
+                      className="flex-1	" type="submit">
+                        {isLoading ? 'Sending an OTP':'Send OTP'}
                       </Button>
                     </div>
                   </div>
                 </form>
               </Form>
             </CardContent>
-            <p className="px-8 text-center text-xs  text-muted-foreground">
-            Email: <b> {userEmail}</b> <br />
+            <p className="px-8 text-center text-sm text-muted-foreground">
               <Link
-                href="/auth/forgot-password"
-                className="hover:text-brand  underline underline-offset-4"
+                href="/auth/signin"
+                className="hover:text-brand underline underline-offset-4"
               >
-                wanna change email? tap here.
+                Remember password? Sign In
               </Link>
             </p>
           </Card>
@@ -167,4 +193,4 @@ const verifyOtp = (props: Props) => {
   );
 };
 
-export default verifyOtp;
+export default ForgotPassword;
