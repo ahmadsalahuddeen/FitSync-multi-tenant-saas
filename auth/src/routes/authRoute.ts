@@ -6,7 +6,7 @@ import { userSignIn } from '../controller/authController/signin';
 import { getCurrentUser } from '../controller/authController/current-user';
 import auth from '../middlewares/auth';
 import { oauthSignIn } from '../controller/authController/oauthSignIn';
-import { requestOtp } from '../controller/authController/otp';
+import { requestOtp, verifyOtp } from '../controller/authController/otp';
 
 const authRoute = require('express').Router();
 
@@ -31,11 +31,19 @@ authRoute.post(
   oauthSignIn
 );
 
-
+// get otp
 authRoute.post(
   '/otp',
   requestOtp
 );
+// verify otp
+authRoute.post(
+  '/verify-otp',
+  verifyOtp
+);
+
+
+
 
 authRoute.post(
   '/tenant/signup',
