@@ -50,7 +50,8 @@ type Props = {};
 const SignUp = (props: Props) => {
   const router = useRouter();
   const [FormStep, setFormStep] = useState(0);
-
+  const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false);
+  const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false);
   type Input = z.infer<typeof registerSchema>;
 
 
@@ -486,17 +487,35 @@ const SignUp = (props: Props) => {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-6">
-                  <Button variant="outline"
-                  onClick={()=> signIn('github')}>
-                    <Icons.gitHub className="mr-2 h-4 w-4" />
+                <Button
+                    variant="outline"
+                    disabled={isGitHubLoading}
+                    onClick={() => {
+                      setIsGitHubLoading(true);
+                      signIn("github");
+                    }}
+                  >
+                    {isGitHubLoading ? (
+                      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Icons.gitHub className="mr-2 h-4 w-4" />
+                    )}{" "}
                     Github
                   </Button>
-                  <Button variant="outline"
-                  onClick={()=> signIn('google')}
-                  
+
+                  <Button
+                    variant="outline"
+                    disabled={isGoogleLoading}
+                    onClick={() => {
+                      setIsGoogleLoading(true);
+                      signIn("google");
+                    }}
                   >
-                    
-                    <Icons.google className="mr-2 h-4 w-4" />
+                    {isGoogleLoading ? (
+                      <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Icons.google className="mr-2 h-4 w-4" />
+                    )}{" "}
                     Google
                   </Button>
                 </div>

@@ -142,7 +142,7 @@ export const verifyOtpHelper = async ({
       throw new BadRequestError('Incorrect Otp');
     }
 
-    return   true
+    return   otp
   } catch (error) {
     throw error;
   }

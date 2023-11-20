@@ -21,7 +21,7 @@ export const   verifyOtp = async (req: Request, res: Response) => {
 
 const validOtp = await verifyOtpHelper({email, otp})
 
-res.status(200).send({valid: validOtp})
+res.status(200).send({ validOtp})
 
   } catch (error: any) {
     console.log(error);

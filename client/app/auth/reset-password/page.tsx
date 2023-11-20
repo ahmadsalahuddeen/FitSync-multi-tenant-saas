@@ -45,6 +45,7 @@ const ForgotPassword = (props: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const userEmail = searchParams.get("email");
+  const userOtp = searchParams.get('otp')
 
   const [error, setError] = useState<string | null>(null);
 
@@ -68,14 +69,16 @@ const ForgotPassword = (props: Props) => {
     isError,
   } = useMutation({
     mutationFn: async (input: PasswordInput) => {
-      const otp = await axios.post("/api/auth/reset-password", {
+       await axios.post("/api/auth/reset-password", {
         email: input.password,
         newPassword: input.password,
+        otp: userOtp
       });
     },
     onSuccess: () => {
-      const url = `/auth/verify-otp?email=${userEmail}`;
-      router.push(url);
+  
+      router.push('/dashboard');
+      router.refresh()
     },
 
     onError: (err: any) => {
@@ -94,7 +97,6 @@ const ForgotPassword = (props: Props) => {
         toast.error("Password do not match");
         return;
       }
-      console.log("ddddddddddddddddddddddddd");
       await resetPassword(input);
     } catch (err) {
       console.log(err);

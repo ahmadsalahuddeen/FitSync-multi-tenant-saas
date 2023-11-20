@@ -122,7 +122,7 @@ setSeconds(30)
       return data;
     },
     onSuccess: (data) => {
-      router.push(`/auth/reset-password?email=${userEmail}`);
+      router.push(`/auth/reset-password?email=${userEmail}?otp=${data.validOtp}`);
     },
 
     onError: (err: any) => {
