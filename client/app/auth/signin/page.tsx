@@ -43,7 +43,7 @@ const SignIn = (props: Props) => {
   const [FormStep, setFormStep] = useState(0);
   const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false);
   const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false);
-
+  const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = useState<string | null>(null);
 
   type Input = z.infer<typeof signInSchema>;
@@ -61,6 +61,7 @@ const SignIn = (props: Props) => {
 
   async function onSubmit(input: Input) {
     try {
+      setIsLoading(true);
       const response = await signIn("credentials", {
         email: input.email,
         password: input.password,
@@ -69,6 +70,7 @@ const SignIn = (props: Props) => {
       if (response && !response.error) {
         router.push("/dashboard");
       } else {
+        setIsLoading(false);
         console.log("Error:", response);
         setError("Your email or passowrd is wrong!");
       }
@@ -161,8 +163,18 @@ const SignIn = (props: Props) => {
                     </p>
 
                     <div className="flex gap-4">
-                      <Button className="flex-1	" type="submit">
-                        Sign In
+                      <Button 
+                                            disabled={isLoading}
+
+                      className="flex-1	" type="submit">
+                       {isLoading ? 'Signing In...':'Sign In '}
+                        {isLoading ? (
+                      <Icons.spinner className="ml-2 h-4 w-4 animate-spin" />
+
+                        ):(
+                          <Icons.arrowRight className="ml-2 h-4 w-4 " />
+
+                        )}
                       </Button>
                     </div>
                   </div>

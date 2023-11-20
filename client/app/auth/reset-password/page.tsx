@@ -78,7 +78,7 @@ const ForgotPassword = (props: Props) => {
     },
     onSuccess: () => {
   
-      router.push('/dashboard');
+      router.push('/auth/signin');
       router.refresh()
     },
 

@@ -59,6 +59,7 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
+      required: true
       
     },
 name: {
@@ -118,7 +119,7 @@ name: {
 // pre hook will run whenever .save onvoked, thus hasing the password if it is modified
 userSchema.pre('save', async function (done) {
   if (this.isModified('password')) {
-    const hashedPassword = await Password.toHash(this.get('password') as string);
+    const hashedPassword = await Password.toHash(this.get('password') );
     this.set('password', hashedPassword);
   }
   done();

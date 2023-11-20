@@ -23,6 +23,7 @@ export const oauthSignIn = async (req: Request, res: Response) => {
         role: 'owner',
         name,
         image,
+        password: ''
         
       });
       await user.save();
