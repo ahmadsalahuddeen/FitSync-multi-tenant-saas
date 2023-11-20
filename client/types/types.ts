@@ -15,6 +15,7 @@ export type SiteConfig = {
 export type SideNavItem = {
   title: string;
   href: string;
+  disabled: boolean,
   icon?: JSX.Element;
   submenu?: boolean;
   subMenuItems?: SideNavItem[];

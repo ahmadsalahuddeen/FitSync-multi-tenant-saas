@@ -1,47 +1,104 @@
+import { Icon, Icons } from "@/components/icons";
+import { getCurrentUser } from "@/lib/session";
+import { SideNavItem } from "@/types/types";
+import { CreditCard } from "lucide-react";
 
-
-import { Icon, Icons } from '@/components/icons';
-import { SideNavItem } from '@/types/types';
-import { CreditCard } from 'lucide-react';
-
-
-
-
-export const menuItems = (gymId: any) =>  [
+export const menuItems = (gymId: any) => [
   {
     title: `Home`,
     href: `/dashboard/${gymId}/home`,
-    icon:  <Icons.home className="mr-2 h-4 w-4"/>,
+    disabled: false,
+    icon: <Icons.home className="mr-2 h-4 w-4" />,
   },
   {
     title: `Staff`,
     href: `/dashboard/${gymId}/staff`,
     icon: <Icons.key className="mr-2 h-4 w-4" />,
+    disabled: false,
     submenu: true,
     subMenuItems: [
-      { title: `Staff Management`, href: `/dashboard/${gymId}/staff` },
-      { title: `Trainer Availability`, href: `/dashboard/${gymId}/staff/availability` },
-     
+      {
+        title: `Staff Management`,
+        href: `/dashboard/${gymId}/staff`,
+        disabled: false,
+      },
+      {
+        title: `Trainer Availability`,
+        href: `/dashboard/${gymId}/staff/availability`,
+        disabled: false,
+      },
     ],
   },
   {
     title: `Customers`,
     href: `/dashboard/${gymId}/customers`,
-    icon:<Icons.users className="mr-2 h-4 w-4"/>,
+    disabled: false,
+    icon: <Icons.users className="mr-2 h-4 w-4" />,
   },
   {
     title: `Settings`,
     href: `/dashboard/${gymId}/settings`,
-    icon: <Icons.settings className="mr-2 h-4 w-4"/>,
+    disabled: false,
+    icon: <Icons.settings className="mr-2 h-4 w-4" />,
   },
   {
     title: `Billing`,
+    disabled: false,
     href: `/dashboard/${gymId}/settings/billing`,
-    icon:<CreditCard className="mr-2 h-4 w-4"/>,
+    icon: <CreditCard className="mr-2 h-4 w-4" />,
   },
   {
     title: `My personal Profile`,
     href: `/dashboard/${gymId}/user-profile`,
-    icon:<Icons.user className="mr-2 h-4 w-4"/>,
+    disabled: false,
+    icon: <Icons.user className="mr-2 h-4 w-4" />,
+  },
+];
+
+export const initalMenuItems = () => [
+  {
+    title: `Home`,
+    href: `/dashboard/home`,
+    disabled: false,
+    icon: <Icons.home className="mr-2 h-4 w-4" />,
+  },
+  {
+    title: `Staff`,
+    href: `/dashboard/staff`,
+    disabled: true,
+    icon: <Icons.key className="mr-2 h-4 w-4" />,
+    submenu: true,
+    subMenuItems: [
+      { title: `Staff Management`, href: `/dashboard/staff`, disabled: false },
+      {
+        title: `Trainer Availability`,
+        href: `/dashboard/staff/availability`,
+        disabled: false,
+      },
+    ],
+  },
+  {
+    title: `Customers`,
+    href: `/dashboard/customers`,
+    disabled: true,
+    icon: <Icons.users className="mr-2 h-4 w-4" />,
+  },
+  {
+    title: `Settings`,
+    href: `/dashboard/settings`,
+    disabled: true,
+    icon: <Icons.settings className="mr-2 h-4 w-4" />,
+  },
+  {
+    title: `Billing`,
+    href: `/dashboard/settings/billing`,
+    disabled: true,
+    icon: <CreditCard className="mr-2 h-4 w-4" />,
+  },
+  {
+    title: `My personal Profile`,
+    href: `/dashboard/user-profile`,
+    disabled: false,
+    icon: <Icons.user className="mr-2 h-4 w-4" />,
   },
 ];
