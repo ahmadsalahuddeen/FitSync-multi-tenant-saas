@@ -1,4 +1,4 @@
-'use client'
+ 'use client'
 
 
 import { fetchServerResponse } from "next/dist/client/components/router-reducer/fetch-server-response";

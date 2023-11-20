@@ -10,7 +10,7 @@ const HomePage = async (props: Props) => {
     
     <div>
 
-<h1>{`${user?.firstName} ${user?.lastName}`}</h1>
+<h1>{`${user?.name}`}</h1>
     </div>
   )
 }

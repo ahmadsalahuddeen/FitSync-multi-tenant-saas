@@ -10,10 +10,10 @@ export interface Gym {
 export interface User   {
   accountId: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  name: string;
+  image?: string,
   role: string;
-  gyms: Gym[];
+  gyms?: Gym[];
   id: string;
 }
 

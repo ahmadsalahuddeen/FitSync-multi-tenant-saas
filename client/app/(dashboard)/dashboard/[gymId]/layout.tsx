@@ -44,8 +44,8 @@ export default async function RootLayout({
               </div>
               <UserAccountNav
                 user={{
-                  name: `${user.lastName} ${user.lastName}`,
-                  image: null,
+                  name: `${user.name}`,
+                  image: user.image ||null,
                   email: user.email,
                 }}
               />
