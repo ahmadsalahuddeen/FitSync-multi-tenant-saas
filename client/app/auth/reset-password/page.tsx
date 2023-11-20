@@ -42,6 +42,7 @@ import { useMutation, useQuery } from "react-query";
 type Props = {};
 
 const ForgotPassword = (props: Props) => {
+  
   const router = useRouter();
   const searchParams = useSearchParams();
   const userEmail = searchParams.get("email");
@@ -70,8 +71,8 @@ const ForgotPassword = (props: Props) => {
   } = useMutation({
     mutationFn: async (input: PasswordInput) => {
        await axios.post("/api/auth/reset-password", {
-        email: input.password,
-        newPassword: input.password,
+        email: userEmail,
+        password: input.password,
         otp: userOtp
       });
     },

@@ -122,7 +122,7 @@ setSeconds(30)
       return data;
     },
     onSuccess: (data) => {
-      router.push(`/auth/reset-password?email=${userEmail}?otp=${data.validOtp}`);
+      router.push(`/auth/reset-password?email=${userEmail}&otp=${data.validOtp}`);
     },
 
     onError: (err: any) => {
@@ -203,13 +203,20 @@ await resendOtp(userEmail)
                     />
 
                     <div className="flex gap-4">
-                      <Button
-                        disabled={isLoading}
-                        className="flex-1	"
-                        type="submit"
-                      >
-                        {isLoading ? "Verifying" : "Verify"}
+
+                    <Button
+                      disabled={isLoading}
+                      className="flex-1	" type="submit">
+                        {isLoading ? 'Verifying':'Verify '}
+                        {isLoading ? (
+                      <Icons.spinner className="ml-2 h-4 w-4 animate-spin" />
+
+                        ):(
+                          <Icons.arrowRight className="ml-2 h-4 w-4 " />
+
+                        )}
                       </Button>
+
                     </div>
                   </div>
                 </form>
@@ -223,7 +230,9 @@ await resendOtp(userEmail)
                 onClick={() => {handleResendOtp()}}
                 className="hover:text-brand  m-0 px-2 underline  underline-offset-4"
               >
-                Resend OTP
+                 {newOtpLoading ? 'Resending OTP':'Resend OTP '}
+                        {newOtpLoading && <Icons.spinner className="ml-2 h-4 w-4 animate-spin" />}
+                
               </Button>
               in <b> {seconds}</b> seconds
             </p>

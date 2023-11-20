@@ -6,7 +6,7 @@ import { userSignIn } from '../controller/authController/signin';
 import { getCurrentUser } from '../controller/authController/current-user';
 import auth from '../middlewares/auth';
 import { oauthSignIn } from '../controller/authController/oauthSignIn';
-import { requestOtp, verifyOtp } from '../controller/authController/otp';
+import { requestOtp, resetPassword, verifyOtp } from '../controller/authController/resetPassword';
 
 const authRoute = require('express').Router();
 
@@ -26,24 +26,16 @@ authRoute.post(
 );
 
 // route for validating add updating user signed with google || github provider
-authRoute.post(
-  '/oauth-signin',
-  oauthSignIn
-);
+authRoute.post('/oauth-signin', oauthSignIn);
 
 // get otp
-authRoute.post(
-  '/forgot-password',
-  requestOtp
-);
+authRoute.post('/forgot-password', requestOtp);
+
 // verify otp
-authRoute.post(
-  '/verify-otp',
-  verifyOtp
-);
+authRoute.post('/verify-otp', verifyOtp);
 
-
-
+// reset password
+authRoute.post('/reset-password', resetPassword);
 
 authRoute.post(
   '/tenant/signup',
@@ -60,8 +52,6 @@ authRoute.post(
 );
 
 authRoute.post('/users/signout', signout);
-authRoute.get('/users/currentuser',auth, getCurrentUser);
-
-
+authRoute.get('/users/currentuser', auth, getCurrentUser);
 
 export { authRoute };

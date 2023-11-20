@@ -165,7 +165,14 @@ router.push(url)
                       <Button
                       disabled={isLoading}
                       className="flex-1	" type="submit">
-                        {isLoading ? 'Sending an OTP':'Send OTP'}
+                        {isLoading ? 'Sending':'Send OTP'}
+                        {isLoading ? (
+                      <Icons.spinner className="ml-2 h-4 w-4 animate-spin" />
+
+                        ):(
+                          <Icons.arrowRight className="ml-2 h-4 w-4 " />
+
+                        )}
                       </Button>
                     </div>
                   </div>

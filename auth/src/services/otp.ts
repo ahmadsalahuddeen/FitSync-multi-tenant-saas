@@ -12,25 +12,26 @@ export const generateOtp = async () => {
   }
 };
 
+// helper function for controller of api/auth/forgot-password to genrate and send otp email
 export const sendOtp = async ({
   email,
   subject,
 
-  duration 
+  duration,
 }: {
   email: string;
   subject: string;
-duration: number
+  duration: number;
 }) => {
   try {
-    if (!(email && subject )) {
+    if (!(email && subject)) {
       throw Error('provide values for email, subject, message');
     }
 
-const existingUser = await User.findOne({email})
-if(!existingUser){
-  throw new BadRequestError("Provide a valid registered email")
-}
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      throw new BadRequestError('Provide a valid registered email');
+    }
 
     // clear any old record
     const userData = await User.findOneAndUpdate(
@@ -38,8 +39,6 @@ if(!existingUser){
       { $set: { forgotPasswordToken: null, forgotPasswordTokenExpiry: null } },
       { new: true }
     );
-
-  
 
     // genearte OTP pin
     const generatedOtp = await generateOtp();
@@ -104,25 +103,26 @@ if(!existingUser){
   }
 };
 
+// controller function to verify otp - api/auth/verify-otp route's helper function
 export const verifyOtpHelper = async ({
   email,
   otp,
-
 }: {
   email: string;
   otp: string;
-
 }) => {
   try {
-    if (!(email && otp )) {
+    if (!(email && otp)) {
       throw new BadRequestError('please values for email, otp');
     }
 
     const user = await User.findOne({ email });
-    
+
     if (user?.forgotPasswordToken == null) {
       throw new BadRequestError('No otp token found.');
     }
+
+    // deleting otp from user after checking all the condition
     if (
       user &&
       user.forgotPasswordTokenExpiry &&
@@ -142,8 +142,39 @@ export const verifyOtpHelper = async ({
       throw new BadRequestError('Incorrect Otp');
     }
 
-    return   otp
+    // delete the otp if has verified
+    await User.findOneAndUpdate(
+      { email },
+      {
+        $set: { forgotPasswordToken: null, forgotPasswordTokenExpiry: null },
+      },
+      { new: true }
+    );
+
+    return otp;
   } catch (error) {
     throw error;
   }
+};
+
+export const resetUserPassword = async ({
+  email,
+  otp,
+  password,
+}: {
+  email: string;
+  otp: string;
+  password: string;
+}) => {
+  try {
+    const user = await User.findOne({ email });
+
+    if (otp !== user?.forgotPasswordToken) {
+      throw new BadRequestError('Invalid OTP passed. Check your inbox');
+    }
+
+    user.password = password;
+    await user.save();
+    return;
+  } catch (error) {}
 };
