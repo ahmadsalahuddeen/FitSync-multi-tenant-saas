@@ -58,7 +58,7 @@ export const menuItems = (gymId: any) => [
 export const initalMenuItems = () => [
   {
     title: `Home`,
-    href: `/dashboard/home`,
+    href: `/dashboard/undefined/home`,
     disabled: false,
     icon: <Icons.home className="mr-2 h-4 w-4" />,
   },

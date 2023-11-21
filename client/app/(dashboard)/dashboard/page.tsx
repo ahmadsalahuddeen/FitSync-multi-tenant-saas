@@ -19,6 +19,7 @@ import EmptyGymShell from "@/components/empty-gym-shell";
 type Props = {};
 
 const Dashboard = (props: Props) => {
+  const {gym} = useGymStore();
   const router = useRouter();
   //  router.refresh()
   const { data: session } = useSession();
@@ -27,7 +28,6 @@ const Dashboard = (props: Props) => {
     router.refresh();
     return redirect("/auth/signin");
   }
-  const gym = useGymStore((state) => state.gym);
 
 
   if (gym == null)

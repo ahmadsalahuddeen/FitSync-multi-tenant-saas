@@ -153,7 +153,7 @@ const SignIn = (props: Props) => {
                         </FormItem>
                       )}
                     />
-                    <p className=" text-start text-xs text-muted-foreground">
+                    <p className=" text-end text-xs text-muted-foreground">
                       <Link
                         href="/auth/forgot-password"
                         className="hover:text-brand underline underline-offset-4"
@@ -231,8 +231,9 @@ const SignIn = (props: Props) => {
                 href="/auth/signup"
                 className="hover:text-brand underline underline-offset-4"
               >
-                Don&apos;t have an account? Sign Up
+                Don&apos;t have an account? Sign Up 
               </Link>
+              
             </p>
           </Card>
         </div>

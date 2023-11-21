@@ -93,7 +93,7 @@ isLoading: newOtpLoading
   },
   onSuccess: ()=>{
 setSeconds(30)
-    toast.success('A new OTP is on your way!')
+    toast.success('A new OTP is on your way!', {description: `to ${userEmail}`})
   },
 
   onError: (err: any) => {

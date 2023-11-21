@@ -10,7 +10,7 @@ const EmptyGymShell = (props: Props) => {
         <DashboardShell>
     
           <EmptyPlaceholder>
-            <EmptyPlaceholder.Icon name="post" />
+            <EmptyPlaceholder.Icon name="warning" />
             <EmptyPlaceholder.Title>No gyms created</EmptyPlaceholder.Title>
             <EmptyPlaceholder.Description>
               You don&apos;t have any Gym yet. Add one right away.

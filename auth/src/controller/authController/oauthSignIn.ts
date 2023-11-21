@@ -3,7 +3,7 @@ import { BadRequestError } from '../../errors/bad-request-error';
 import { User } from '../../models/userSchema';
 import { Account } from '../../models/accountSchema';
 import { getDateNDaysFromNow } from '../../services/date';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
 export const oauthSignIn = async (req: Request, res: Response) => {
   try {
@@ -23,8 +23,7 @@ export const oauthSignIn = async (req: Request, res: Response) => {
         role: 'owner',
         name,
         image,
-        password: ''
-        
+        password: '',
       });
       await user.save();
 
@@ -35,25 +34,20 @@ export const oauthSignIn = async (req: Request, res: Response) => {
         role: user.role,
       };
 
-    const accessToken = jwt.sign(payload, process.env.JWT_KEY!);
-    req.session = {
-      jwt: accessToken,
-    };
-    res.status(201).send({
-      user,
-      backendTokens: {
-        accessToken,
-        refreshToken: jwt.sign(payload, process.env.JWT_KEY!, {
-          expiresIn: '7d',
-        }),
-      },
-    });
-
-    }else {
-      
-
-      
-      
+      const accessToken = jwt.sign(payload, process.env.JWT_KEY!);
+      req.session = {
+        jwt: accessToken,
+      };
+      res.status(201).send({
+        user,
+        backendTokens: {
+          accessToken,
+          refreshToken: jwt.sign(payload, process.env.JWT_KEY!, {
+            expiresIn: '7d',
+          }),
+        },
+      });
+    } else {
       const payload = {
         accountId: userData.accountId,
         id: userData.id,
@@ -66,7 +60,7 @@ export const oauthSignIn = async (req: Request, res: Response) => {
       req.session = {
         jwt: accessToken,
       };
-    
+
       res.status(200).send({
         user: userData,
         backendTokens: {
@@ -77,10 +71,8 @@ export const oauthSignIn = async (req: Request, res: Response) => {
         },
       });
     }
-
-
   } catch (error) {
-    console.log(error)
+    console.log(error);
     throw new BadRequestError('Error handling provider signin');
   }
 };

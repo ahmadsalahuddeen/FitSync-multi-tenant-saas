@@ -35,6 +35,8 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       token,
       process.env.JWT_KEY!
     ) as userPayload;
+
+      
     
     req.currentUser = payload;
   

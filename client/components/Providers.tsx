@@ -25,7 +25,7 @@ const Providers = ({ children, ...props }: ThemeProviderProps) => {
        
         
         </SessionProvider>
-        <Toaster richColors position="top-right" />
+        <Toaster richColors position="top-center" />
       </ThemeProvider>
 
     </QueryClientProvider>

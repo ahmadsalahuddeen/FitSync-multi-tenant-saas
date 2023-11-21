@@ -79,6 +79,7 @@ const ForgotPassword = (props: Props) => {
     
     },
     onSuccess: ()=>{
+      toast.success('An OTP is sent to ', {description: userEmail})
 
       const url =  `/auth/verify-otp?email=${userEmail}`
 router.push(url)
