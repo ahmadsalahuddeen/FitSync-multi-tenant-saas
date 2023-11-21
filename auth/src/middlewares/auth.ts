@@ -9,7 +9,7 @@ type userPayload = {
   accountId: string,
   id: string;
   email: string;
-  role?: string;
+  role: string;
   backendTokens: {
     accessToken: string;
     refreshToken?: string;
@@ -19,7 +19,7 @@ type userPayload = {
 declare global {
   namespace Express {
     interface Request {
-      currentUser?: userPayload;
+      currentUser: userPayload;
     }
   }
 }
