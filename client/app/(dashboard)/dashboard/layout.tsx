@@ -39,6 +39,7 @@ export default async function RootLayout({
             <HeaderNav params={params} />
             <div className="flex">
               <div className="hidden justify-between gap-4 px-4 md:block">
+                <GymSwithcer className="mr-6"/>
                 <ThemeToggle />
               </div>
               <UserAccountNav
