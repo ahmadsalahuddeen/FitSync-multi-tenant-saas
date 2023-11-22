@@ -10,8 +10,8 @@ type GymInfo = {
 interface userAttrs {
   accountId: string;
   name: string
-  // firstName: string;
-  // lastName: string;
+
+  status?: string;
   image?: string;
   bio?: string,
   forgotPasswordToken?: String,
@@ -34,8 +34,8 @@ interface userModel extends mongoose.Model<userDoc> {
 interface userDoc extends mongoose.Document {
   accountId: string;
   name: string;
-  // firstName: string;
-  // lastName: string;
+  status?: string;
+
   image?: string;
   bio?: string,
   forgotPasswordToken?: String,
@@ -66,14 +66,10 @@ name: {
   type: String,
   required: true
 },
-    // firstName: {
-    //   type: String,
-    //   required: true,
-    // },
-    // lastName: {
-    //   type: String,
-    //   required: true,
-    // },
+status: {
+  type: String,
+},
+
     image: {
       type: String,
     },

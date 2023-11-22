@@ -20,9 +20,9 @@ const TestingComp = (props: Props) => {
   return (
     <Dialog>
     <DialogHeader>
-    <DialogTitle>Edit profile</DialogTitle>
+    <DialogTitle>Add Gym</DialogTitle>
     <DialogDescription>
-      Make changes to your profile here. Click save when you're done.
+      Provide details about your new gym. 
     </DialogDescription>
   </DialogHeader>
   <div className="grid gap-4 py-4">

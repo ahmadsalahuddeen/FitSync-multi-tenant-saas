@@ -13,11 +13,18 @@ const EmptyGymShell = (props: Props) => {
       <DashboardShell>
         <EmptyPlaceholder>
           {/* <EmptyPlaceholder.Icon name="logo" /> */}
-          <svg
-            src="https://illustrations.popsy.co/yellow/woman-on-laptop-excel.svg"
-            width="160"
-            height="160"
-            className="-mb-5"
+          <Image
+            className="hidden scale-0 dark:block dark:scale-100"
+            src="/images/illustrations/gymDark.svg"
+            width="170"
+            height="170"
+            alt="Image"
+          />
+          <Image
+            className="dark:hidden"
+            src="https://illustrations.popsy.co/lime/weight-lifting.svg"
+            width="170"
+            height="170"
             alt="Image"
           />
           <EmptyPlaceholder.Title>Welcome to FitSync 🥳</EmptyPlaceholder.Title>
