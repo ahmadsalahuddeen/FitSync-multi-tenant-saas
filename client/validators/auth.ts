@@ -47,9 +47,9 @@ export const emailZod = z.object({
 
 
 export const gymcreationSchema = z.object({
-  name: z.string().min(1).max(200),
+  name: z.string().min(1, "Provide gym name").max(200),
  phoneNumber: z
-  .string().min(5)
+  .string().min(7).max(15)
 
   .refine((val) => !isNaN(val as unknown as number), {
     message: 'phone number should be a Number ',
