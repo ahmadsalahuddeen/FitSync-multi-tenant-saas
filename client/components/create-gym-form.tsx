@@ -53,7 +53,7 @@ import {
   CommandItem,
 } from "./ui/command";
 import { Country, ICountry, IState, State } from "country-state-city";
-import { Check, ChevronUpIcon, ChevronsUpDown } from "lucide-react";
+import { Check, CheckIcon, ChevronUpIcon, ChevronsUpDown } from "lucide-react";
 
 type Props = {};
 
@@ -62,7 +62,11 @@ const GymCreateForm = (props: Props) => {
   let countryData: ICountry[] = [] = Country.getAllCountries();
   const [stateData, setStateData] = useState<IState[] | undefined>();
 
-  const [country, setCountry] = useState(countryData[0]);
+  const [country, setCountry] = useState({
+    "name": "fakeittillmakeit",
+    "isoCode": "AF",
+   
+});
   const [state, setState] = useState<IState | undefined>();
 
   useEffect(() => {
@@ -176,76 +180,78 @@ const GymCreateForm = (props: Props) => {
                 {/* country */}
 
                 <FormField
-                  control={form.control}
-                  name="phoneNumber"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>Country</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                "w-[200px] justify-between",
-                                !field.value && "text-muted-foreground",
-                              )}
-                            >
-                              {field.value
-                                ? countryData.find(
-                                    (country) =>
-                                      country.isoCode === field.value,
-                                  )?.name
-                                : "Select country"}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                          <Command>
-                            <CommandInput placeholder="Search country..." />
-                            <CommandEmpty>No country found.</CommandEmpty>
-                            <CommandGroup>
-                              {countryData.map((country) => (
-                                <CommandItem
-                                  value={country.isoCode}
-                                  key={country.phonecode}
-                                  onSelect={() => {
-                                    form.setValue("country", country.isoCode);
-                                  }}
-                                >
-                                  <Icons.check
-                                    className={cn(
-                                      "mr-2 h-4 w-4",
-                                      country.isoCode === field.value
-                                        ? "opacity-100"
-                                        : "opacity-0",
-                                    )}
-                                  />
-                                  {country.name}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
+          control={form.control}
+          name="country"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Language</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "w-[200px] justify-between",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value
+                        ? countryData.find(
+                            (el) => el.isoCode === field.value
+                          )?.name
+                        : "Select language"}
+                      <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search language..." />
+                    <CommandEmpty>No language found.</CommandEmpty>
+                    <CommandGroup>
+                      {countryData.map((el) => (
+                        <CommandItem
+                          value={el.name}
+                          key={el.name}
+                          onSelect={() => {
+                            setCountry(el)
+                            form.setValue("country", el.isoCode)
+                          }}
+                        >
+                          <CheckIcon
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              el.isoCode === field.value
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                          {el.name}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+             
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
                 {/* state */}
                 <FormField
+           
                   control={form.control}
                   name="state"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel>state</FormLabel>
                       <Popover>
-                        <PopoverTrigger asChild>
+                        <PopoverTrigger
+                             disabled={country.name === 'fakeittillmakeit'}
+                        asChild>
                           <FormControl>
                             <Button
                               variant="outline"
@@ -256,9 +262,9 @@ const GymCreateForm = (props: Props) => {
                               )}
                             >
                               {field.value
-                                ? countryData.find(
-                                    (country) =>
-                                      country.isoCode === field.value,
+                                ? stateData?.find(
+                                    (el) =>
+                                      el.name === field.value,
                                   )?.name
                                 : "Select state"}
                               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -270,24 +276,24 @@ const GymCreateForm = (props: Props) => {
                             <CommandInput placeholder="Search country..." />
                             <CommandEmpty>No state found.</CommandEmpty>
                             <CommandGroup>
-                              {countryData.map((country) => (
+                              {stateData?.map((el) => (
                                 <CommandItem
-                                  value={country.isoCode}
-                                  key={country.phonecode}
+                                  value={el.name}
+                                  key={el.name}
                                   onSelect={() => {
-                                    setCountry(country)
-                                    form.setValue("country", country.isoCode);
+
+                                    form.setValue("state", el.name);
                                   }}
                                 >
                                   <Icons.check
                                     className={cn(
                                       "mr-2 h-4 w-4",
-                                      country.isoCode === field.value
+                                      el.name === field.value
                                         ? "opacity-100"
                                         : "opacity-0",
                                     )}
                                   />
-                                  {country.name}
+                                  {el.name}
                                 </CommandItem>
                               ))}
                             </CommandGroup>
