@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import PhoneInputWithCountrySelect, { isPossiblePhoneNumber, isValidPhoneNumber } from "react-phone-number-input";
+import React, { useEffect, useState } from "react";
 
-import 'react-phone-input-2/lib/bootstrap.css'
 import {
   Dialog,
   DialogContent,
@@ -40,19 +38,46 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Alert, AlertDescription } from "./ui/alert";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import TelInput from "./phoneInput";
 
 import { Select } from "./ui/select";
 import { Input } from "./ui/input";
-import PhoneInput from "react-phone-input-2";
-
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "./ui/command";
+import { Country, ICountry, IState, State } from "country-state-city";
+import { Check, ChevronUpIcon, ChevronsUpDown } from "lucide-react";
 
 type Props = {};
 
 const GymCreateForm = (props: Props) => {
+  
+  let countryData: ICountry[] = [] = Country.getAllCountries();
+  const [stateData, setStateData] = useState<IState[] | undefined>();
+
+  const [country, setCountry] = useState(countryData[0]);
+  const [state, setState] = useState<IState | undefined>();
+
+  useEffect(() => {
+    setStateData(State.getStatesOfCountry(country?.isoCode ) ) ;
+  }, [country]);
+
+
+  useEffect(() => {
+    stateData && setState(stateData[0]);
+  }, [stateData]);
+
+
+
+  console.log(countryData);
+
   type Input = z.infer<typeof gymcreationSchema>;
   const [validateError, setValidateError] = useState("");
 
@@ -94,31 +119,8 @@ const GymCreateForm = (props: Props) => {
   }
 
   const watcher = form.watch();
-  let validPhoneNumber = false;
+  
 
-  const validatePhoneNumber = (
-    inputNumber: string,
-    country: any,
-    isDirty: boolean,
-    phoneLength: number,
-  ) => {
-    if (isDirty) {
-      if (
-        inputNumber &&
-        inputNumber?.replace(country.dialCode, "")?.trim() === ""
-      ) {
-        validPhoneNumber = false;
-        return false;
-      } else if (inputNumber.length < phoneLength) {
-        validPhoneNumber = false;
-        return false;
-      }
-      validPhoneNumber = true;
-      return true;
-    }
-    validPhoneNumber = false;
-    return false;
-  };
   return (
     <Dialog>
       <Card className="border-0 shadow-none">
@@ -153,7 +155,7 @@ const GymCreateForm = (props: Props) => {
               onSubmit={form.handleSubmit(onSubmit)}
               className=" relative space-y-3     "
             >
-              <div className={cn("space-y-3")}>
+              <div className={cn("space-y-9")}>
                 {/* gym Name */}
                 <FormField
                   control={form.control}
@@ -163,7 +165,6 @@ const GymCreateForm = (props: Props) => {
                       <FormLabel>Gym name</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="eg: Power gym inc - branch 2 "
                           {...field}
                         />
                       </FormControl>
@@ -171,39 +172,134 @@ const GymCreateForm = (props: Props) => {
                     </FormItem>
                   )}
                 />
-                {/* phone Number */}
+                <div className="grid gap-4 sm:grid-cols-2">
+                {/* country */}
 
                 <FormField
                   control={form.control}
                   name="phoneNumber"
-                  rules={{ validate: (value) => isValidPhoneNumber(value) }}
                   render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>phone number</FormLabel>
-                    <FormControl>
-                  
-                    <PhoneInput
-                    // dropdownClass="z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
-                    // buttonClass="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground "
-                    // searchClass="bg-green"
-                    inputClass="flex-1  h-10 w-full border-md           rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    containerClass="flex w-full h-10   "
-                    specialLabel=" "
-                    value={field.value}
-                    onChange={field.onChange}
-                    placeholder="Enter your number"
-country={'us'}
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Country</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn(
+                                "w-[200px] justify-between",
+                                !field.value && "text-muted-foreground",
+                              )}
+                            >
+                              {field.value
+                                ? countryData.find(
+                                    (country) =>
+                                      country.isoCode === field.value,
+                                  )?.name
+                                : "Select country"}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                          <Command>
+                            <CommandInput placeholder="Search country..." />
+                            <CommandEmpty>No country found.</CommandEmpty>
+                            <CommandGroup>
+                              {countryData.map((country) => (
+                                <CommandItem
+                                  value={country.isoCode}
+                                  key={country.phonecode}
+                                  onSelect={() => {
+                                    form.setValue("country", country.isoCode);
+                                  }}
+                                >
+                                  <Icons.check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      country.isoCode === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0",
+                                    )}
+                                  />
+                                  {country.name}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
 
-
-
-                    
-                    />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                      <FormMessage />
+                    </FormItem>
                   )}
                 />
 
+
+                {/* state */}
+                <FormField
+                  control={form.control}
+                  name="state"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>state</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn(
+                                "w-[200px] justify-between",
+                                !field.value && "text-muted-foreground",
+                              )}
+                            >
+                              {field.value
+                                ? countryData.find(
+                                    (country) =>
+                                      country.isoCode === field.value,
+                                  )?.name
+                                : "Select state"}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                          <Command>
+                            <CommandInput placeholder="Search country..." />
+                            <CommandEmpty>No state found.</CommandEmpty>
+                            <CommandGroup>
+                              {countryData.map((country) => (
+                                <CommandItem
+                                  value={country.isoCode}
+                                  key={country.phonecode}
+                                  onSelect={() => {
+                                    setCountry(country)
+                                    form.setValue("country", country.isoCode);
+                                  }}
+                                >
+                                  <Icons.check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      country.isoCode === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0",
+                                    )}
+                                  />
+                                  {country.name}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+</div>
                 <div className="flex gap-4">
                   <Button className="flex-1 	" type="submit">
                     submit

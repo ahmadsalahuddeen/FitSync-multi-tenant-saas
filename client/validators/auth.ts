@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { string, z } from 'zod';
 
 // zod schema for tenant/business signup
 export const registerSchema = z.object({
@@ -47,14 +47,16 @@ export const emailZod = z.object({
 
 
 export const gymcreationSchema = z.object({
-  name: z.string().min(1, "Provide gym name").max(200),
+  name: z.string({required_error: 'Please provide a gym name'}).max(200),
  phoneNumber: z
   .string().min(7).max(15)
 
   .refine((val) => !isNaN(val as unknown as number), {
     message: 'phone number should be a Number ',
   }),
-  
+  country: z.string({required_error: "Please select a country"}),
+  state: z.string({required_error: "Please select a state"}),
+
 })
 
 
