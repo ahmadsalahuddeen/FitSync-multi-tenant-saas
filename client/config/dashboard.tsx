@@ -61,7 +61,7 @@ export const initalMenuItems = () => [
     title: `Home`,
     href: `/dashboard/undefined/home`,
     disabled: false,
-    icon: <Icons.settings className="mr-2 h-4 w-4" />,
+    icon: <Icons.home className="mr-2 h-4 w-4" />,
   },
   {
     title: `Settings`,

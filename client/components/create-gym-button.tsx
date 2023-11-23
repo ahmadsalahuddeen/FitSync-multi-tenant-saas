@@ -11,7 +11,7 @@ import {
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import TestingComp from './testing';
+import GymCreateForm from './create-gym-form';
 import { PlusCircledIcon } from '@radix-ui/react-icons';
 type Props = {}
 
@@ -25,7 +25,7 @@ const GymCreateButton = (props: Props) => {
       <Button variant="default"> <PlusCircledIcon className="mr-2 h-5 w-5" />Create a new Gym</Button>
     </DialogTrigger>
     <DialogContent>
-    <TestingComp/>
+    <GymCreateForm/>
     </DialogContent>
   </Dialog>
     )

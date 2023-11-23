@@ -10,7 +10,7 @@ export const registerSchema = z.object({
   confirmPassword: z.string().min(8).max(100),
   country: z.string().optional(),
   phoneNumber: z
-    .string()
+    .string().min(5)
 
     .refine((val) => !isNaN(val as unknown as number), {
       message: 'phone number should be a Number ',
@@ -44,5 +44,17 @@ export const emailZod = z.object({
 
 })
 
+
+
+export const gymcreationSchema = z.object({
+  name: z.string().min(1).max(200),
+ phoneNumber: z
+  .string().min(5)
+
+  .refine((val) => !isNaN(val as unknown as number), {
+    message: 'phone number should be a Number ',
+  }),
+  
+})
 
 

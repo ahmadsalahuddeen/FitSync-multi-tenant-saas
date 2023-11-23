@@ -27,7 +27,7 @@ const EmptyGymShell = (props: Props) => {
             height="170"
             alt="Image"
           />
-          <EmptyPlaceholder.Title>Welcome to FitSync 🥳</EmptyPlaceholder.Title>
+          <EmptyPlaceholder.Title>Welcome to FitSync!</EmptyPlaceholder.Title>
           <EmptyPlaceholder.Description>
             You don&apos;t have any Gym added yet. Add one right away.
           </EmptyPlaceholder.Description>

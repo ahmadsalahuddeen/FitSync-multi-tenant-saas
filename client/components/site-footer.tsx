@@ -32,7 +32,15 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
             >
               127.0.0.1
             </a>
-            
+            . Illustrations by{" "}
+            <a
+              href="https://popsy.co"
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium underline underline-offset-4"
+            >
+              Popsy
+            </a>
             . The source code is available on{" "}
             <a
               href={siteConfig.links.github}

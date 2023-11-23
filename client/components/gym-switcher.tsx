@@ -46,7 +46,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import TestingComp from "./testing"
+import GymCreateForm from "./create-gym-form"
 
 
 // TODO: fetch all gyms related to the user and update the dummy values
@@ -184,7 +184,7 @@ export default function GymSwitcher({ className }: GymSwitcherProps) {
         </PopoverContent>
       </Popover>
       <DialogContent>
-        <TestingComp/>
+        <GymCreateForm/>
       </DialogContent>
     </Dialog>
      

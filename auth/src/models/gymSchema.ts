@@ -1,4 +1,4 @@
-import mongoose, { Types, mongo } from 'mongoose';
+import mongoose, { Mongoose, Types, mongo } from 'mongoose';
 import { Password } from '../services/password';
 import { Schema } from 'zod';
 
@@ -8,6 +8,7 @@ interface gymAttrs {
   name: string;
   phoneNumber: string;
   users?: Types.ObjectId[];
+  creatorId?: Types.ObjectId;
   image?: string
 
 }
@@ -47,6 +48,10 @@ const gymSchema = new mongoose.Schema(
     phoneNumber: {
       type: String,
       required: true,
+    },
+    creatorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
     },
     users: [
       {
