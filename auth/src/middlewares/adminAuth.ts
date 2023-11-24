@@ -39,6 +39,15 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       
     
     req.currentUser = payload;
+
+    if (!req.currentUser) throw new BadRequestError('something went wrong, check if you are loggged In');
+
+    const { role } = req.currentUser;
+    if (role !== 'owner') {
+      throw new NotAuthorizedError(
+        'sorry, only admins allowed, your are not authorized!🪲'
+      );
+    }
   
   } catch (error) {
     throw new NotAuthorizedError();

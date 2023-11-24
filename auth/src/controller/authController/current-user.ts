@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 const route = express.Router();
 
 import { requireAuth } from '../../middlewares/require-auth';
-import auth from '../../middlewares/auth';
+import auth from '../../middlewares/adminAuth';
 import { User } from '../../models/userSchema';
 
 export const getCurrentUser = async(req: Request, res: Response) => {
