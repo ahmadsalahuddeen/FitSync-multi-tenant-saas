@@ -76,19 +76,19 @@ const GymCreateForm = (props: Props) => {
   useEffect(() => {
     setStateData(State.getStatesOfCountry(country?.isoCode));
   }, [country]);
-
+  
   useEffect(() => {
     stateData && setState(stateData[0]);
   }, [stateData]);
-
-  console.log(countryData);
-
+  
+  
+  
   type Input = z.infer<typeof gymcreationSchema>;
   const [validateError, setValidateError] = useState("");
-
+  
   const {
     mutate: doRequest,
-
+    
     isError,
     isLoading,
     error,
@@ -106,7 +106,7 @@ const GymCreateForm = (props: Props) => {
       }
     },
   });
-
+  
   const form = useForm<Input>({
     resolver: zodResolver(gymcreationSchema),
     defaultValues: {
@@ -114,6 +114,7 @@ const GymCreateForm = (props: Props) => {
       phoneNumber: "",
     },
   });
+  
 
   async function onSubmit(input: Input) {
     try {

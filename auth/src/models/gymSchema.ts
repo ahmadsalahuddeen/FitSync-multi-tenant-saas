@@ -10,6 +10,15 @@ interface gymAttrs {
   users?: Types.ObjectId[];
   creatorId?: Types.ObjectId;
   image?: string
+  address?: {
+    streetAddressOne?: string;
+    streetAddressTwo?: string;
+    region?: string;
+    state?: string;
+    formatted?: string;
+    country: string;
+    timeZone?: string;
+  };
 
 }
 
@@ -27,6 +36,15 @@ interface gymDoc extends mongoose.Document {
   phoneNumber: string;
   users?: Types.ObjectId[];
   image?: string
+  address?: {
+    streetAddressOne?: string;
+    streetAddressTwo?: string;
+    region?: string;
+    state?: string;
+    formatted?: string;
+    country: string;
+    timeZone?: string;
+  };
 }
 
 const gymSchema = new mongoose.Schema(
@@ -53,12 +71,36 @@ const gymSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
     },
+
     users: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
       }
-    ]
+    ],
+    address: {
+      streetAddressOne: {
+        type: String,
+      },
+      streetAddressTwo: {
+        type: String,
+      },
+      region: {
+        type: String,
+      },
+      state: {
+        type: String,
+      },
+      formatted: {
+        type: String,
+      },
+      country: {
+        type: String,
+      },
+      timeZone: {
+        type: String,
+      },
+    },
   },
 
   {
