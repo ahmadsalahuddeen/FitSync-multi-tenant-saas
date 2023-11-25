@@ -9,7 +9,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { notFound, redirect } from "next/navigation";
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
-import { useGymStore } from "@/store/gym";
+import { useGymStore, useGymsStore } from "@/store/gym";
 import { useRouter } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { DashboardShell } from "@/components/dashboard-shell";
@@ -22,6 +22,11 @@ import { getAllGyms } from "@/services/gymService";
 type Props = {};
 
 const Dashboard = (props: Props) => {
+  const { data: session } = useSession();
+  
+  if (!session?.user) {
+    return redirect("/auth/signin");
+  }
   const {
     status,
     error,
@@ -31,17 +36,23 @@ const Dashboard = (props: Props) => {
     queryFn: getAllGyms,
   });
 
-  const gym = useGymStore.getState().gym;
+  if (!gyms || gyms.length === 0) return <EmptyGymShell />;
 
-  const { data: session } = useSession();
+  // setting or updating gyms state
+  const { setGyms } = useGymsStore();
+  
+  setGyms(gyms);
 
-  if (!session?.user) {
-    return redirect("/auth/signin");
-  }
 
-  if (gyms[0] == null) return <EmptyGymShell />;
+  //setting or updating the current selected gym
+  const { setGym, gym } = useGymStore();
+  
+  if (gym === null) setGym(gyms[0]);
 
-  redirect(`/dashboard/${gym}/home`);
+
+
+
+  redirect(`/dashboard/${gym?.id}/home`);
 };
 
 export default Dashboard;

@@ -3,7 +3,7 @@ import { Password } from '../services/password';
 import { Schema } from 'zod';
 
 //interface that describes the properties to create a new Gym
-interface gymAttrs {
+export interface gymAttrs {
   accountId: string ;
   name: string;
   phoneNumber: string;

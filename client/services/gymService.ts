@@ -1,6 +1,6 @@
 import axios from "@/lib/axios";
 
-interface Gym {
+export type Gym = {
   id: string
   accountId: string ;
   name: string;

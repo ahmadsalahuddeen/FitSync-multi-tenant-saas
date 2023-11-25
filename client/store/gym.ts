@@ -1,28 +1,30 @@
+
+import { Gym } from "@/services/gymService";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 // interface for selected usegymstore
 interface GymStore {
-  gym: string;
+  gym: Gym | null;
 
-  setGym: (gym: any) => void;
+  setGym: (gym: Gym) => void;
 }
 // store current selected gym
 export const useGymStore = create<GymStore>((set) => ({
-  gym:'',
-  setGym: (gym: any) => set({ gym }),
+  gym: null,
+  setGym: (gym: Gym) => set({ gym }),
 }));
 
 
 // interface for usegymstore
 interface GymsStore {
-  gyms: any;
+  gyms: Gym[] | null ;
 
-  setGyms: (gym: any) => void;
+  setGyms: (gym: Gym[]) => void;
 }
 // store for all gyms of current user
 export const useGymsStore = create<GymsStore>((set) => ({
   gyms: null,
 
-  setGyms: (newGym: string) => set((state) => ({ ...state.gyms, newGym })),
+  setGyms: (newGym: Gym[]) => set((state) => ({ ...state.gyms, newGym })),
 }));
