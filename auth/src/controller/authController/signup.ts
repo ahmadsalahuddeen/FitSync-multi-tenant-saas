@@ -34,6 +34,8 @@ export const tenantSignup = async (req: Request, res: Response) => {
   }
 
   try {
+
+
     // create account, gym, user document and save to DB
     const account = Account.build({
       subscriptionType: 'freeTrial',
@@ -55,12 +57,12 @@ export const tenantSignup = async (req: Request, res: Response) => {
       password,
       role: 'owner',
    name: `${firstName} ${lastName}`,
-      gyms: [{ gymId: gym.id, name: gym.name }],
+      gyms: gym.id,
     });
     await user.save();
 
     //add user to the gym
-    gym.users = [user.id];
+    gym.staffs =  user.id;
     await gym.save();
 
     const payload = {
