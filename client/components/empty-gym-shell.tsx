@@ -15,17 +15,23 @@ const EmptyGymShell = (props: Props) => {
           {/* <EmptyPlaceholder.Icon name="logo" /> */}
           <Image
             className="hidden scale-0 dark:block dark:scale-100"
-            src="/images/illustrations/gymDark.svg"
+            src={"/images/illustrations/gymDark.svg"}
             width="170"
             height="170"
             alt="Image"
+            placeholder="blur"
+            blurDataURL={"/images/illustrations/gymDark.svg"}
+
           />
           <Image
             className="dark:hidden"
-            src="https://illustrations.popsy.co/lime/weight-lifting.svg"
+            src={"/images/illustrations/gymLight.svg"}
+            
             width="170"
             height="170"
             alt="Image"
+            placeholder="blur"
+            blurDataURL={"/images/illustrations/gymLight.svg"}
           />
           <EmptyPlaceholder.Title>Welcome to FitSync!</EmptyPlaceholder.Title>
           <EmptyPlaceholder.Description>

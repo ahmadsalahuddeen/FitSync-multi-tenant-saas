@@ -1,4 +1,4 @@
-"use client";
+
 
 import { fetchServerResponse } from "next/dist/client/components/router-reducer/fetch-server-response";
 import React from "react";
@@ -15,22 +15,25 @@ import { useRouter } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { DashboardShell } from "@/components/dashboard-shell";
 import EmptyGymShell from "@/components/empty-gym-shell";
+import { getCurrentUser } from "@/lib/session";
 
 type Props = {};
 
-const Dashboard = (props: Props) => {
-  const {gym} = useGymStore();
-  const router = useRouter();
+
+
+const Dashboard = async (props: Props) => {
+
   //  router.refresh()
-  const { data: session } = useSession();
-  console.log(session);
-  if (!session?.user) {
-    router.refresh();
+  const user = await  getCurrentUser();
+  console.log(user);
+  if (!user) {
+
     return redirect("/auth/signin");
+
   }
 
 
-  if (gym == null)
+  if (user.gyms == null)
     return (
       <EmptyGymShell/>
     );
