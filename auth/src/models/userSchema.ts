@@ -1,10 +1,7 @@
 import mongoose, { Mongoose, Schema, Types, mongo } from 'mongoose';
 import { Password } from '../services/password';
 
-type GymInfo = {
-  gymId: string; // Type for Schema.Types.ObjectId
-  name: string;
-}
+
 
 //interface that describes the properties to create a new User
 interface userAttrs {
@@ -19,7 +16,7 @@ interface userAttrs {
   email: string;
   password?: string;
   role: 'owner' | 'member';
-  gyms?: GymInfo[]
+  gyms?: string
 
 }
 
@@ -43,7 +40,7 @@ interface userDoc extends mongoose.Document {
   email: string;
   password?: string;
   role: 'owner' | 'member';
-  gyms?: GymInfo[]
+  gyms?: string
 }
 
 const userSchema = new mongoose.Schema(
@@ -55,7 +52,9 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
+      unique: true,
+      lowercase: true,
+      required: [true, "Please enter your email"],
     },
     password: {
       type: String,
@@ -87,14 +86,8 @@ status: {
 
     gyms: [
       {
-        gymId: {
-          type: Schema.Types.ObjectId,
-          ref: 'Gym',
-
-        },
-        name: {
-          type: String,
-        },
+        type: Schema.Types.ObjectId,
+        ref: 'Gym',
       },
     ],
 

@@ -4,11 +4,11 @@ import { Schema } from 'zod';
 
 //interface that describes the properties to create a new Gym
 interface gymAttrs {
-  accountId: string;
+  accountId: string ;
   name: string;
   phoneNumber: string;
-  users?: Types.ObjectId[];
-  creatorId?: Types.ObjectId;
+  staffs?: string ;
+  creatorId?: string ;
   image?: string
   address?: {
     streetAddressOne?: string;
@@ -18,6 +18,7 @@ interface gymAttrs {
     formatted?: string;
     country: string;
     timeZone?: string;
+    isoCode?: string
   };
 
 }
@@ -31,10 +32,12 @@ interface gymModel extends mongoose.Model<gymDoc> {
 // interface that describes the properties
 // of a Gym Document
 interface gymDoc extends mongoose.Document {
-  accountId: string;
+  accountId: string ;
   name: string;
   phoneNumber: string;
-  users?: Types.ObjectId[];
+  staffs?: string ;
+  creatorId?: string ;
+
   image?: string
   address?: {
     streetAddressOne?: string;
@@ -44,6 +47,8 @@ interface gymDoc extends mongoose.Document {
     formatted?: string;
     country: string;
     timeZone?: string;
+    isoCode?: string
+
   };
 }
 
@@ -72,12 +77,19 @@ const gymSchema = new mongoose.Schema(
       ref: "User"
     },
 
-    users: [
+    staffs: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
       }
     ],
+ // TODO: update after creating customer logic
+    // customers: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'User'
+    //   }
+    // ],
     address: {
       streetAddressOne: {
         type: String,
@@ -98,6 +110,9 @@ const gymSchema = new mongoose.Schema(
         type: String,
       },
       timeZone: {
+        type: String,
+      },
+      isoCode: {
         type: String,
       },
     },

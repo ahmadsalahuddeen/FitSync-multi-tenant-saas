@@ -41,7 +41,7 @@ import { Alert, AlertDescription } from "./ui/alert";
 import { CaretSortIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { getCountryCallingCode } from 'react-phone-number-input'
+import { getCountryCallingCode } from "react-phone-number-input";
 
 import { Select } from "./ui/select";
 import { Input } from "./ui/input";
@@ -58,37 +58,46 @@ import {
 import { Country, ICountry, IState, State } from "country-state-city";
 import { Check, CheckIcon, ChevronUpIcon, ChevronsUpDown } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
+import { useRouter } from "next/navigation";
+import { useToast } from "./ui/use-toast";
+
 
 type Props = {};
 
 const GymCreateForm = (props: Props) => {
+  const router  = useRouter()
   let countryData: ICountry[] = ([] = Country.getAllCountries());
   const [stateData, setStateData] = useState<IState[] | undefined>();
 
-  const [country, setCountry] = useState({
-    "name": "fakeittillmakeit",
-    "isoCode": "ID",
-    "phonecode": "62",
-    
-});
-  const [state, setState] = useState<IState | undefined>();
+  const [country, setCountry] = useState<ICountry >({
+    name: "fakeittillmakeit",
+    isoCode: "IN",
+    flag: "🇮🇳",
+    phonecode: "91",
+    currency: "INR",
+    latitude: "20.00000000",
+    longitude: "77.00000000",
+    timezones: [
+      {
+        zoneName: "Asia/Kolkata",
+        gmtOffset: 19800,
+        gmtOffsetName: "UTC+05:30",
+        abbreviation: "IST",
+        tzName: "Indian Standard Time",
+      },
+    ],
+  });
 
   useEffect(() => {
     setStateData(State.getStatesOfCountry(country?.isoCode));
   }, [country]);
-  
-  useEffect(() => {
-    stateData && setState(stateData[0]);
-  }, [stateData]);
-  
-  
-  
+
   type Input = z.infer<typeof gymcreationSchema>;
   const [validateError, setValidateError] = useState("");
-  
+
   const {
-    mutate: doRequest,
-    
+    mutate: createGymRequest,
+
     isError,
     isLoading,
     error,
@@ -97,7 +106,13 @@ const GymCreateForm = (props: Props) => {
       try {
         const response = await axios.post("/api/gym/create", {
           name: input.name,
-          phoneNumber: input.phoneNumber,
+          phoneNumber: `${country.phonecode}${input.phoneNumber}`,
+          address: {
+            country: input.country,
+            state: input.state,
+            isoCode: country.isoCode,
+            timeZone: country.timezones?.[0].zoneName,
+          },
         });
       } catch (err: any) {
         err.response.data.errors.map((err: any) => {
@@ -105,29 +120,29 @@ const GymCreateForm = (props: Props) => {
         });
       }
     },
+    onSuccess: ()=>{
+toast.success(`Let's get started!` , {description: 'gym created successfully' , })
+    }
   });
-  
+
   const form = useForm<Input>({
     resolver: zodResolver(gymcreationSchema),
     defaultValues: {
       name: "",
       phoneNumber: "",
+      country: '', 
+      state: ''
     },
   });
-  
 
   async function onSubmit(input: Input) {
     try {
-const phoneNumber = `${country.phonecode}${input.phoneNumber}`
-
-
-
-
+      await createGymRequest(input)
     } catch (err) {
       console.log(err);
     }
   }
-
+  console.log(countryData);
   const watcher = form.watch();
 
   return (
@@ -188,7 +203,7 @@ const phoneNumber = `${country.phonecode}${input.phoneNumber}`
                     render={({ field }) => (
                       <FormItem className="flex flex-col">
                         <FormLabel>Country</FormLabel>
-                        <Popover   modal={true}>
+                        <Popover modal={true}>
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
@@ -337,12 +352,12 @@ const phoneNumber = `${country.phonecode}${input.phoneNumber}`
                 <div className="flex gap-4">
                   <Button className="flex-1 	" type="submit">
                     Create Gym
-                    {/* {isLoading ? "Creating Gym..." : "Create Gym "}
+                    {isLoading ? "Creating Gym" : "Create Gym "}
                     {isLoading ? (
                       <Icons.spinner className="ml-2 h-4 w-4 animate-spin" />
                     ) : (
                       <Icons.arrowRight className="ml-2 h-4 w-4 " />
-                    )} */}
+                    )}
                   </Button>
                 </div>
               </div>
