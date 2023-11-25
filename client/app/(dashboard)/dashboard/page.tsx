@@ -1,5 +1,4 @@
-
-
+"use client";
 import { fetchServerResponse } from "next/dist/client/components/router-reducer/fetch-server-response";
 import React from "react";
 
@@ -16,28 +15,31 @@ import { DashboardHeader } from "@/components/dashboard-header";
 import { DashboardShell } from "@/components/dashboard-shell";
 import EmptyGymShell from "@/components/empty-gym-shell";
 import { getCurrentUser } from "@/lib/session";
+import { RESPONSE_LIMIT_DEFAULT } from "next/dist/server/api-utils";
+import { useQuery } from "react-query";
+import { getAllGyms } from "@/services/gymService";
 
 type Props = {};
 
+const Dashboard = (props: Props) => {
+  const {
+    status,
+    error,
+    data: gyms,
+  } = useQuery({
+    queryKey: ["gyms"],
+    queryFn: getAllGyms,
+  });
 
+  const gym = useGymStore.getState().gym;
 
-const Dashboard = async (props: Props) => {
-  
-const gym = useGymStore.getState().gym
-  //  router.refresh()
-  const user = await  getCurrentUser();
-  console.log(user);
-  if (!user) {
+  const { data: session } = useSession();
 
+  if (!session?.user) {
     return redirect("/auth/signin");
-
   }
 
-
-  if (user.gyms == null)
-    return (
-      <EmptyGymShell/>
-    );
+  if (gyms[0] == null) return <EmptyGymShell />;
 
   redirect(`/dashboard/${gym}/home`);
 };

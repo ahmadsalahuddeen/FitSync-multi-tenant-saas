@@ -4,8 +4,12 @@ import { Gym } from '../../models/gymSchema';
 import { DatabaseOperationError } from '../../errors/databse-operation-error';
 import { BadRequestError } from '../../errors/bad-request-error';
 
+
+// /gyms
 export const getAllGyms = async (req: Request, res: Response) => {
   try {
+    console.log('gggggeting hererererer')
+    if(!req.currentUser) throw new BadRequestError('invalid req.currentuser')
     if (!req.currentUser) {
       throw new BadRequestError('no Req.currenUser / not authorized');
     }

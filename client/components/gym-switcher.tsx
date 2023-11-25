@@ -73,19 +73,7 @@ const groups = [
       },
     ],
   },
-  {
-    label: "Gysdfms",
-    teams: [
-      {
-        label: "Acme sdfInc.",
-        value: "acmsdfe-inc",
-      },
-      {
-        label: "Monssdfters Inc.",
-        value: "monssdfters",
-      },
-    ],
-  },
+  
 ]
 
 type Gym = (typeof groups)[number]["teams"][number]
