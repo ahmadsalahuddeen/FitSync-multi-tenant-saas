@@ -126,7 +126,7 @@ function MarketingHeader() {
               )}
             <Button className="mr-2" size="sm" asChild variant="default">
 
-              {session && session.user ? (
+              { session?.user ? (
                 <Link
                   href="/dashboard"
                   className=" text-sm font-medium transition-colors"
