@@ -3,7 +3,7 @@ import {devtools, persist}  from 'zustand/middleware'
 
 
 interface GymStore {
-  gym: {gymId: string, accountId: string} | null;
+  gym: string | null;
   gyms: any;
   setGym: (gym: any) => void;
 }

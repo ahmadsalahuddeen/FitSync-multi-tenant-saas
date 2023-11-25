@@ -16,7 +16,7 @@ type Props = {
 export const SideNav = ({ params }: Props) => {
   let menu = menuItems(params.gymId);
 
-  if (!params.gymId) {
+  if (!params.gymId || params.gymId == 'undefined') {
     menu = initalMenuItems();
   }
 

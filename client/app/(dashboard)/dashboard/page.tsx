@@ -22,7 +22,7 @@ type Props = {};
 
 
 const Dashboard = async (props: Props) => {
-
+const gym = useGymStore.getState().gym
   //  router.refresh()
   const user = await  getCurrentUser();
   console.log(user);
@@ -38,7 +38,7 @@ const Dashboard = async (props: Props) => {
       <EmptyGymShell/>
     );
 
-  redirect(`/dashboard/${gym.gymId}/home`);
+  redirect(`/dashboard/${gym}/home`);
 };
 
 export default Dashboard;
