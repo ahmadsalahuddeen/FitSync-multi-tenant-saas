@@ -9,14 +9,16 @@ import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { initalMenuItems, menuItems } from "@/config/dashboard";
 import { Button } from "./ui/button";
+import { useGymStore } from "@/store/gym";
 type Props = {
   params: { gymId: string };
 };
 
 export const SideNav = ({ params }: Props) => {
-  let menu = menuItems(params.gymId);
+  const {gym} = useGymStore()
+  let menu = menuItems(gym);
 
-  if (!params.gymId || params.gymId == 'undefined') {
+  if (!gym) {
     menu = initalMenuItems();
   }
 

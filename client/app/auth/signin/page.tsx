@@ -34,9 +34,10 @@ import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
+import { useGymStore } from "@/store/gym";
 type Props = {};
 const SignIn = (props: Props) => {
   const router = useRouter();
@@ -45,9 +46,10 @@ const SignIn = (props: Props) => {
   const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = useState<string | null>(null);
+  const {setGym} = useGymStore()
 
   type Input = z.infer<typeof signInSchema>;
-
+  
   // react hook form
   const form = useForm<Input>({
     resolver: zodResolver(signInSchema),
@@ -68,6 +70,7 @@ const SignIn = (props: Props) => {
         redirect: false,
       });
       if (response && !response.error) {
+        
         router.push("/dashboard");
       } else {
         setIsLoading(false);

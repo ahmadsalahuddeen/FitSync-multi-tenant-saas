@@ -22,6 +22,7 @@ type Props = {};
 
 
 const Dashboard = async (props: Props) => {
+  
 const gym = useGymStore.getState().gym
   //  router.refresh()
   const user = await  getCurrentUser();

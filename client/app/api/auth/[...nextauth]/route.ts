@@ -54,6 +54,7 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account, profile }) {
+      
       if (account?.provider == "credentials") {
         return true;
       }
@@ -81,9 +82,7 @@ export const authOptions: NextAuthOptions = {
       return false;
     },
     async jwt({ token, user }) {
-      // console.log(user, "user")
       if (user) return { ...token, ...user };
-// console.log(token, "token")
       return token;
     },
     async session({ token, session }) {

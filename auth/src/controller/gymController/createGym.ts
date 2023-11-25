@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Gym } from '../../models/gymSchema';
 import { BadRequestError } from '../../errors/bad-request-error';
+import { User } from '../../models/userSchema';
 
 export const createGym = async (req: Request, res: Response) => {
   try {
@@ -21,6 +22,8 @@ export const createGym = async (req: Request, res: Response) => {
       staffs: id,
     });
     await gym.save()
+
+    await User.findOneAndUpdate({id}, {$push: {gyms: gym.id}})
 
     res.status(201).send(gym)
   } catch (error) {
