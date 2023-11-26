@@ -28,12 +28,13 @@ const Dashboard = (props: Props) => {
     data: gymsData,
   } = useQuery({
     queryKey: ["gymsData"],
-    queryFn:  async ()=>{
-const res = await axiosAuth.get('/api/gym/gyms')
-return res.data
-    }
+    queryFn: async () => {
+      const res = await axiosAuth.get("/api/gym/gyms");
+      
+      return res.data;
+      
+    },
   });
-
 
   useEffect(() => {
     if (!session?.user) {
@@ -41,31 +42,26 @@ return res.data
     }
   }, [session, router]);
 
- 
-useEffect(()=>{
-  if(gymsData && gymsData.length > 0){
-    setGyms(gymsData)
+  useEffect(() => {
+    if (gymsData && gymsData.length > 0) {
+      setGyms(gymsData);
 
-    if(gym === null){
-      setGym(gymsData[0]);
-      router.replace(`/dashbaord/${gymsData[0].id}/home`)
+      if (gym === null) {
+      console.log('gymsdata.gyms: ', gymsData.gyms)
+
+        setGym(gymsData.gyms);
+        router.replace(`/dashbaord/${gymsData.gyms.id}/home`);
+      }
     }
+  }, [gymsData, setGyms, setGym, gym, router]);
+
+  console.log("object", gymsData);
+  if (!gymsData || !gymsData.gyms || gymsData.gyms.length === 0) {
+    console.log(gymsData);
+    return <EmptyGymShell />;
+  } else {
+    redirect(`/dashboard/${gym?.id}/home`);
   }
-}, [gymsData, setGyms, setGym, gym, router])
-
-
-
-  if (!gymsData || gymsData.length === 0) return <EmptyGymShell />;
-
-
-
-  //setting or updating the current selected gym
-
-
-console.log("ggggggggggg",gymsData)
-
-  router.push(`/dashboard/${gym?.id}/home`);
-
 };
 
 export default Dashboard;

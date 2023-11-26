@@ -122,6 +122,7 @@ const {gym, setGym} = useGymStore()
             timeZone: country.timezones?.[0].zoneName,
           },
         });
+        console.log(response, "respones")
         return response.data
       } catch (err: any) {
         err.response.data.errors.map((err: any) => {
@@ -130,6 +131,7 @@ const {gym, setGym} = useGymStore()
       }
     },
     onSuccess: (data)=>{
+
       setGyms(data)
       setGym(data)
 
