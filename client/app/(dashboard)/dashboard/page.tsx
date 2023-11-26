@@ -22,39 +22,50 @@ const Dashboard = (props: Props) => {
   const router = useRouter();
   const { setGyms } = useGymsStore();
   const { setGym, gym } = useGymStore();
-  useEffect(() => {
-    if (!session?.user) {
-      return router.replace("/auth/signin");
-    }
-  }, [session]);
-
- 
-
-
   const {
     status,
     error,
-    data: gyms,
+    data: gymsData,
   } = useQuery({
-    queryKey: ["gyms"],
+    queryKey: ["gymsData"],
     queryFn:  async ()=>{
 const res = await axiosAuth.get('/api/gym/gyms')
 return res.data
     }
   });
 
-  console.log("ssssssssssss", gyms);
-  if (!gyms || gyms.length === 0) return <EmptyGymShell />;
 
-  // setting or updating gyms state
+  useEffect(() => {
+    if (!session?.user) {
+      return router.replace("/auth/signin");
+    }
+  }, [session, router]);
 
-  setGyms(gyms);
+ 
+useEffect(()=>{
+  if(gymsData && gymsData.length > 0){
+    setGyms(gymsData)
+
+    if(gym === null){
+      setGym(gymsData[0]);
+      router.replace(`/dashbaord/${gymsData[0].id}/home`)
+    }
+  }
+}, [gymsData, setGyms, setGym, gym, router])
+
+
+
+  if (!gymsData || gymsData.length === 0) return <EmptyGymShell />;
+
+
 
   //setting or updating the current selected gym
 
-  if (gym === null) setGym(gyms[0]);
 
-  redirect(`/dashboard/${gym?.id}/home`);
+console.log("ggggggggggg",gymsData)
+
+  router.push(`/dashboard/${gym?.id}/home`);
+
 };
 
 export default Dashboard;

@@ -11,15 +11,17 @@ import { initalMenuItems, menuItems } from "@/config/dashboard";
 import { Button } from "./ui/button";
 import { useGymStore } from "@/store/gym";
 type Props = {
-  params: { gymId: string };
+  gymId: string
 };
 
-export const SideNav = ({ params }: Props) => {
-  const {gym} = useGymStore()
-  let menu = menuItems(gym);
+export const SideNav = ({gymId}: Props) => {
 
-  if (!gym) {
-    menu = initalMenuItems();
+
+  let menu = initalMenuItems();
+  
+  if (gymId ) {
+  console.log(gymId)
+    menu = menuItems(gymId);
   }
 
   return (

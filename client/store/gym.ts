@@ -12,19 +12,19 @@ interface GymStore {
 // store current selected gym
 export const useGymStore = create<GymStore>((set) => ({
   gym: null,
-  setGym: (gym: Gym) => set({ gym }),
+  setGym: (newGym: Gym) => set({ gym: newGym  }),
 }));
 
 
 // interface for usegymstore
 interface GymsStore {
-  gyms: Gym[] | null ;
+  gyms: Gym[] ;
 
   setGyms: (newGyms: Gym[]) => void;
 }
 // store for all gyms of current user
 export const useGymsStore = create<GymsStore>((set) => ({
-  gyms: null,
+  gyms: [],
 
-  setGyms: (newGyms: Gym[]) => set((state) => ({ gyms: newGyms })),
+  setGyms: (newGyms: Gym[]) => set((state) => ({ gyms: [...state.gyms, ...newGyms] })),
 }));

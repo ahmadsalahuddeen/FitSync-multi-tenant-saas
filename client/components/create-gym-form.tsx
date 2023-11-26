@@ -60,18 +60,22 @@ import { Check, CheckIcon, ChevronUpIcon, ChevronsUpDown } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ui/use-toast";
-import { useGymStore } from "@/store/gym";
+import { useGymStore, useGymsStore } from "@/store/gym";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
+import { Gym } from "@/services/gymService";
 
 
 type Props = {};
 
 const GymCreateForm = (props: Props) => {
+  const {gyms, setGyms} = useGymsStore()
   const router  = useRouter()
   const axiosAuth = useAxiosAuth()
+  
   let countryData: ICountry[] = ([] = Country.getAllCountries());
-  const [stateData, setStateData] = useState<IState[] | undefined>();
+    const [stateData, setStateData] = useState<IState[] | undefined>();
 
+  // state for selected country
   const [country, setCountry] = useState<ICountry >({
     name: "fakeittillmakeit",
     isoCode: "IN",
@@ -95,8 +99,9 @@ const GymCreateForm = (props: Props) => {
     setStateData(State.getStatesOfCountry(country?.isoCode));
   }, [country]);
 
+  // types for gym form input
   type Input = z.infer<typeof gymcreationSchema>;
-  const [validateError, setValidateError] = useState("");
+
 const {gym, setGym} = useGymStore()
   const {
     mutate: createGymRequest,
@@ -125,7 +130,11 @@ const {gym, setGym} = useGymStore()
       }
     },
     onSuccess: (data)=>{
-console.log(data)
+      setGyms(data)
+      setGym(data)
+
+
+
 toast.success(`gym created successfully`)
 
 router.push(`/dashboard`)

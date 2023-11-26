@@ -1,9 +1,11 @@
 import { Icon, Icons } from "@/components/icons";
 import { getCurrentUser } from "@/lib/session";
+import { useGymStore } from "@/store/gym";
 import { SideNavItem } from "@/types/types";
 import { CreditCard } from "lucide-react";
 
-export const menuItems = (gymId: any) => [
+
+export const menuItems = (gymId: string) => [
   {
     title: `Home`,
     href: `/dashboard/${gymId}/home`,

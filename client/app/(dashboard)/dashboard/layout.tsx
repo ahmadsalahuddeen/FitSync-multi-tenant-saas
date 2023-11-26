@@ -11,6 +11,7 @@ import { notFound, useParams } from "next/navigation";
 import { ReactNode } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { menuItems } from "@/config/dashboard";
+import { useGymStore } from "@/store/gym";
 
 export const metadata: Metadata = {
   title: `Dashboard - ${siteConfig.name}`,
@@ -25,6 +26,7 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: any;
 }) {
+  const gym = useGymStore.getState().gym
   const user = await getCurrentUser();
 
   if (!user) {
@@ -54,7 +56,7 @@ export default async function RootLayout({
         </header>
         <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
           <aside className="hidden w-[200px] flex-col md:flex">
-            <SideNav  params={params} />
+            <SideNav  gymId= {gym?.id} />
           </aside>
           <main className="flex w-full flex-1 flex-col overflow-hidden">
             {children}
