@@ -5,29 +5,34 @@ import { User } from '../../models/userSchema';
 
 export const createGym = async (req: Request, res: Response) => {
   try {
-
     const { accountId, id } = req.currentUser;
-    const { name, password, address } = req.body;
+    const { name, phoneNumber, address } = req.body;
 
-    if(!(name && password && address)) throw new BadRequestError('Provide valid credentials')
+    if (!(name && phoneNumber && address))
+      throw new BadRequestError('Provide valid credentials');
+    
+    // check's if the gym name is already taken
+    const existingGym = await Gym.findOne({ name });
+    if (existingGym)
+      throw new BadRequestError(
+        'Gym Name is already taken, try different name'
+      );
 
-
-
-    const gym = Gym.build({
+    
+      const gym = Gym.build({
       accountId,
-      name: 'asdf',
-      phoneNumber: 'asdf',
+      name,
+      phoneNumber,
       creatorId: id,
       address,
       staffs: id,
     });
-    await gym.save()
+    await gym.save();
 
-    await User.findOneAndUpdate({id}, {$push: {gyms: gym.id}})
+    await User.findOneAndUpdate({ id }, { $push: { gyms: gym.id } });
 
-    res.status(201).send(gym)
+    res.status(201).send(gym);
   } catch (error) {
-
-
+    throw new BadRequestError('something went while creating gym ');
   }
 };

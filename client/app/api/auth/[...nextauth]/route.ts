@@ -42,6 +42,7 @@ export const authOptions: NextAuthOptions = {
         const user = response?.data;
 
         if (user) {
+          
           return user;
         } else {
           throw new Error(
@@ -53,6 +54,7 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
+     
     async signIn({ user, account, profile }) {
       
       if (account?.provider == "credentials") {
@@ -60,6 +62,8 @@ export const authOptions: NextAuthOptions = {
       }
 
       if (account?.provider === "google" || account?.provider === "github") {
+
+
         const email = profile?.email;
         const image = profile?.image;
         const name = profile?.name;
@@ -90,6 +94,7 @@ export const authOptions: NextAuthOptions = {
       session.backendTokens = token.backendTokens;
       return session;
     },
+
   },
 };
 

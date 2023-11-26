@@ -97,7 +97,7 @@ const SignUp = (props: Props) => {
           country: input.country,
           refer: input.refer,
         });
-       
+    
        
       } catch (err: any) {
         err.response.data.errors.map((err: any) => {
@@ -121,6 +121,7 @@ const SignUp = (props: Props) => {
         password: input.password,
         redirect: false,
       });
+      
       router.push("/dashboard");
       router.refresh();
      }

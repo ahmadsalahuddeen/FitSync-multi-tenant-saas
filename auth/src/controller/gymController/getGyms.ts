@@ -16,7 +16,7 @@ export const getAllGyms = async (req: Request, res: Response) => {
 
     const { role, accountId, id } = req.currentUser;
 
-    if (role == 'owner') {
+    if (role === 'owner') {
       const gyms: gymAttrs[] = await Gym.find({ accountId }).sort({ createdAt: -1 });
 
       res.status(200).send({ gyms });

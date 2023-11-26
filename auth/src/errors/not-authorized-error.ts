@@ -6,7 +6,7 @@ export class NotAuthorizedError extends CustomError {
   statusCode = 401
 
   constructor(message?: string) {
-    super(message || 'not authorized') 
+    super(message || 'Not authorized') 
 
     Object.setPrototypeOf(this, NotAuthorizedError.prototype)
   } 

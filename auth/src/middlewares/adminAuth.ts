@@ -6,7 +6,7 @@ import { BadRequestError } from '../errors/bad-request-error';
 import { NotAuthorizedError } from '../errors/not-authorized-error';
 
 type userPayload = {
-  accountId: string,
+  accountId: string;
   id: string;
   email: string;
   role: string;
@@ -24,32 +24,30 @@ declare global {
   }
 }
 
-
 export default async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
+    const token = await req.headers.authorization?.split(' ')[1];
+    if (token === undefined || token === null) {
+      throw new NotAuthorizedError();
+    }
 
-    if (!token) throw new NotAuthorizedError();
+    const payload = jwt.verify(token, process.env.JWT_KEY!) as userPayload;
 
-    const payload = jwt.verify(
-      token,
-      process.env.JWT_KEY!
-    ) as userPayload;
-
-      
-    
-    req.currentUser = payload;
-
-    if (!req.currentUser) throw new BadRequestError('something went wrong, check if you are loggged In');
-
-    const { role } = req.currentUser;
-    if (role !== 'owner') {
+    if (payload.role !== 'owner') {
       throw new NotAuthorizedError(
-        'sorry, only admins allowed, your are not authorized!🪲'
+        'sorry, only admins or staffs are allowed, your are not authorized!🪲'
       );
     }
-  
+
+    req.currentUser = payload;
+
+    if (!req.currentUser) {
+      throw new BadRequestError(
+        'something went wrong, check if you are loggged In'
+      );
+    }
   } catch (error) {
+    console.log('isAdmin error:', error);
     throw new NotAuthorizedError();
   }
   next();

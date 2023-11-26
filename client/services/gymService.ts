@@ -1,4 +1,10 @@
-import axios from "@/lib/axios";
+import useAxiosAuth from "@/hooks/useAxiosAuth";
+import { gymcreationSchema } from "@/validators/auth";
+import { ICountry } from "country-state-city";
+import { toast } from "sonner";
+import { z } from "zod";
+const axiosAuth = useAxiosAuth()
+
 
 export type Gym = {
   id: string
@@ -22,7 +28,6 @@ export type Gym = {
 }
 
 
-export function getAllGyms(){
-return axios.get<Gym[]>('/api/gym/gym').then(res => res.data)
 
-}
+
+

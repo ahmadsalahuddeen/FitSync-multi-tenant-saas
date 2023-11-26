@@ -28,6 +28,7 @@ declare global {
 export default async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
+    console.log('token', token)
 
     if (!token) throw new NotAuthorizedError();
 
@@ -37,20 +38,19 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     ) as userPayload;
 
       
-    
-    req.currentUser = payload;
-
-    if (!req.currentUser) throw new BadRequestError('something went wrong, check if you are loggged In');
-
-    const { role } = req.currentUser;
-    if (role !== 'owner' || "member") {
+    if (payload.role !== 'owner' && payload.role !== 'member' ) {
       throw new NotAuthorizedError(
         'sorry, only admins or staffs are allowed, your are not authorized!🪲'
       );
     }
+
+    req.currentUser = payload;
+
+
+
   
   } catch (error) {
-    throw new NotAuthorizedError();
+console.log(error, 'error')
   }
   next();
 };

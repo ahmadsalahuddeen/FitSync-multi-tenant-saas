@@ -26,7 +26,7 @@ import { gymcreationSchema } from "@/validators/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "react-query";
-import axios from "@/lib/axios";
+
 import { toast } from "sonner";
 import {
   Form,
@@ -60,12 +60,15 @@ import { Check, CheckIcon, ChevronUpIcon, ChevronsUpDown } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
 import { useRouter } from "next/navigation";
 import { useToast } from "./ui/use-toast";
+import { useGymStore } from "@/store/gym";
+import useAxiosAuth from "@/hooks/useAxiosAuth";
 
 
 type Props = {};
 
 const GymCreateForm = (props: Props) => {
   const router  = useRouter()
+  const axiosAuth = useAxiosAuth()
   let countryData: ICountry[] = ([] = Country.getAllCountries());
   const [stateData, setStateData] = useState<IState[] | undefined>();
 
@@ -94,7 +97,7 @@ const GymCreateForm = (props: Props) => {
 
   type Input = z.infer<typeof gymcreationSchema>;
   const [validateError, setValidateError] = useState("");
-
+const {gym, setGym} = useGymStore()
   const {
     mutate: createGymRequest,
 
@@ -104,7 +107,7 @@ const GymCreateForm = (props: Props) => {
   } = useMutation({
     mutationFn: async (input: Input) => {
       try {
-        const response = await axios.post("/api/gym/create", {
+        const response = await axiosAuth.post("/api/gym/create", {
           name: input.name,
           phoneNumber: `${country.phonecode}${input.phoneNumber}`,
           address: {
@@ -114,14 +117,18 @@ const GymCreateForm = (props: Props) => {
             timeZone: country.timezones?.[0].zoneName,
           },
         });
+        return response.data
       } catch (err: any) {
         err.response.data.errors.map((err: any) => {
           toast.error(err.message);
         });
       }
     },
-    onSuccess: ()=>{
-toast.success(`Let's get started!` , {description: 'gym created successfully' , })
+    onSuccess: (data)=>{
+console.log(data)
+toast.success(`gym created successfully`)
+
+router.push(`/dashboard`)
     }
   });
 
@@ -137,12 +144,14 @@ toast.success(`Let's get started!` , {description: 'gym created successfully' , 
 
   async function onSubmit(input: Input) {
     try {
+      
       await createGymRequest(input)
+
     } catch (err) {
       console.log(err);
     }
   }
-  console.log(countryData);
+
   const watcher = form.watch();
 
   return (
@@ -345,13 +354,16 @@ toast.success(`Let's get started!` , {description: 'gym created successfully' , 
                       <FormControl>
                         <Input type="number" placeholder="" {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Don't include country phone code
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <div className="flex gap-4">
                   <Button className="flex-1 	" type="submit">
-                    Create Gym
+                    
                     {isLoading ? "Creating Gym" : "Create Gym "}
                     {isLoading ? (
                       <Icons.spinner className="ml-2 h-4 w-4 animate-spin" />
