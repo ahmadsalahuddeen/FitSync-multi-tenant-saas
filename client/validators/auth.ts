@@ -60,3 +60,10 @@ export const gymcreationSchema = z.object({
 })
 
 
+export const staffcreationSchema = z.object({
+  email: z.string({required_error:'email is required'}).email(),
+  role: z.enum(['owner', 'member']).default('member')
+
+})
+
+
