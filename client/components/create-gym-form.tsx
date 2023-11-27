@@ -139,7 +139,7 @@ const {gym, setGym} = useGymStore()
 
 toast.success(`gym created successfully`)
 
-router.push(`/dashboard`)
+router.push(`/dashboard/${gym.id}/home`)
     }
   });
 

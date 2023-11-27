@@ -6,8 +6,8 @@ import { useEffect } from "react";
 
 
 // hook to manage headers in axios request with accestoken 
-const useAxiosAuth = () => {
-  const { data: session } = useSession();
+const useAxiosAuth =  () => {
+  const { data: session } =  useSession();
   useEffect(() => {
     const requestIntercept = axiosAuth.interceptors.request.use(
       (config) => {

@@ -50,7 +50,7 @@ const Dashboard = (props: Props) => {
       console.log('gymsdata.gyms: ', gymsData.gyms)
 
         setGym(gymsData.gyms);
-        router.replace(`/dashbaord/${gymsData.gyms.id}/home`);
+        router.push(`/dashboard/${gymsData[0].id}/home`);
       }
     }
   }, [gymsData, setGyms, setGym, gym, router]);
