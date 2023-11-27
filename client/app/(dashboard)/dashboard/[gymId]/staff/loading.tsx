@@ -7,7 +7,7 @@ import { DashboardHeader } from "@/components/dashboard-header"
 export default function DashboardSettingsLoading() {
   return (
     <DashboardShell>
-            <DashboardHeader heading={`My Profile`} text="Manage personal account settings" />
+            <DashboardHeader heading={`Staff Management`}  text={'create and manage staff'} />
 
       <div className="grid gap-10">
         <CardSkeleton />

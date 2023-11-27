@@ -5,6 +5,7 @@ import { SideNavItem } from "@/types/types";
 import { CreditCard } from "lucide-react";
 
 
+
 export const menuItems = (gymId: string) => [
   {
     title: `Home`,
@@ -51,7 +52,7 @@ export const menuItems = (gymId: string) => [
   },
   {
     title: `My personal Profile`,
-    href: `/dashboard/${gymId}/user-profile`,
+    href: `/dashboard/user-profile`,
     disabled: false,
     icon: <Icons.user className="mr-2 h-4 w-4" />,
   },

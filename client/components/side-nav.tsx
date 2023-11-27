@@ -11,21 +11,17 @@ import { initalMenuItems, menuItems } from "@/config/dashboard";
 import { Button } from "./ui/button";
 import { useGymStore } from "@/store/gym";
 type Props = {
-  gymId: string
+
 };
 
-export const SideNav = ({gymId}: Props) => {
+export const SideNav = ( ) => {
 
+  const {gym} = useGymStore()
 
-  let menu = initalMenuItems();
-  
-  if (gymId ) {
-  console.log(gymId)
-    menu = menuItems(gymId);
-  }
+const menu =  !gym.id ? initalMenuItems() : menuItems(gym.id)
 
   return (
-    <div className="fixed grid  items-start gap-2  ">
+    <div className=" fixed grid  items-start gap-2  ">
       {menu.map((item, idx) => {
         return <MenuItem key={idx} item={item} />;
       })}
@@ -47,7 +43,7 @@ export const MenuItem = ({ item }: { item: SideNavItem }) => {
           <Button
             variant="ghost"
             onClick={toggleSubMenu}
-            className={`hover-bg-accent flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground ${
+            className={`hover-bg-accent flex  w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground ${
               pathname.includes(item.href)
                 ? "bg-accent"
                 : "" || (item.disabled && "hover:cursor-not-allowed")
@@ -71,7 +67,7 @@ export const MenuItem = ({ item }: { item: SideNavItem }) => {
                   <Link
                     key={idx}
                     href={subItem.href}
-                    className={`text-sm ${
+                    className={` text-sm ${
                       subItem.href === pathname ? "font-semibold  " : ""
                     } `}
                   >
@@ -89,11 +85,11 @@ export const MenuItem = ({ item }: { item: SideNavItem }) => {
 type="button"
             variant="ghost"
             className={cn(
-              "hover-bg-accent flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+              "hover-bg-accent flex w-full  items-center justify-between rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
               pathname === item.href ? "bg-accent" : "transparent",
             )}
           >
-            <div className="flex flex-row  items-start">
+            <div className="flex flex-row  items-start mr-6">
               {item.icon}
               <span className="">{item.title}</span>
             </div>
