@@ -172,7 +172,7 @@ export default function GymSwitcher({ className }: GymSwitcherProps) {
         </PopoverContent>
       </Popover>
       <DialogContent>
-        <GymCreateForm/>
+        <GymCreateForm setShowNewGymDialog={setShowNewGymDialog} />
       </DialogContent>
     </Dialog>
      

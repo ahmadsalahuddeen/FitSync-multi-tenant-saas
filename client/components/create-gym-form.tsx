@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import {
   Dialog,
@@ -65,9 +65,8 @@ import useAxiosAuth from "@/hooks/useAxiosAuth";
 import { Gym } from "@/services/gymService";
 
 
-type Props = {};
-
-const GymCreateForm = (props: Props) => {
+type Props = {setShowNewGymDialog:  any}
+const GymCreateForm = ({setShowNewGymDialog}: Props) => {
   const {gyms, setGyms} = useGymsStore()
   const router  = useRouter()
   const axiosAuth = useAxiosAuth()
@@ -138,8 +137,10 @@ const {gym, setGym} = useGymStore()
 
 
 toast.success(`gym created successfully`)
+setShowNewGymDialog(false)
+router.push(`/dashboard/`) 
 
-router.push(`/dashboard/${gym.id}/home`)
+router.refresh()
     }
   });
 
@@ -373,7 +374,7 @@ router.push(`/dashboard/${gym.id}/home`)
                   )}
                 />
                 <div className="flex gap-4">
-                  <Button className="flex-1 	" type="submit">
+                  <Button className="flex-1 	" type="submit" >
                     
                     {isLoading ? "Creating Gym" : "Create Gym "}
                     {isLoading ? (
