@@ -22,6 +22,11 @@ const Dashboard = (props: Props) => {
   const router = useRouter();
   const { setGyms } = useGymsStore();
   const { setGym, gym } = useGymStore();
+
+  if(gym.id){
+    redirect(`/dashboard/${gym.id}/home`)
+  }
+
   const {
     status,
     error,
@@ -36,6 +41,8 @@ const Dashboard = (props: Props) => {
     },
   });
 
+  
+
   useEffect(() => {
     if (!session?.user) {
       return router.replace("/auth/signin");
@@ -46,7 +53,7 @@ const Dashboard = (props: Props) => {
     if (gymsData && gymsData.length > 0) {
       setGyms(gymsData);
 
-      if (gym === null) {
+      if (  gym === null || Object.keys(gym).length === 0 ) {
       console.log('gymsdata.gyms: ', gymsData.gyms)
 
         setGym(gymsData.gyms);

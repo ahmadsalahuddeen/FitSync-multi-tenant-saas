@@ -47,36 +47,13 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import GymCreateForm from "./create-gym-form"
+import { useGymStore, useGymsStore } from "@/store/gym"
+import { Gym } from "@/services/gymService"
 
 
-// TODO: fetch all gyms related to the user and update the dummy values
-const groups = [
-  {
-    label: "Gyms",
-    teams: [
-      {
-        label: "Power Fitness",
-        value: "personal",
-      },
-    ],
-  },
-  {
-    label: "Gyms",
-    teams: [
-      {
-        label: "Acme Inc.",
-        value: "acme-inc",
-      },
-      {
-        label: "Monsters Inc.",
-        value: "monsters",
-      },
-    ],
-  },
-  
-]
 
-type Gym = (typeof groups)[number]["teams"][number]
+
+
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
@@ -84,14 +61,16 @@ interface GymSwitcherProps extends PopoverTriggerProps {}
 
 export default function GymSwitcher({ className }: GymSwitcherProps) {
 
+  const {gyms} = useGymsStore()
+  const { gym } = useGymStore()
 
   const [gymName, setGymName] = React.useState('')
   const [open, setOpen] = React.useState(false)
   const [showNewGymDialog, setShowNewGymDialog] = React.useState(false)
-  const [selectedGym, setSelectedGym] = React.useState<Gym>(
-    groups[0].teams[0]
+  const [selectedGym, setSelectedGym] = React.useState<Gym | null>(
+    gym
   )
-
+  console.log("gggggggggggg",gym)
   return (
     <Dialog  open={showNewGymDialog} onOpenChange={setShowNewGymDialog}>
       <Popover  open={open} onOpenChange={setOpen}>
@@ -105,12 +84,12 @@ export default function GymSwitcher({ className }: GymSwitcherProps) {
           >
             <Avatar className="mr-2 h-5 w-5">
               <AvatarImage
-                src={`https://avatar.vercel.sh/${selectedGym.value}.png`}
-                alt={selectedGym.label}
+                src={`https://avatar.vercel.sh/.png`}
+                alt={selectedGym?.name}
               />
               <AvatarFallback>SC</AvatarFallback>
             </Avatar>
-            {selectedGym.label}
+            {selectedGym?.name}
             <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -119,38 +98,38 @@ export default function GymSwitcher({ className }: GymSwitcherProps) {
             <CommandList>
               <CommandInput placeholder="Search team..." />
               <CommandEmpty>No team found.</CommandEmpty>
-              {groups.map((group) => (
-                <CommandGroup key={group.label} heading={group.label}>
-                  {group.teams.map((team) => (
+              <CommandGroup heading={'gyms'}>
+              {gyms.map((gymEl) => (
+
                     <CommandItem
-                      key={team.value}
+                      key={gymEl.name}
                       onSelect={() => {
-                        setSelectedGym(team)
+                        setSelectedGym(gymEl)
                         setOpen(false)
                       }}
                       className="text-sm"
                     >
                       <Avatar className="mr-2 h-5 w-5">
                         <AvatarImage
-                          src={`https://avatar.vercel.sh/${team.value}.png`}
-                          alt={team.label}
+                          src={`https://avatar.vercel.sh/.png`}
+                          alt={gymEl.name}
                           className="grayscale"
                         />
                         <AvatarFallback>SC</AvatarFallback>
                       </Avatar>
-                      {team.label}
+                      {gymEl.name}
                       <CheckIcon
                         className={cn(
                           "ml-auto h-4 w-4",
-                          selectedGym.value === team.value
+                          selectedGym?.id === gymEl.id
                             ? "opacity-100"
                             : "opacity-0"
                         )}
                       />
                     </CommandItem>
+
                   ))}
-                </CommandGroup>
-              ))}
+                  </CommandGroup>
             </CommandList>
             <CommandSeparator />
             <CommandList>
