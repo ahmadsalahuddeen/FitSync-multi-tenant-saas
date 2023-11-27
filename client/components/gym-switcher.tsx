@@ -49,6 +49,8 @@ import {
 import GymCreateForm from "./create-gym-form"
 import { useGymStore, useGymsStore } from "@/store/gym"
 import { Gym } from "@/services/gymService"
+import { useRouter } from "next/navigation"
+
 
 
 
@@ -62,8 +64,8 @@ interface GymSwitcherProps extends PopoverTriggerProps {}
 export default function GymSwitcher({ className }: GymSwitcherProps) {
 
   const {gyms} = useGymsStore()
-  const { gym } = useGymStore()
-
+  const { gym, setGym } = useGymStore()
+const router = useRouter()
   const [gymName, setGymName] = React.useState('')
   const [open, setOpen] = React.useState(false)
   const [showNewGymDialog, setShowNewGymDialog] = React.useState(false)
@@ -85,11 +87,11 @@ export default function GymSwitcher({ className }: GymSwitcherProps) {
             <Avatar className="mr-2 h-5 w-5">
               <AvatarImage
                 src={`https://avatar.vercel.sh/.png`}
-                alt={selectedGym?.name}
+                alt={gym?.name}
               />
               <AvatarFallback>SC</AvatarFallback>
             </Avatar>
-            {selectedGym?.name}
+            {gym?.name}
             <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -104,8 +106,11 @@ export default function GymSwitcher({ className }: GymSwitcherProps) {
                     <CommandItem
                       key={gymEl.name}
                       onSelect={() => {
-                        setSelectedGym(gymEl)
+                        setGym(gymEl)
+                        // setSelectedGym(gymEl)
                         setOpen(false)
+                        router.push(`/dashboard/${gym.id}/home`)
+                        
                       }}
                       className="text-sm"
                     >
@@ -121,7 +126,7 @@ export default function GymSwitcher({ className }: GymSwitcherProps) {
                       <CheckIcon
                         className={cn(
                           "ml-auto h-4 w-4",
-                          selectedGym?.id === gymEl.id
+                          gym?.id === gymEl.id
                             ? "opacity-100"
                             : "opacity-0"
                         )}

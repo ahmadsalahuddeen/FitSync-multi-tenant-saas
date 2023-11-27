@@ -19,7 +19,7 @@ const HomePage =  (props: Props) => {
     
     <div>
 
-<h1>{`${gym}`}</h1>
+<h1>{`${gym.name}`}</h1>
     </div>
   )
 }
