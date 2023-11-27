@@ -67,7 +67,7 @@ import { Gym } from "@/services/gymService";
 
 type Props = {setShowNewGymDialog:  any}
 const GymCreateForm = ({setShowNewGymDialog}: Props) => {
-  const {gyms, setGyms} = useGymsStore()
+  const {gyms, setGyms, setOneGyms} = useGymsStore()
   const router  = useRouter()
   const axiosAuth = useAxiosAuth()
   
@@ -131,7 +131,7 @@ const {gym, setGym} = useGymStore()
     },
     onSuccess: (data)=>{
 
-      setGyms(data)
+      setOneGyms(data)
       setGym(data)
 
 

@@ -32,6 +32,7 @@ interface GymsStore {
   gyms: Gym[] ;
 
   setGyms: (newGym: Gym[]) => void;
+  setOneGyms: (newGym: Gym) => void;
   removeGyms: (gymId: string) => void;
 }
 // store for all gyms of current user
