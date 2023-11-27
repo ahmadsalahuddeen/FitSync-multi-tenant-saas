@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
-import { toast } from "@/components/ui/use-toast";
+
 import { Icons } from "@/components/icons";
 import {
   Dialog,
@@ -16,10 +16,20 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import CreateStaffForm from "./create-staff-form";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import {
+  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -27,10 +37,14 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { staffcreationSchema } from "@/validators/auth";
 import { z } from "zod";
+import { useMutation } from "react-query";
+import useAxiosAuth from "@/hooks/useAxiosAuth";
+import { toast } from "sonner";
+import { Divide } from "lucide-react";
 
 interface StaffCreateButtonProps extends ButtonProps {}
 
@@ -39,19 +53,57 @@ export function StaffCreateButton({
   variant,
   ...props
 }: StaffCreateButtonProps) {
+  const axiosAuth = useAxiosAuth();
   const router = useRouter();
   const [showNewGymDialog, setShowNewGymDialog] = React.useState(false);
-  const isLoading = false;
 
-type Input = z.infer<typeof staffcreationSchema>
+  type Input = z.infer<typeof staffcreationSchema>;
 
   const form = useForm<Input>({
     resolver: zodResolver(staffcreationSchema),
     defaultValues: {
       email: "",
-      role: 'member';
+      role: "member",
     },
   });
+
+  const {
+    mutate: createStaffRequest,
+
+    isError,
+    isLoading,
+    error,
+  } = useMutation({
+    mutationFn: async (input: Input) => {
+      try {
+        const response = await axiosAuth.post("/api/gym/staff/create", {
+          email: input.email,
+          role: input.role,
+        });
+        console.log(response, "respones");
+        return response.data;
+      } catch (err: any) {
+        err.response.data.errors.map((err: any) => {
+          toast.error(err.message);
+        });
+      }
+    },
+    onSuccess: (data) => {
+      toast.success(`gym created successfully`);
+      setShowNewGymDialog(false);
+      router.push(`/dashboard/`);
+
+      router.refresh();
+    },
+  });
+
+  async function onSubmit(input: Input) {
+    try {
+      await createStaffRequest(input);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <Dialog>
@@ -65,58 +117,74 @@ type Input = z.infer<typeof staffcreationSchema>
           Add Staff
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle> Invite a new staff</DialogTitle>
+          <DialogDescription>
+            An invitation will be sent to the provided email, guiding them
+            through the onboarding process.
+          </DialogDescription>
+        </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <DialogHeader>
-              <DialogTitle> onboarding new staff</DialogTitle>
-              <DialogDescription>
-                An invitation will be sent to the provided email, guiding them
-                through the onboarding process.
-              </DialogDescription>
-            </DialogHeader>
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="shadcn" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit">Submit</Button>
-
             <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  email
-                </Label>
-                <Input
-                  id="name"
-                  defaultValue="Pedro Duarte"
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="username" className="text-right">
-                  Role
-                </Label>
-                <Input
-                  id="username"
-                  defaultValue="@peduarte"
-                  className="col-span-3"
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email Address</FormLabel>
+                    <FormControl>
+                      <Input placeholder="youname@gmail.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="">
+                <FormField
+                  control={form.control}
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel >Role</FormLabel>
+                      <FormControl>
+                      <Select defaultValue="member">
+              <SelectTrigger
+                id="security-level"
+                className="line-clamp-1 w-1/2 truncate"
+              >
+                <SelectValue className=" teamaspace-y-1 flex flex-col items-start px-4 py-2"  placeholder="Select level" />
+              </SelectTrigger>
+              <SelectContent >
+                <SelectItem  value="owner" >
+     
+               Owner
+
+                </SelectItem>
+                <SelectItem value="member">
+
+                       
+                Member
+                </SelectItem>
+         
+              </SelectContent>
+            </Select>
+
+
+                      </FormControl>
+                      <FormDescription>
+                        Owners have admin-level access, while members have
+                        limited access.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit">Send Invitation</Button>
             </DialogFooter>
           </form>
         </Form>

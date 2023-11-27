@@ -17,6 +17,10 @@ interface userAttrs {
   password?: string;
   role: 'owner' | 'member';
   gyms?: string
+  isInstructor?: boolean;
+  invitationStatus?: 'accepted' | 'pending'| 'declined';
+
+
 
 }
 
@@ -40,7 +44,9 @@ interface userDoc extends mongoose.Document {
   email: string;
   password?: string;
   role: 'owner' | 'member';
+  invitationStatus?: 'accepted' | 'pending'| 'declined';
   gyms?: string
+  isInstructor?: boolean;
 }
 
 const userSchema = new mongoose.Schema(
@@ -75,10 +81,18 @@ status: {
     bio: {
       type: String,
     },
+    isInstructor: {
+type: Boolean
+    },
     role: {
       type: String,
       enum: ['owner', 'member'],
       default: 'member',
+    },
+    invitationStatus: {
+      type: String,
+      enum: ['accepted', 'pending', 'declined'],
+
     },
     forgotPasswordToken: String,
     forgotPasswordTokenExpiry: Date,
