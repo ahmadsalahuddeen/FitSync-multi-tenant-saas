@@ -1,5 +1,5 @@
 import mongoose, { Mongoose, Types, mongo } from 'mongoose';
-import { Password } from '../services/password';
+import { Password } from '../lib/password';
 import { Schema } from 'zod';
 
 //interface that describes the properties to create a new Gym
@@ -9,6 +9,8 @@ export interface gymAttrs {
   phoneNumber: string;
   staffs?: string ;
   creatorId?: string ;
+  inviteCode: string;
+
   image?: string
   address?: {
     streetAddressOne?: string;
@@ -37,7 +39,7 @@ interface gymDoc extends mongoose.Document {
   phoneNumber: string;
   staffs?: string ;
   creatorId?: string ;
-
+  inviteCode: string;
   image?: string
   address?: {
     streetAddressOne?: string;
@@ -64,6 +66,10 @@ const gymSchema = new mongoose.Schema(
     },
     
     name: {
+      type: String,
+      required: true,
+    },
+    inviteCode: {
       type: String,
       required: true,
     },

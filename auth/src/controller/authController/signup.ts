@@ -8,8 +8,9 @@ import { BadRequestError } from '../../errors/bad-request-error';
 import jwt from 'jsonwebtoken';
 import { validateRequest } from '../../middlewares/request-vaidation';
 import { User } from '../../models/userSchema';
-import { getDateNDaysFromNow } from '../../services/date';
+import { getDateNDaysFromNow } from '../../lib/date';
 import { Gym } from '../../models/gymSchema';
+const crypto = require('crypto');
 
 export const tenantSignup = async (req: Request, res: Response) => {
   const {
@@ -34,6 +35,16 @@ export const tenantSignup = async (req: Request, res: Response) => {
   }
 
   try {
+    const inviteCode =crypto.randomBytes(48, function(err: Error | null, buffer: Buffer) {
+      if (err) {
+        console.error('Error generating random bytes:', err);
+        // Handle the error appropriately (e.g., throw an error, log it, etc.)
+      } else {
+        var key = buffer.toString('base64');
+        // Save the key with the new user in the database
+        console.log('Generated key:', key);
+      }
+    });
 
 
     // create account, gym, user document and save to DB
@@ -44,10 +55,12 @@ export const tenantSignup = async (req: Request, res: Response) => {
     });
     await account.save();
 
+
     const gym = Gym.build({
       accountId: account.id,
       name: businessName,
       phoneNumber,
+      inviteCode
     });
     await gym.save();
 

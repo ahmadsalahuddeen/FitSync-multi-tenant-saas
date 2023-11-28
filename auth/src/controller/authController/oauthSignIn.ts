@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { BadRequestError } from '../../errors/bad-request-error';
 import { User } from '../../models/userSchema';
 import { Account } from '../../models/accountSchema';
-import { getDateNDaysFromNow } from '../../services/date';
+import { getDateNDaysFromNow } from '../../lib/date';
 import jwt from 'jsonwebtoken';
 
 export const oauthSignIn = async (req: Request, res: Response) => {

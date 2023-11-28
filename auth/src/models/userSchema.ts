@@ -1,12 +1,12 @@
 import mongoose, { Mongoose, Schema, Types, mongo } from 'mongoose';
-import { Password } from '../services/password';
+import { Password } from '../lib/password';
 
 
 
 //interface that describes the properties to create a new User
 interface userAttrs {
   accountId: string;
-  name: string
+  name?: string
 
   status?: string;
   image?: string;
@@ -92,6 +92,7 @@ type: Boolean
     invitationStatus: {
       type: String,
       enum: ['accepted', 'pending', 'declined'],
+      default: 'pending'
 
     },
     forgotPasswordToken: String,

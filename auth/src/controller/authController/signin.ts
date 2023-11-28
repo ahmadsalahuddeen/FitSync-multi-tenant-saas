@@ -4,7 +4,7 @@ import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import { validateRequest } from '../../middlewares/request-vaidation';
 import { BadRequestError } from '../../errors/bad-request-error';
-import { Password } from '../../services/password';
+import { Password } from '../../lib/password';
 import { Account } from '../../models/accountSchema';
 import { User } from '../../models/userSchema';
 const route = express.Router();

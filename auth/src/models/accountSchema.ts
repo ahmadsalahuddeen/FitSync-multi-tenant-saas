@@ -1,5 +1,5 @@
 import mongoose, { Schema, mongo } from 'mongoose';
-import { Password } from '../services/password';
+import { Password } from '../lib/password';
 
 //interface that describes the properties to create a new Account
 interface accountAttrs {

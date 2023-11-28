@@ -1,7 +1,7 @@
 import { BadRequestError } from '../errors/bad-request-error';
 import { NotFoundError } from '../errors/notFound-error';
 import { User } from '../models/userSchema';
-import { sendMail } from './email';
+import { sendMail } from '../lib/email';
 
 export const generateOtp = async () => {
   try {
