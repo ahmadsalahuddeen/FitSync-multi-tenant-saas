@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Gym } from '../../models/gymSchema';
 import { BadRequestError } from '../../errors/bad-request-error';
 import { User } from '../../models/userSchema';
+const { v4: uuidv4 } = require('uuid');
 
 export const createGym = async (req: Request, res: Response) => {
   try {
@@ -13,6 +14,9 @@ export const createGym = async (req: Request, res: Response) => {
     
     // check's if the gym name is already taken
     const existingGym = await Gym.findOne({ name });
+
+    const inviteCode = uuidv4();
+
     if (existingGym)
       throw new BadRequestError(
         'Gym Name is already taken, try different name'
@@ -26,6 +30,7 @@ export const createGym = async (req: Request, res: Response) => {
       creatorId: id,
       address,
       staffs: id,
+      inviteCode
     });
     await gym.save();
 

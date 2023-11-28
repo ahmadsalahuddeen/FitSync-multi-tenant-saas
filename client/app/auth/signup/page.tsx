@@ -49,12 +49,9 @@ type Props = {};
 
 const SignUp = (props: Props) => {
   const router = useRouter();
-  const [FormStep, setFormStep] = useState(0);
   const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false);
   const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false);
   type Input = z.infer<typeof registerSchema>;
-
-
 
   // schema to ts types
 
@@ -62,48 +59,34 @@ const SignUp = (props: Props) => {
   const form = useForm<Input>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      activeCustomers: "",
-      businessName: "",
-      confirmPassword: "",
-      country: "",
       email: "",
+      confirmPassword: "",
       firstName: "",
       lastName: "",
       password: "",
-      phoneNumber: "",
-      refer: "",
     },
   });
-  const isLoading = form.formState.isSubmitting
+  const isLoading = form.formState.isSubmitting;
 
   const {
     mutate: doRequest,
-     
+
     isError,
-    
+
     error,
   } = useMutation({
     mutationFn: async (input: Input) => {
-      try {
-        const response = await axios.post("/api/auth/tenant/signup", {
-          firstName: input.firstName,
-          lastName: input.lastName,
-          email: input.email,
-          password: input.password,
-          phoneNumber: input.phoneNumber,
-          confirmPassword: input.confirmPassword,
-          activeCustomers: input.activeCustomers,
-          businessName: input.businessName, 
-          country: input.country,
-          refer: input.refer,
-        });
-    
-       
-      } catch (err: any) {
-        err.response.data.errors.map((err: any) => {
-          toast.error(err.message);
-        });
-      }
+
+      const response = await axios.post("/api/auth/tenant/signup", {
+        firstName: input.firstName,
+        lastName: input.lastName,
+        email: input.email,
+        password: input.password,
+
+        confirmPassword: input.confirmPassword,
+      });
+      return response.data;
+
     },
 
     onError: (error: any) => {
@@ -111,25 +94,23 @@ const SignUp = (props: Props) => {
         toast.error(err.message);
       });
     },
-  });
-  async function onSubmit(input: Input) {
-    try {
-     await  doRequest(input)
-     if(!isError){
+    onSuccess: async (data, variables) => {
       await signIn("credentials", {
-        email: input.email,
-        password: input.password,
+        email: variables.email,
+        password: variables.password,
         redirect: false,
       });
-      
+
       router.push("/dashboard");
       router.refresh();
-     }
-    } catch (err) {
-      console.log(err);
+    },
+  });
+  async function onSubmit(input: Input) {
+    if (input.confirmPassword !== input.password) {
+      return toast.error("Confirm password does not match!");
     }
+    await doRequest(input);
   }
-  const watcher = form.watch();
 
   return (
     <>
@@ -150,40 +131,23 @@ const SignUp = (props: Props) => {
           <div className="flex flex-col space-y-2 text-center">
             <Icons.logo className="mx-auto h-6 w-6  text-green-600" />
             <h1 className="text-2xl font-semibold tracking-tight">
-              {FormStep === 0
-                ? "Let's get started"
-                : `Setup ${watcher.businessName} `}
+              Let's get started
             </h1>
             <p className="text-sm text-muted-foreground">
-              {FormStep === 0
-                ? "Explore your free 14-day trial🔥."
-                : `Just a few more details to get started📈`}
+              Just a few more details to get started📈
             </p>
           </div>
-          
+
           <Card className="border-none">
-            
             <CardHeader></CardHeader>
             <CardContent>
-              
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className=" relative space-y-3   overflow-x-hidden  "
+                  className=" relative space-y-3  "
                 >
                   {/* First Form Step  */}
-                  <motion.div
-                    className={cn(
-                      "space-y-3",
-                      //  { hidden: FormStep === 1 }
-                    )}
-                    animate={{
-                      translateX: `-${FormStep * 100}%`,
-                    }}
-                    transition={{
-                      ease: easeInOut,
-                    }}
-                  >
+                  <div className={cn("space-y-3")}>
                     {/* First and Last Name */}
                     <div className="gap-4 md:flex">
                       <FormField
@@ -231,20 +195,7 @@ const SignUp = (props: Props) => {
                         </FormItem>
                       )}
                     />
-                    {/* phone Number */}
-                    <FormField
-                      control={form.control}
-                      name="phoneNumber"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
-                          <FormControl>
-                            <Input placeholder="" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+
                     {/* Passoword */}
                     <FormField
                       control={form.control}
@@ -274,204 +225,20 @@ const SignUp = (props: Props) => {
                         </FormItem>
                       )}
                     />
-                  </motion.div>
-
-                  {/* second Form Step  */}
-                  <motion.div
-                    className={cn(
-                      "absolute  left-0   right-0 top-0 space-y-3 ",
-                      {
-                        // hidden: FormStep === 0
-                      },
-                    )}
-                    style={{
-                      translateX: `${100 - FormStep * 100}%`,
-                    }}
-                    animate={{
-                      translateX: `${100 - FormStep * 100}%`,
-                    }}
-                    transition={{
-                      ease: easeInOut,
-                    }}
-                  >
-                    {/* Business Name */}
-                    <FormField
-                      control={form.control}
-                      name="businessName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Business Name</FormLabel>
-                          <FormControl>
-                            <Input placeholder="" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    {/* active Cusomter */}
-                    <FormField
-                      control={form.control}
-                      name="activeCustomers"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>How many customers do you have?</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select " />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {[
-                                "none, launching Soon",
-                                "0-100",
-                                "101-300",
-                                "301-600",
-                                "600+",
-                              ].map((noOfMember, i) => (
-                                <SelectItem key={noOfMember} value={noOfMember}>
-                                  {noOfMember}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* country */}
-                    <FormField
-                      control={form.control}
-                      name="country"
-                      render={({ field }) => (
-                        <FormItem hidden>
-                          <FormLabel>Country</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={"defaulCountry"}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select " />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent className="h-40">
-                              <SelectItem key={"country"} value="country">
-                                country
-                              </SelectItem>
-                              {/* {countries.map((country, i) => (
-                              <SelectItem
-                                key={country.name + country.code}
-                                value={country.name}
-                              >
-                                {country.name}
-                              </SelectItem>
-                            ))} */}
-                            </SelectContent>
-                          </Select>
-
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    {/* Refer */}
-                    <FormField
-                      control={form.control}
-                      name="refer"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Where did you hear about us?</FormLabel>
-                          <FormControl>
-                            <Input placeholder="from twitter/X?" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </motion.div>
+                  </div>
 
                   <div className="flex gap-4">
                     <Button
-                      type="button"
-                      variant={"secondary"}
-                      onClick={() => {
-                        //triggers validation before moving next form step
-                        form.trigger([
-                          "firstName",
-                          "lastName",
-                          "email",
-                          "password",
-                          "confirmPassword",
-                          "phoneNumber",
-                        ]);
-                        const emailState = form.getFieldState("email");
-                        const phoneState = form.getFieldState("phoneNumber");
-                        const firstNameState = form.getFieldState("firstName");
-                        const lastNameState = form.getFieldState("lastName");
-                        const passwordState = form.getFieldState("password");
-                        const confirmPassowordState =
-                          form.getFieldState("confirmPassword");
-
-                        // checks the validation result before redirecting step 2 of the form
-                        if (!emailState.isDirty || emailState.invalid) return;
-                        if (!phoneState.isDirty || phoneState.invalid) return;
-                        if (!firstNameState.isDirty || firstNameState.invalid)
-                          return;
-                        if (!lastNameState.isDirty || lastNameState.invalid)
-                          return;
-                        if (!passwordState.isDirty || passwordState.invalid)
-                          return;
-                        if (
-                          !confirmPassowordState.isDirty ||
-                          confirmPassowordState.invalid
-                        )
-                          return;
-                        if (watcher.password !== watcher.confirmPassword) {
-                          toast.error("Password do not match");
-                          return;
-                        }
-
-                        setFormStep(1);
-                      }}
-                      className={cn({ hidden: FormStep === 1 })}
-                    >
-                      Next Step
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                    {isLoading ?(
-
-                    <Button
-                      disabled
+                      disabled={isLoading}
+                      className="flex-1	"
                       type="submit"
-                      className={cn({ hidden: FormStep === 0 })}
                     >
-                      Submiting
-                    </Button>
-                    ):(
-
-                    <Button
-              
-                      type="submit"
-                      className={cn({ hidden: FormStep === 0 })}
-                    >
-                      Submit
-                    </Button>
-                    ) }
-
-                    <Button
-                      type="button"
-                      variant={"ghost"}
-                      className={cn({ hidden: FormStep === 0 })}
-                      onClick={() => {
-                        setFormStep(0);
-                      }}
-                    >
-                      Go Back
+                      {isLoading ? "submitting.." : "Create account"}
+                      {isLoading ? (
+                        <Icons.spinner className="ml-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <Icons.arrowRight className="ml-2 h-4 w-4 " />
+                      )}
                     </Button>
                   </div>
                 </form>
@@ -488,7 +255,7 @@ const SignUp = (props: Props) => {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-6">
-                <Button
+                  <Button
                     variant="outline"
                     disabled={isGitHubLoading}
                     onClick={() => {
@@ -522,16 +289,15 @@ const SignUp = (props: Props) => {
                 </div>
               </div>
             </CardContent>
-            {FormStep == 0 && (
-              <p className="px-8 pb-6 text-center text-sm text-muted-foreground">
-                <Link
-                  href="/auth/signin"
-                  className="hover:text-brand underline underline-offset-4"
-                >
-                  Already have an account? Sign In
-                </Link>
-              </p>
-            )}
+
+            <p className="px-8 pb-6 text-center text-sm text-muted-foreground">
+              <Link
+                href="/auth/signin"
+                className="hover:text-brand underline underline-offset-4"
+              >
+                Already have an account? Sign In
+              </Link>
+            </p>
           </Card>
         </div>
       </div>

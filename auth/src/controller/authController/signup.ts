@@ -10,18 +10,17 @@ import { validateRequest } from '../../middlewares/request-vaidation';
 import { User } from '../../models/userSchema';
 import { getDateNDaysFromNow } from '../../lib/date';
 import { Gym } from '../../models/gymSchema';
-const crypto = require('crypto');
+const { v4: uuidv4 } = require('uuid');
+
 
 export const tenantSignup = async (req: Request, res: Response) => {
   const {
     email,
     password,
-    businessName,
     firstName,
     lastName,
-    phoneNumber,
-    // activeCustomers,
-    // refer,
+
+   
     confirmPassword,
   } = req.body;
 
@@ -35,16 +34,7 @@ export const tenantSignup = async (req: Request, res: Response) => {
   }
 
   try {
-    const inviteCode =crypto.randomBytes(48, function(err: Error | null, buffer: Buffer) {
-      if (err) {
-        console.error('Error generating random bytes:', err);
-        // Handle the error appropriately (e.g., throw an error, log it, etc.)
-      } else {
-        var key = buffer.toString('base64');
-        // Save the key with the new user in the database
-        console.log('Generated key:', key);
-      }
-    });
+
 
 
     // create account, gym, user document and save to DB
@@ -56,13 +46,6 @@ export const tenantSignup = async (req: Request, res: Response) => {
     await account.save();
 
 
-    const gym = Gym.build({
-      accountId: account.id,
-      name: businessName,
-      phoneNumber,
-      inviteCode
-    });
-    await gym.save();
 
     const user = User.build({
       accountId: account.id,
@@ -70,13 +53,12 @@ export const tenantSignup = async (req: Request, res: Response) => {
       password,
       role: 'owner',
    name: `${firstName} ${lastName}`,
-      gyms: gym.id,
+
     });
     await user.save();
 
     //add user to the gym
-    gym.staffs =  user.id;
-    await gym.save();
+ 
 
     const payload = {
       accountId: account.id,
@@ -101,6 +83,7 @@ export const tenantSignup = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.log(error, 'error while creating user');
+    throw new BadRequestError('something went wrong')
+
   }
 };

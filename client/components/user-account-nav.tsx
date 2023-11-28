@@ -12,12 +12,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { UserAvatar } from "@/components/user-avatar"
+import { useGymStore, useGymsStore } from "@/store/gym"
 
 interface UserAccountNavProps extends React.HTMLAttributes<HTMLDivElement> {
   user: Pick<User, "name" | "image" | "email">
 }
 
 export function UserAccountNav({ user }: UserAccountNavProps) {
+  const {setGym} = useGymStore()
+  const {setGyms} = useGymsStore()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -52,7 +55,15 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
           className="cursor-pointer"
           onSelect={(event) => {
             event.preventDefault()
+setGym( {
+  id: '',
+  accountId: '',
+  name: '',
+  phoneNumber: '',
+  creatorId: '',
 
+},)
+setGyms([])
             signOut({
               redirect: true,
               callbackUrl: `/`,
