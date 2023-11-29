@@ -5,37 +5,24 @@ import { User } from "../models/userSchema";
 // helper function for controller of api/auth/forgot-password to genrate and send otp email
 export const sendEmailInviteStaff = async ({
   email,
-  subject,
 
-  duration,
+
+
 }: {
   email: string;
-  subject: string;
-  duration: number;
+
 }) => {
   try {
-    if (!(email && subject)) {
-      throw Error('provide values for email, subject, message');
-    }
+    
 
-    const existingUser = await User.findOne({ email });
-    if (!existingUser) {
-      throw new BadRequestError('Provide a valid registered email');
-    }
 
-    // clear any old record
-    const userData = await User.findOneAndUpdate(
-      { email },
-      { $set: { forgotPasswordToken: null, forgotPasswordTokenExpiry: null } },
-      { new: true }
-    );
 
-    // genearte OTP pin
+
 
 
     const mailOptions = {
       to: email,
-      subject,
+      subject: `You're invited to the FitSync business dashboard for ${'sdfs'}`,
       html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
       <html lang="en">
@@ -96,25 +83,9 @@ export const sendEmailInviteStaff = async ({
     // send mail
     await sendMail(mailOptions);
 
-    // update user data with otp data
-    const user = await User.findOneAndUpdate(
-      { email },
-      {
-        $set: {
-          forgotPasswordToken: generatedOtp,
-          forgotPasswordTokenExpiry: Date.now() + 3600000 * +duration,
-        },
-      },
-      { new: true }
-    );
-
-    const createdOtpRecord = {
-      email: user?.email,
-      forgotPasswordToken: user?.forgotPasswordToken,
-      forgotPasswordTokenExpiry: user?.forgotPasswordTokenExpiry,
-    };
-
-    return createdOtpRecord;
+   //TODO: update gym with invite link email 
+   //TODO: return 
+    // return createdOtpRecord;
   } catch (error) {
     throw error;
   }

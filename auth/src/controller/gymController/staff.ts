@@ -8,6 +8,9 @@ import { sendEmailInviteStaff } from '../../services/gym';
 export const inviteStaff = async (req: Request, res: Response) => {
   try {
     const { email, role } = req.body;
+    const gymId = req.headers['GymId']
+    console.log('getting gymid headers:' ,gymId)
+
    
    
     if (!(email && role))
@@ -16,12 +19,11 @@ export const inviteStaff = async (req: Request, res: Response) => {
 
 
     const mailResponse = await sendEmailInviteStaff({
-      email,
-      subject: 'Password Reset Verification Code: Use Within 5 Minutes',
-      duration: 1,
+      email
+    
     });
 
-    
+
     res.status(201).send({});
   } catch (error) {
     throw new DatabaseOperationError('Error while getting all gyms');
