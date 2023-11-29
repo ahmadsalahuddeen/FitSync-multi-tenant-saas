@@ -76,7 +76,7 @@ export function StaffCreateButton({
   } = useMutation({
     mutationFn: async (input: Input) => {
       try {
-        const response = await axiosAuth.post("/api/gym/staff/create", {
+        const response = await axiosAuth.post("/api/gym/staff/invite", {
           email: input.email,
           role: input.role,
         });

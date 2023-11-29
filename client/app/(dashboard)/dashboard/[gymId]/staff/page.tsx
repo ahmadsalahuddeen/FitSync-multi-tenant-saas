@@ -1,6 +1,6 @@
 import { DashboardHeader } from '@/components/dashboard-header'
 import { DashboardShell } from '@/components/dashboard-shell'
-import { StaffCreateButton } from '@/components/staff-create-button'
+import { StaffCreateButton } from '@/components/staff-invite-button'
 import React from 'react'
 
 type Props = {}
