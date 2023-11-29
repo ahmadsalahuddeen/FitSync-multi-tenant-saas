@@ -29,7 +29,7 @@ export const createGym = async (req: Request, res: Response) => {
       phoneNumber,
       creatorId: id,
       address,
-      staffs: id,
+      staffs: [id],
       inviteCode
     });
     await gym.save();

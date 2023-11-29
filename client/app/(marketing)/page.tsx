@@ -1,8 +1,8 @@
-import React from 'react';
-import Link from 'next/link';
-import { siteConfig } from '@/config/site';
-import { cn } from '@/lib/utils';
-import { buttonVariants } from '@/components/ui/button';
+import React from "react";
+import Link from "next/link";
+import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 import {
   AreaChart,
   BadgeDollarSign,
@@ -11,8 +11,8 @@ import {
   DatabaseBackup,
   Split,
   Ungroup,
-} from 'lucide-react';
-import { Icons } from '@/components/icons';
+} from "lucide-react";
+import { Icons } from "@/components/icons";
 
 type Props = {};
 
@@ -29,21 +29,24 @@ const page = (props: Props) => {
             Follow along on Twitter
           </Link>
           <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl">
-            A Gym Management SaaS built for yor Growth🚀.
+            A Gym Management SaaS built for Growth🚀.
           </h1>
           <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-            I'm building this web app in public and sharing
-            everything on X.  Follow along as we figure this out together.
+            I'm building this web app in public and sharing everything on X.
+            Follow along as we figure this out together.
           </p>
           <div className="space-x-4">
-            <Link href="/auth/signup" className={cn(buttonVariants({ size: 'lg' }))}>
+            <Link
+              href="/auth/signup"
+              className={cn(buttonVariants({ size: "lg" }))}
+            >
               Get Free Trial
             </Link>
             <Link
               href={siteConfig.links.github}
               target="_blank"
               rel="noreferrer"
-              className={cn(buttonVariants({ variant: 'outline', size: 'lg' }))}
+              className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
             >
               GitHub
             </Link>
@@ -52,20 +55,18 @@ const page = (props: Props) => {
       </section>
       <section
         id="features"
-        className="container space-y-6 bg-slate-50 py-8 dark:bg-transparent md:py-12 lg:py-24"
+        className="container rounded-lg space-y-6 bg-slate-50 py-8 dark:bg-transparent md:py-12 lg:py-24"
       >
-        <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center">
-          <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-6xl">
-            Features
+        <div className="mx-auto flex max-w-[58rem] flex-col items-center space-y-4 text-center md:w-1/2">
+          <h2 className="font-heading text-2xl leading-[1.1] sm:text-2xl md:text-4xl">
+            We spend all our energy on building beautiful product
           </h2>
           <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-            Full features for everyone. Never get upsold.
+            So no energy left for this landing page:)
           </p>
         </div>
-        <div className="mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
-          <div 
-          
-          className="relative overflow-hidden rounded-lg border bg-background p-2">
+        <div className=" mx-auto grid justify-center gap-4 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
+          <div className="relative overflow-hidden rounded-lg border bg-background p-2">
             <div className="flex h-[180px] flex-col justify-between rounded-md p-6">
               <BadgeDollarSign viewBox="0 0 24 24" className="h-12 w-12 " />
               <div className="space-y-2">
@@ -158,8 +159,7 @@ const page = (props: Props) => {
             Proudly #BuiltInPublic
           </h2>
           <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-            FitSync is mostly  powered by open source software💚. <br />{' '}
-            Follow along on{' '}
+            FitSync is mostly powered by open source 💚. <br /> Follow along on{" "}
             <Link
               href={siteConfig.links.twitter}
               target="_blank"
@@ -168,7 +168,7 @@ const page = (props: Props) => {
             >
               Twitter
             </Link>
-            .{' '}
+            .{" "}
           </p>
         </div>
       </section>

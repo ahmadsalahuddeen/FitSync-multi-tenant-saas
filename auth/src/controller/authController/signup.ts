@@ -1,16 +1,10 @@
 'use client';
 import express, { Request, Response } from 'express';
-const route = express.Router();
-import { body, validationResult } from 'express-validator';
-import { RequestValidationError } from '../../errors/request-validation-error';
 import { Account } from '../../models/accountSchema';
 import { BadRequestError } from '../../errors/bad-request-error';
 import jwt from 'jsonwebtoken';
-import { validateRequest } from '../../middlewares/request-vaidation';
 import { User } from '../../models/userSchema';
 import { getDateNDaysFromNow } from '../../lib/date';
-import { Gym } from '../../models/gymSchema';
-const { v4: uuidv4 } = require('uuid');
 
 
 export const tenantSignup = async (req: Request, res: Response) => {

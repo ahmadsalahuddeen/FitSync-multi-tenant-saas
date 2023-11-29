@@ -7,7 +7,8 @@ export interface gymAttrs {
   accountId: string ;
   name: string;
   phoneNumber: string;
-  staffs?: string ;
+  inviteEmailList?: string[] ;
+  staffs?: string[] ;
   creatorId?: string ;
   inviteCode: string;
 
@@ -37,9 +38,11 @@ interface gymDoc extends mongoose.Document {
   accountId: string ;
   name: string;
   phoneNumber: string;
-  staffs?: string ;
+  staffs?: string[] ;
+  inviteEmailList?: string[] ;
   creatorId?: string ;
   inviteCode: string;
+
   image?: string
   address?: {
     streetAddressOne?: string;
@@ -87,6 +90,13 @@ const gymSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+      }
+    ],
+    inviteEmailList: [
+      {
+        type: String,
+
+
       }
     ],
  // TODO: update after creating customer logic

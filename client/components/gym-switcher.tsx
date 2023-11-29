@@ -72,7 +72,7 @@ const router = useRouter()
   const [selectedGym, setSelectedGym] = React.useState<Gym | null>(
     gym
   )
-  console.log("gggggggggggg",gym)
+
   return (
     <Dialog  open={showNewGymDialog} onOpenChange={setShowNewGymDialog}>
       <Popover  open={open} onOpenChange={setOpen}>

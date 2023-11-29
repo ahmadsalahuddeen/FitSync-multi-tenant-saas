@@ -24,3 +24,23 @@ export const getAllGyms = async (req: Request, res: Response) => {
     throw new DatabaseOperationError('Error while getting all gyms');
   }
 };
+
+
+
+// /getGymWithInviteCode
+export const getGymWithInviteCode = async (req: Request, res: Response) => {
+  try {
+ 
+
+const {inviteCode} = req.query
+
+const gymData = await Gym.findOne({})
+
+res.status(200).send({message:'success'})
+  } catch (error) {
+    throw new DatabaseOperationError('Error while getting all gyms');
+  }
+};
+
+
+
