@@ -59,7 +59,7 @@ export const sendOtp = async ({
         <table align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0" width="100%" style="max-width:37.5em;margin:0 auto;padding:20px 0 48px;width:560px">
             <tr style="width:100%">
               <td>
-              <img alt="FitSync" src="https://i.ibb.co/0K3vYGh/apple-icon.png" width="42" height="42" style="display:block;outline:none;border:none;text-decoration:none;border-radius:21px;width:42px;height:42px" />
+              <img alt="FitSync" src="https://i.ibb.co/pnv0HZZ/Group-481788.png" width="42" height="42" style="display:block;outline:none;border:none;text-decoration:none;border-radius:0px;width:150px;height:36px" />
                 <h1 style="font-size:24px;letter-spacing:-0.5px;line-height:1.3;font-weight:400;color:#484848;padding:17px 0 0">Your OTP pin for password reset</h1>
                 <table style="padding:27px 0 27px" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>

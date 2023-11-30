@@ -1,18 +1,19 @@
 import mongoose, { Mongoose, Types, mongo } from 'mongoose';
 import { Password } from '../lib/password';
 import { Schema } from 'zod';
+import { userAttrs } from './userSchema';
 
 //interface that describes the properties to create a new Gym
 export interface gymAttrs {
-  accountId: string ;
+  accountId: string;
   name: string;
   phoneNumber: string;
-  inviteEmailList?: string[] ;
-  staffs?: string[] ;
-  creatorId?: string ;
+  inviteEmailList?: string[];
+  staffs?: string[] | userAttrs[];
+  creatorId: string | userAttrs;
   inviteCode: string;
 
-  image?: string
+  image?: string;
   address?: {
     streetAddressOne?: string;
     streetAddressTwo?: string;
@@ -21,9 +22,8 @@ export interface gymAttrs {
     formatted?: string;
     country: string;
     timeZone?: string;
-    isoCode?: string
+    isoCode?: string;
   };
-
 }
 
 // interface that describes the properties
@@ -35,15 +35,17 @@ interface gymModel extends mongoose.Model<gymDoc> {
 // interface that describes the properties
 // of a Gym Document
 interface gymDoc extends mongoose.Document {
-  accountId: string ;
+  accountId: string;
   name: string;
   phoneNumber: string;
-  staffs?: string[] ;
-  inviteEmailList?: string[] ;
-  creatorId?: string ;
+  staffs?: string[] | userAttrs[];
+
+  inviteEmailList?: string[];
+  creatorId: userAttrs | string;
+
   inviteCode: string;
 
-  image?: string
+  image?: string;
   address?: {
     streetAddressOne?: string;
     streetAddressTwo?: string;
@@ -52,8 +54,7 @@ interface gymDoc extends mongoose.Document {
     formatted?: string;
     country: string;
     timeZone?: string;
-    isoCode?: string
-
+    isoCode?: string;
   };
 }
 
@@ -65,9 +66,9 @@ const gymSchema = new mongoose.Schema(
       required: true,
     },
     image: {
-      type: String
+      type: String,
     },
-    
+
     name: {
       type: String,
       required: true,
@@ -76,30 +77,28 @@ const gymSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-   
+
     phoneNumber: {
       type: String,
       required: true,
     },
     creatorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
+      ref: 'User',
     },
 
     staffs: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      }
+        ref: 'User',
+      },
     ],
     inviteEmailList: [
       {
         type: String,
-
-
-      }
+      },
     ],
- // TODO: update after creating customer logic
+    // TODO: update after creating customer logic
     // customers: [
     //   {
     //     type: mongoose.Schema.Types.ObjectId,
@@ -146,8 +145,6 @@ const gymSchema = new mongoose.Schema(
     },
   }
 );
-
-
 
 gymSchema.statics.build = (attrs: gymAttrs) => {
   return new Gym(attrs);

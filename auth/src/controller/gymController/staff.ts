@@ -4,6 +4,7 @@ import { BadRequestError } from '../../errors/bad-request-error';
 import { DatabaseOperationError } from '../../errors/databse-operation-error';
 import { sendEmailInviteStaff } from '../../services/gym';
 import { Gym } from '../../models/gymSchema';
+import { gymCreatorIdPopulated } from '../../types/types';
 
 // send invite email to staff
 export const inviteStaff = async (req: Request, res: Response) => {
@@ -12,8 +13,11 @@ export const inviteStaff = async (req: Request, res: Response) => {
 
     const { email, role } = req.body;
     const gymId: any = req.headers['gymid'];
-console.log('gymdi: ', gymId)
-    const gymData = await Gym.findOne({ _id: gymId });
+
+const isInviteExist = await Gym.findOne({_id: gymId, inviteEmailList: email})
+if(isInviteExist) throw new BadRequestError('Invite Email is Already sent!')
+
+    const gymData  = await Gym.findOne({ _id: gymId })
 
     if (!gymData) throw new BadRequestError('cannot find your gym ');
 
@@ -27,10 +31,9 @@ console.log('gymdi: ', gymId)
     gymData.inviteEmailList?.push(email);
     await gymData.save();
 
-    
     res.status(201).send(gymData.inviteEmailList);
   } catch (error) {
-console.log(error)
-res.status(500).send(error)
+    console.log(error);
+
   }
 };

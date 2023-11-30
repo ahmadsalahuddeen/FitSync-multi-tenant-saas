@@ -4,7 +4,7 @@ import { Password } from '../lib/password';
 
 
 //interface that describes the properties to create a new User
-interface userAttrs {
+export type userAttrs = {
   accountId: string;
   name?: string
 

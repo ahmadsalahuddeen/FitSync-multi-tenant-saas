@@ -1,7 +1,9 @@
 import { BadRequestError } from '../errors/bad-request-error';
 import { sendMail } from '../lib/email';
-import { Gym, gymAttrs } from '../models/gymSchema';
+import { gymAttrs } from '../models/gymSchema';
+
 import { User } from '../models/userSchema';
+import { gymCreatorIdPopulated } from '../types/types';
 
 // helper function for controller of api/auth/forgot-password to genrate and send otp email
 export const sendEmailInviteStaff = async ({
@@ -11,7 +13,12 @@ export const sendEmailInviteStaff = async ({
   email: string;
   gymData: gymAttrs;
 }) => {
+
+
+
   try {
+
+    const userData = await User.find({_id: gymData.creatorId})
     const mailOptions = {
       to: email,
       subject: `You're invited to the FitSync business dashboard for ${gymData.name}`,
@@ -20,50 +27,32 @@ export const sendEmailInviteStaff = async ({
       <html lang="en">
       
         <head></head>
-        <div id="__react-email-preview" style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0">Join bukinoshita on Vercel<div></div>
+        <div id="__react-email-preview" style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0">You&#x27;re now ready to make live transactions with Stripe!<div></div>
         </div>
       
-        <body style="margin-left:auto;margin-right:auto;margin-top:auto;margin-bottom:auto;background-color:rgb(255,255,255);font-family:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;">
-          <table align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0" width="100%" style="max-width:37.5em;margin-left:auto;margin-right:auto;margin-top:40px;margin-bottom:40px;width:465px;border-radius:0.25rem;border-width:1px;border-style:solid;border-color:rgb(234,234,234);padding:20px">
+        <body style="background-color:#f6f9fc;font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,&quot;Helvetica Neue&quot;,Ubuntu,sans-serif">
+          <table align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0" width="100%" style="max-width:37.5em;background-color:#ffffff;margin:0 auto;padding:20px 0 48px;margin-bottom:64px">
             <tr style="width:100%">
               <td>
-                <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%" style="margin-top:32px">
+                <table style="padding:0 48px" align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
                   <tbody>
                     <tr>
-                      <td><img alt="Vercel" src="https://react-email-demo-ijnnx5hul-resend.vercel.app/static/vercel-logo.png" width="40" height="37" style="display:block;outline:none;border:none;text-decoration:none;margin-left:auto;margin-right:auto;margin-top:0px;margin-bottom:0px" /></td>
-                    </tr>
-                  </tbody>
-                </table>
-                <h1 style="margin-left:0px;margin-right:0px;margin-top:30px;margin-bottom:30px;padding:0px;text-align:center;font-size:24px;font-weight:400;color:rgb(0,0,0)">Join <strong>${'gym name here'}</strong> on <strong>Vercel</strong></h1>
-                <p style="font-size:14px;line-height:24px;margin:16px 0;color:rgb(0,0,0)">Hello zenorocha,</p>
-                <p style="font-size:14px;line-height:24px;margin:16px 0;color:rgb(0,0,0)"><strong>bukinoshita</strong> (<a target="_blank" style="color:rgb(37,99,235);text-decoration:none;text-decoration-line:none" href="mailto:bukinoshita@example.com">bukinoshita@example.com</a>) has invited you to the <strong>My Project</strong> team on <strong>Vercel</strong>.</p>
-                <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%">
-                  <tbody>
-                    <tr>
-                      <td>
-                        <table width="100%" align="center" role="presentation" cellSpacing="0" cellPadding="0" border="0">
-                          <tbody style="width:100%">
-                            <tr style="width:100%">
-                              <td align="right"><img src="https://react-email-demo-ijnnx5hul-resend.vercel.app/static/vercel-user.png" width="64" height="64" style="display:block;outline:none;border:none;text-decoration:none;border-radius:9999px" /></td>
-                              <td align="center"><img alt="invited you to" src="https://react-email-demo-ijnnx5hul-resend.vercel.app/static/vercel-arrow.png" width="12" height="9" style="display:block;outline:none;border:none;text-decoration:none" /></td>
-                              <td align="left"><img src="https://react-email-demo-ijnnx5hul-resend.vercel.app/static/vercel-team.png" width="64" height="64" style="display:block;outline:none;border:none;text-decoration:none;border-radius:9999px" /></td>
-                            </tr>
-                          </tbody>
-                        </table>
+                      <td><img alt="Fitsync" src="https://i.ibb.co/pnv0HZZ/Group-481788.png" width="150" height="36" style="display:block;outline:none;border:none;text-decoration:none;width:150px;height:36px" />
+                        <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#e6ebf1;margin:20px 0" />
+                        <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">Welcome! You have been invited to the business dashboard for ${gymData.name}. Click the link below to get started:</p>
+                        <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left"></p><a href="${process.env.BASE_URL_FRONTEND}/auth/staff/invite?inviteCode=${gymData.inviteCode}" target="_blank" style="background-color:#656ee8;border-radius:5px;color:#fff;font-size:16px;font-weight:bold;text-decoration:none;text-align:center;display:inline-block;width:100%;p-x:10px;p-y:10px;line-height:100%;max-width:100%;padding:10px 10px"><span><!--[if mso]><i style="letter-spacing: 10px;mso-font-width:-100%;mso-text-raise:15" hidden>&nbsp;</i><![endif]--></span><span style="background-color:#656ee8;border-radius:5px;color:#fff;font-size:16px;font-weight:bold;text-decoration:none;text-align:center;display:inline-block;width:100%;p-x:10px;p-y:10px;max-width:100%;line-height:120%;text-transform:none;mso-padding-alt:0px;mso-text-raise:7.5px">Accept invitation to join ${gymData.name}</span><span><!--[if mso]><i style="letter-spacing: 10px;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
+                        <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#e6ebf1;margin:20px 0" />
+                        <p style="font-size:14px;line-height:26px;margin-top:16px;font-weight:700;color:#656ee8">What is Fitsync?🤔</p>
+                        <p style="font-size:16px;line-height:24px;margin-bottom:16px;color:#525f7f;text-align:left">Fitsync is a software that manages classes and payments for gyms, boxes, studios, and more.</p>
+                        <p style="font-size:14px;line-height:26px;margin-top:16px;font-weight:700;color:#656ee8">Why have I been sent this?</p>
+                        <p style="font-size:16px;line-height:24px;margin-bottom:16px;color:#525f7f;text-align:left">Once you've accepted this invitation and created an account, you will have a login to TeamUp that you can use to access the business dashboard for ${gymData.name}.</p>
+                        <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">All the best <br/>Fitsync team </p>
+                        <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#e6ebf1;margin:20px 0" />
+                        <p style="font-size:12px;line-height:16px;margin:16px 0;color:#8898aa">@Fitsync</p>
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                <table align="center" border="0" cellPadding="0" cellSpacing="0" role="presentation" width="100%" style="margin-bottom:32px;margin-top:32px;text-align:center">
-                  <tbody>
-                    <tr>
-                      <td><a href="https://vercel.com/teams/invite/foo" target="_blank" style="p-x:20px;p-y:12px;line-height:100%;text-decoration:none;display:inline-block;max-width:100%;padding:12px 20px;border-radius:0.25rem;background-color:rgb(0,0,0);text-align:center;font-size:12px;font-weight:600;color:rgb(255,255,255);text-decoration-line:none"><span></span><span style="p-x:20px;p-y:12px;max-width:100%;display:inline-block;line-height:120%;text-decoration:none;text-transform:none;mso-padding-alt:0px;mso-text-raise:9px">Join the team</span><span></span></a></td>
-                    </tr>
-                  </tbody>
-                </table>
-                <p style="font-size:14px;line-height:24px;margin:16px 0;color:rgb(0,0,0)">or copy and paste this URL into your browser: <a target="_blank" style="color:rgb(37,99,235);text-decoration:none;text-decoration-line:none" href="https://vercel.com/teams/invite/foo">https://vercel.com/teams/invite/foo</a></p>
-                <hr style="width:100%;border:none;border-top:1px solid #eaeaea;margin-left:0px;margin-right:0px;margin-top:26px;margin-bottom:26px;border-width:1px;border-style:solid;border-color:rgb(234,234,234)" />
-                <p style="font-size:12px;line-height:24px;margin:16px 0;color:rgb(102,102,102)">This invitation was intended for <span style="color:rgb(0,0,0)">zenorocha </span>.This invite was sent from <span style="color:rgb(0,0,0)">204.13.186.218</span> located in <span style="color:rgb(0,0,0)">São Paulo, Brazil</span>. If you were not expecting this invitation, you can ignore this email. If you are concerned about your account&#x27;s safety, please reply to this email to get in touch with us.</p>
               </td>
             </tr>
           </table>
