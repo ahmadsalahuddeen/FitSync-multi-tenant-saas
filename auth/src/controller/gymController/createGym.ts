@@ -8,30 +8,22 @@ export const createGym = async (req: Request, res: Response) => {
   try {
     const { accountId, id } = req.currentUser;
     const { name, phoneNumber, address } = req.body;
-    
-    if (!(name && phoneNumber && address))
-    throw new BadRequestError('Provide valid credentials');
-  
-  // check's if the gym name is already taken
-  const existingGym = await Gym.findOne({ name });
-  
-  const inviteCode = uuidv4();
-  
-  if (existingGym){
-  throw new BadRequestError(
-'Gym Name is already taken, try different name'
-);}
-console.log('req.current', req.currentUser)
 
-    
-      const gym = Gym.build({
+    if (!(name && phoneNumber && address))
+      throw new BadRequestError('Provide valid credentials');
+
+
+
+    const inviteCode = uuidv4();
+
+    const gym = Gym.build({
       accountId,
       name,
       phoneNumber,
       creatorId: id,
       address,
       staffs: [id],
-      inviteCode
+      inviteCode,
     });
     await gym.save();
 
@@ -39,8 +31,6 @@ console.log('req.current', req.currentUser)
 
     res.status(201).send(gym);
   } catch (error: any) {
-    console.log(error)
-
-
+    console.log(error);
   }
 };

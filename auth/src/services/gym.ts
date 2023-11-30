@@ -1,28 +1,20 @@
-import { BadRequestError } from "../errors/bad-request-error";
-import { sendMail } from "../lib/email";
-import { User } from "../models/userSchema";
+import { BadRequestError } from '../errors/bad-request-error';
+import { sendMail } from '../lib/email';
+import { Gym, gymAttrs } from '../models/gymSchema';
+import { User } from '../models/userSchema';
 
 // helper function for controller of api/auth/forgot-password to genrate and send otp email
 export const sendEmailInviteStaff = async ({
   email,
-
-
-
+  gymData,
 }: {
   email: string;
-
+  gymData: gymAttrs;
 }) => {
   try {
-    
-
-
-
-
-
-
     const mailOptions = {
       to: email,
-      subject: `You're invited to the FitSync business dashboard for ${'sdfs'}`,
+      subject: `You're invited to the FitSync business dashboard for ${gymData.name}`,
       html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
       <html lang="en">
@@ -83,9 +75,6 @@ export const sendEmailInviteStaff = async ({
     // send mail
     await sendMail(mailOptions);
 
-   //TODO: update gym with invite link email 
-   //TODO: return 
-    // return createdOtpRecord;
   } catch (error) {
     throw error;
   }
