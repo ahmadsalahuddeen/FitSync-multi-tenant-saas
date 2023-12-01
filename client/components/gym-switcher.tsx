@@ -48,8 +48,9 @@ import {
 } from "@/components/ui/select"
 import GymCreateForm from "./create-gym-form"
 import { useGymStore, useGymsStore } from "@/store/gym"
-import { Gym } from "@/services/gymService"
+
 import { useRouter } from "next/navigation"
+import { Gym } from "@/types/types"
 
 
 

@@ -13,7 +13,7 @@ const gymRoute = require('express').Router();
 gymRoute.get('/gyms',memberAuth, getAllGyms);
 gymRoute.post('/create',adminAuth , createGym);
 gymRoute.post('/staff/invite',adminAuth , inviteStaff);
-// gymRoute.post('/invite-staff',adminAuth , inviteStaff);
+
 gymRoute.get('/get-gym-invite-code', getGymWithInviteCode);
 
 

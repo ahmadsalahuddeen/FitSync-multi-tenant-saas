@@ -75,25 +75,25 @@ export function StaffCreateButton({
     error,
   } = useMutation({
     mutationFn: async (input: Input) => {
-      try {
+      
         const response = await axiosAuth.post("/api/gym/staff/invite", {
           email: input.email,
           role: input.role,
         });
         console.log(response, "respones");
         return response.data;
-      } catch (err: any) {
-        err.response.data.errors.map((err: any) => {
-          toast.error(err.message);
-        });
-      }
+  
+    },
+    onError:(err: any)=>{
+
+toast.error(err.response.data.errors[0].message)
     },
     onSuccess: (data) => {
       toast.success(`gym created successfully`);
       setShowNewGymDialog(false);
-      router.push(`/dashboard/`);
 
-      router.refresh();
+
+
     },
   });
 
@@ -106,7 +106,7 @@ export function StaffCreateButton({
   }
 
   return (
-    <Dialog>
+    <Dialog open={showNewGymDialog} onOpenChange={setShowNewGymDialog}>
       <DialogTrigger asChild>
         <Button variant="default">
           {isLoading ? (
@@ -184,7 +184,17 @@ export function StaffCreateButton({
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Send Invitation</Button>
+              <Button
+              disabled={isLoading}
+              type="submit">
+                
+                Send Invitation
+            {isLoading ? (
+              <Icons.spinner className="ml-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Icons.arrowRight className="ml-2 h-4 w-4" />
+                )}
+                </Button>
             </DialogFooter>
           </form>
         </Form>

@@ -7,9 +7,7 @@ import { BadRequestError } from '../../errors/bad-request-error';
 import { User } from '../../models/userSchema';
 const { v4: uuidv4 } = require('uuid');
 
-
-
-//create gym for user's 
+//create gym for user's
 export const createGym = async (req: Request, res: Response) => {
   try {
     const { accountId, id } = req.currentUser;
@@ -17,7 +15,7 @@ export const createGym = async (req: Request, res: Response) => {
 
     if (!(name && phoneNumber && address))
       throw new BadRequestError('Provide valid credentials');
-    
+
     // check's if the gym name is already taken
     const existingGym = await Gym.findOne({ name });
 
@@ -28,15 +26,14 @@ export const createGym = async (req: Request, res: Response) => {
         'Gym Name is already taken, try different name'
       );
 
-    
-      const gym = Gym.build({
+    const gym = Gym.build({
       accountId,
       name,
       phoneNumber,
       creatorId: id,
       address,
       staffs: [id],
-      inviteCode
+      inviteCode,
     });
     await gym.save();
 
@@ -48,23 +45,21 @@ export const createGym = async (req: Request, res: Response) => {
   }
 };
 
-
-
-
-
 // /gyms
 export const getAllGyms = async (req: Request, res: Response) => {
   try {
- 
-
     const { role, accountId, id } = req.currentUser;
 
     if (role === 'owner') {
-      const gyms: gymAttrs[] = await Gym.find({ accountId }).sort({ createdAt: -1 });
+      const gyms: gymAttrs[] = await Gym.find({ accountId }).sort({
+        createdAt: -1,
+      });
 
-      res.status(200).send(gyms );
+      res.status(200).send(gyms);
     } else if (role == 'member') {
-      const gyms: gymAttrs[] = await Gym.find({ users: id }).sort({ createdAt: -1 });
+      const gyms: gymAttrs[] = await Gym.find({ users: id }).sort({
+        createdAt: -1,
+      });
       res.status(200).send(gyms);
     }
   } catch (error) {
@@ -72,23 +67,13 @@ export const getAllGyms = async (req: Request, res: Response) => {
   }
 };
 
-
-
 // /getGymWithInviteCode
 export const getGymWithInviteCode = async (req: Request, res: Response) => {
   try {
- 
+    const { inviteCode } = req.query;
 
-const {inviteCode} = req.query
-
-const gymData = await Gym.findOne({})
-
-res.status(200).send({message:'success'})
-  } catch (error) {
-    throw new DatabaseOperationError('Error while getting all gyms');
-  }
+    const gymData = await Gym.findOne({ inviteCode });
+if(!gymData) throw new BadRequestError('invalid invite code')
+    res.status(200).send(gymData);
+  } catch (error) {}
 };
-
-
-
-

@@ -7,6 +7,7 @@ import { getCurrentUser } from '../controller/authController/current-user';
 import auth from '../middlewares/adminAuth';
 import { oauthSignIn } from '../controller/authController/oauthSignIn';
 import { requestOtp, resetPassword, verifyOtp } from '../controller/authController/resetPassword';
+import { staffSignup } from '../controller/authController/staffSignup';
 
 const authRoute = require('express').Router();
 
@@ -49,6 +50,19 @@ authRoute.post(
   ],
   validateRequest,
   tenantSignup
+);
+authRoute.post(
+  '/staff/signup',
+  [
+    body('email').isEmail().withMessage('Provide a valid Email address'),
+
+    body('password')
+      .trim()
+      .isLength({ min: 4, max: 20 })
+      .withMessage('Password must be between 4 and 20 characters'),
+  ],
+  validateRequest,
+  staffSignup
 );
 
 authRoute.post('/users/signout', signout);

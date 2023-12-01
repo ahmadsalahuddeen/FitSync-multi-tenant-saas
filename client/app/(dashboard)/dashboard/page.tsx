@@ -9,7 +9,7 @@ import { useGymStore, useGymsStore } from "@/store/gym";
 import EmptyGymShell from "@/components/empty-gym-shell";
 
 import { useQuery } from "react-query";
-import { Gym } from "@/services/gymService";
+
 import { redirect, useRouter } from "next/navigation";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 

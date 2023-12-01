@@ -62,7 +62,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "./ui/use-toast";
 import { useGymStore, useGymsStore } from "@/store/gym";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
-import { Gym } from "@/services/gymService";
+
 
 
 type Props = {setShowNewGymDialog:  any}
@@ -167,7 +167,7 @@ router.refresh()
   const watcher = form.watch();
 
   return (
-    
+
     <Dialog>
       <Card className="border-0 shadow-none">
         <DialogHeader>

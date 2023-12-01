@@ -1,6 +1,6 @@
 import { BadRequestError } from '../errors/bad-request-error';
 import { sendMail } from '../lib/email';
-import { gymAttrs } from '../models/gymSchema';
+import { Gym, gymAttrs } from '../models/gymSchema';
 
 import { User } from '../models/userSchema';
 import { gymCreatorIdPopulated } from '../types/types';
@@ -9,16 +9,14 @@ import { gymCreatorIdPopulated } from '../types/types';
 export const sendEmailInviteStaff = async ({
   email,
   gymData,
+  role
 }: {
   email: string;
+  role: string;
   gymData: gymAttrs;
 }) => {
-
-
-
   try {
-
-    const userData = await User.find({_id: gymData.creatorId})
+    const userData = await User.find({ _id: gymData.creatorId });
     const mailOptions = {
       to: email,
       subject: `You're invited to the FitSync business dashboard for ${gymData.name}`,
@@ -40,7 +38,7 @@ export const sendEmailInviteStaff = async ({
                       <td><img alt="Fitsync" src="https://i.ibb.co/pnv0HZZ/Group-481788.png" width="150" height="36" style="display:block;outline:none;border:none;text-decoration:none;width:150px;height:36px" />
                         <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#e6ebf1;margin:20px 0" />
                         <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left">Welcome! You have been invited to the business dashboard for ${gymData.name}. Click the link below to get started:</p>
-                        <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left"></p><a href="${process.env.BASE_URL_FRONTEND}/auth/staff/invite?inviteCode=${gymData.inviteCode}" target="_blank" style="background-color:#656ee8;border-radius:5px;color:#fff;font-size:16px;font-weight:bold;text-decoration:none;text-align:center;display:inline-block;width:100%;p-x:10px;p-y:10px;line-height:100%;max-width:100%;padding:10px 10px"><span><!--[if mso]><i style="letter-spacing: 10px;mso-font-width:-100%;mso-text-raise:15" hidden>&nbsp;</i><![endif]--></span><span style="background-color:#656ee8;border-radius:5px;color:#fff;font-size:16px;font-weight:bold;text-decoration:none;text-align:center;display:inline-block;width:100%;p-x:10px;p-y:10px;max-width:100%;line-height:120%;text-transform:none;mso-padding-alt:0px;mso-text-raise:7.5px">Accept invitation to join ${gymData.name}</span><span><!--[if mso]><i style="letter-spacing: 10px;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
+                        <p style="font-size:16px;line-height:24px;margin:16px 0;color:#525f7f;text-align:left"></p><a href="${process.env.BASE_URL_FRONTEND}/auth/staff/signup?inviteCode=${gymData.inviteCode}&role=${role}" target="_blank" style="background-color:#656ee8;border-radius:5px;color:#fff;font-size:16px;font-weight:bold;text-decoration:none;text-align:center;display:inline-block;width:100%;p-x:10px;p-y:10px;line-height:100%;max-width:100%;padding:10px 10px"><span><!--[if mso]><i style="letter-spacing: 10px;mso-font-width:-100%;mso-text-raise:15" hidden>&nbsp;</i><![endif]--></span><span style="background-color:#656ee8;border-radius:5px;color:#fff;font-size:16px;font-weight:bold;text-decoration:none;text-align:center;display:inline-block;width:100%;p-x:10px;p-y:10px;max-width:100%;line-height:120%;text-transform:none;mso-padding-alt:0px;mso-text-raise:7.5px">Accept invitation to join ${gymData.name}</span><span><!--[if mso]><i style="letter-spacing: 10px;mso-font-width:-100%" hidden>&nbsp;</i><![endif]--></span></a>
                         <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#e6ebf1;margin:20px 0" />
                         <p style="font-size:14px;line-height:26px;margin-top:16px;font-weight:700;color:#656ee8">What is Fitsync?🤔</p>
                         <p style="font-size:16px;line-height:24px;margin-bottom:16px;color:#525f7f;text-align:left">Fitsync is a software that manages classes and payments for gyms, boxes, studios, and more.</p>
@@ -63,8 +61,25 @@ export const sendEmailInviteStaff = async ({
 
     // send mail
     await sendMail(mailOptions);
-
   } catch (error) {
     throw error;
+  }
+};
+
+export const isInviteCodeValid = async (inviteCode: string) => {
+  try {
+    const IsCodeExist = await Gym.findOne({ inviteCode });
+    if (!IsCodeExist) throw new BadRequestError('invalid invite code!');
+    return IsCodeExist
+  } catch (error) {
+throw error
+  }
+};
+export const isValidInvitedEmail = async (email: string) => {
+  try {
+    const IsInviteEmailExist = await Gym.findOne({ inviteEmailList: email });
+    if (!IsInviteEmailExist) throw new BadRequestError(`Your email is not currently on the invitation list. Kindly request a new invitation from the administrator`);
+  } catch (error) {
+throw error
   }
 };

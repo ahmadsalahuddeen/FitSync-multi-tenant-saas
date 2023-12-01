@@ -1,5 +1,6 @@
 
-import { Gym } from "@/services/gymService";
+
+import { Gym } from "@/types/types";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 

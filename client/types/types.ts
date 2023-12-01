@@ -26,3 +26,29 @@ export type gym = {
   name: string,
   
 }
+
+
+
+export type Gym = {
+  id: string
+  accountId: string ;
+  name: string;
+  phoneNumber: string;
+  staffs?: string ;
+  creatorId?: string ;
+  image?: string
+  address?: {
+    streetAddressOne?: string;
+    streetAddressTwo?: string;
+    region?: string;
+    state?: string;
+    formatted?: string;
+    country: string;
+    timeZone?: string;
+    isoCode?: string
+  };
+
+} 
+
+
+

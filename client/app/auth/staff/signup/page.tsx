@@ -31,7 +31,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useForm } from "react-hook-form";
 import { registerSchema } from "@/validators/auth";
 import { z } from "zod";
@@ -43,19 +43,34 @@ import { easeInOut, motion, useMotionValue } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import useRequest from "@/hooks/use-request";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { Separator } from "@/components/ui/separator";
+import axiosApi from "@/lib/axios";
+import { Gym } from "@/types/types";
 
 type Props = {};
 
 const StaffSignup = (props: Props) => {
-  const searchParams = useSearchParams()
-  const inviteCode = searchParams.get('inviteCode')
+  const { data: session } = useSession();
+  const searchParams = useSearchParams();
+  const inviteCode = searchParams.get("inviteCode");
+  const role = searchParams.get("role");
   const router = useRouter();
   const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false);
   const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false);
   type Input = z.infer<typeof registerSchema>;
+  if (!(role && inviteCode)) throw new Error("Invalid Invitation");
 
-  // schema to ts types
+  // fetch gymData
+  const { data: gymData } = useQuery<Gym, Error>({
+    queryKey: ["gym", inviteCode],
+    queryFn: async () => {
+      const response = await axiosApi.get(
+        `/api/gym/get-gym-invite-code?inviteCode=${inviteCode}`,
+      );
+      return response.data;
+    },
+  });
 
   // react hook form
   const form = useForm<Input>({
@@ -70,25 +85,18 @@ const StaffSignup = (props: Props) => {
   });
   const isLoading = form.formState.isSubmitting;
 
-  const {
-    mutate: doRequest,
-
-    isError,
-
-    error,
-  } = useMutation({
+  const { mutate: doRequest } = useMutation({
     mutationFn: async (input: Input) => {
-
-      const response = await axios.post("/api/auth/tenant/signup", {
+      const response = await axios.post("/api/auth/staff/signup", {
         firstName: input.firstName,
         lastName: input.lastName,
         email: input.email,
         password: input.password,
-
+        inviteCode,
+        role,
         confirmPassword: input.confirmPassword,
       });
       return response.data;
-
     },
 
     onError: (error: any) => {
@@ -113,26 +121,44 @@ const StaffSignup = (props: Props) => {
     }
     await doRequest(input);
   }
-
+  if (session)
+    return (
+      <>
+        <div className="container flex h-screen w-screen flex-col items-center justify-center">
+          <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+            <Card className="py-3 ">
+              <CardHeader>
+                <CardTitle>{gymData?.name}</CardTitle>
+                <CardDescription>
+                  You are invited to join this gym.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Separator className="my-1 " />
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <Button className="flex-1">Join</Button>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+      </>
+    );
   return (
     <>
       <div className="container flex h-auto w-screen flex-col items-center justify-center">
-        
         <div className="mx-auto my-[5rem] flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-
-
           <Card className="border-none">
             <CardHeader>
-            <div className="flex flex-col space-y-2 text-center">
-            <Icons.logo className="mx-auto h-6 w-6  text-green-600" />
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Staff account creation!
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              Create an account to join {'Power'} through fitsync
-            </p>
-          </div>
-
+              <div className="flex flex-col space-y-2 text-center">
+                <Icons.logo className="mx-auto h-6 w-6  text-green-600" />
+                <h1 className="text-2xl font-semibold tracking-tight">
+                  Staff account creation!
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Create an account to join {gymData?.name} through fitsync
+                </p>
+              </div>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -184,10 +210,10 @@ const StaffSignup = (props: Props) => {
                               placeholder="you@yourdomain.com"
                               {...field}
                             />
-
                           </FormControl>
                           <FormDescription>
-                          Please provide the email used for invitation</FormDescription>
+                            Please provide the email used for invitation
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -240,7 +266,6 @@ const StaffSignup = (props: Props) => {
                   </div>
                 </form>
               </Form>
-              
             </CardContent>
 
             <p className="px-8 pb-6 text-center text-sm text-muted-foreground">

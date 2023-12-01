@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { BadRequestError } from '../../errors/bad-request-error';
 
 import { DatabaseOperationError } from '../../errors/databse-operation-error';
-import { sendEmailInviteStaff } from '../../services/gym';
+import { sendEmailInviteStaff } from '../../services/auth';
 import { Gym } from '../../models/gymSchema';
 import { gymCreatorIdPopulated } from '../../types/types';
 
@@ -14,10 +14,15 @@ export const inviteStaff = async (req: Request, res: Response) => {
     const { email, role } = req.body;
     const gymId: any = req.headers['gymid'];
 
-const isInviteExist = await Gym.findOne({_id: gymId, inviteEmailList: email})
-if(isInviteExist) throw new BadRequestError('Invite Email is Already sent!')
+    const isInviteExist = await Gym.findOne({
+      _id: gymId,
+      inviteEmailList: email,
+    });
+    if (isInviteExist) {
+      throw new BadRequestError('Invite Email is Already sent!');
+    }
 
-    const gymData  = await Gym.findOne({ _id: gymId })
+    const gymData = await Gym.findOne({ _id: gymId });
 
     if (!gymData) throw new BadRequestError('cannot find your gym ');
 
@@ -25,6 +30,7 @@ if(isInviteExist) throw new BadRequestError('Invite Email is Already sent!')
 
     await sendEmailInviteStaff({
       email,
+      role,
       gymData,
     });
 
@@ -33,7 +39,6 @@ if(isInviteExist) throw new BadRequestError('Invite Email is Already sent!')
 
     res.status(201).send(gymData.inviteEmailList);
   } catch (error) {
-    console.log(error);
-
+throw error
   }
 };

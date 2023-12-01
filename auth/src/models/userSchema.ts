@@ -16,9 +16,8 @@ export type userAttrs = {
   email: string;
   password?: string;
   role: 'owner' | 'member';
-  gyms?: string
+  gyms?: string[]
   isInstructor?: boolean;
-  invitationStatus?: 'accepted' | 'pending'| 'declined';
 
 
 
@@ -44,8 +43,8 @@ interface userDoc extends mongoose.Document {
   email: string;
   password?: string;
   role: 'owner' | 'member';
-  invitationStatus?: 'accepted' | 'pending'| 'declined';
-  gyms?: string
+
+  gyms?: string[]
   isInstructor?: boolean;
 }
 
@@ -89,12 +88,7 @@ type: Boolean
       enum: ['owner', 'member'],
       default: 'member',
     },
-    invitationStatus: {
-      type: String,
-      enum: ['accepted', 'pending', 'declined'],
-      default: 'pending'
 
-    },
     forgotPasswordToken: String,
     forgotPasswordTokenExpiry: Date,
 
