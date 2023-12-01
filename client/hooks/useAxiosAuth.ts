@@ -18,8 +18,8 @@ const useAxiosAuth =  () => {
         if (!config.headers["Authorization"]) {
           config.headers["Authorization"] = `Bearer ${session?.backendTokens?.accessToken}`;
         }
-        if(gym.id !== ''){
-          config.headers['gymid'] = gym.id; // Set gymId in headers
+        if(gym?.id !== ''){
+          config.headers['gymid'] = gym?.id; // Set gymId in headers
         }
         return config;
       },

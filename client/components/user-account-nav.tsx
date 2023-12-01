@@ -64,6 +64,7 @@ setGym( {
 
 },)
 setGyms([])
+
             signOut({
               redirect: true,
               callbackUrl: `/`,

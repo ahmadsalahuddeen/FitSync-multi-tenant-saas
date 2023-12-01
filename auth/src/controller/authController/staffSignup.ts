@@ -8,6 +8,30 @@ import { getDateNDaysFromNow } from '../../lib/date';
 import { Gym } from '../../models/gymSchema';
 import { isInviteCodeValid, isValidInvitedEmail } from '../../services/auth';
 
+export const staffInviteJoin = async (req: Request, res: Response) => {
+  try {
+    const { userId, inviteCode } = req.body;
+    const gym = await Gym.findOne({ inviteCode });
+    if (!gym) throw new BadRequestError('invalid invite code');
+
+    const user = await User.findOne({ _id: userId });
+    if (!user) throw new BadRequestError('invalid userId ');
+
+    user.gyms?.push(gym.id);
+
+    await user.save();
+
+    const newGymData = await Gym.findOneAndUpdate(
+      { inviteCode },
+      { $pull: { inviteEmailList: user.email }, $push: { staffs: user.id } },
+      { new: true }
+    );
+    res.status(201).send({ success: true });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const staffSignup = async (req: Request, res: Response) => {
   const {
     email,
@@ -19,21 +43,19 @@ export const staffSignup = async (req: Request, res: Response) => {
     confirmPassword,
   } = req.body;
 
-  if (!(role && inviteCode)){
+  if (!(role && inviteCode)) {
     throw new BadRequestError('request does not have invitecode or role ');
   }
-  const gymData = await isInviteCodeValid(inviteCode);
-
-  await isValidInvitedEmail(email);
-
   const emailExist = await User.findOne({ email });
-
   if (emailExist) {
     throw new BadRequestError('email is already in use');
   }
   if (password !== confirmPassword) {
     throw new BadRequestError('confirm password does not match');
   }
+  const gymData = await isInviteCodeValid(inviteCode);
+
+  await isValidInvitedEmail(email);
 
   try {
     const user = User.build({
@@ -77,6 +99,6 @@ export const staffSignup = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-throw error
+    throw error;
   }
 };

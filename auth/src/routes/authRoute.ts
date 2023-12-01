@@ -7,7 +7,7 @@ import { getCurrentUser } from '../controller/authController/current-user';
 import auth from '../middlewares/adminAuth';
 import { oauthSignIn } from '../controller/authController/oauthSignIn';
 import { requestOtp, resetPassword, verifyOtp } from '../controller/authController/resetPassword';
-import { staffSignup } from '../controller/authController/staffSignup';
+import { staffInviteJoin, staffSignup } from '../controller/authController/staffSignup';
 
 const authRoute = require('express').Router();
 
@@ -64,6 +64,8 @@ authRoute.post(
   validateRequest,
   staffSignup
 );
+authRoute.post('/staff/join' , staffInviteJoin);
+
 
 authRoute.post('/users/signout', signout);
 authRoute.get('/users/currentuser', auth, getCurrentUser);

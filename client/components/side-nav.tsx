@@ -18,7 +18,7 @@ export const SideNav = ( ) => {
 
   const {gym} = useGymStore()
 
-const menu =  !gym.id ? initalMenuItems() : menuItems(gym.id)
+const menu =  !gym?.id ? initalMenuItems() : menuItems(gym?.id)
 
   return (
     <div className=" fixed grid  items-start gap-2  ">

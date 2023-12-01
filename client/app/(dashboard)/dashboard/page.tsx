@@ -16,13 +16,11 @@ import useAxiosAuth from "@/hooks/useAxiosAuth";
 type Props = {};
 
 const Dashboard = (props: Props) => {
-  const { data: session } = useSession();
-
+ const { data: session } = useSession();
   const axiosAuth = useAxiosAuth();
   const router = useRouter();
   const { setGyms, gyms } = useGymsStore();
   const { setGym, gym } = useGymStore();
-
   
   
   // api call to get all gyms tied to accoundID if role is "onwer" || user.id if role is "member"
@@ -50,12 +48,12 @@ const Dashboard = (props: Props) => {
   
   
   
-  // set gyms and gym state if it's empty
+ // Set gyms and gym state if gymsData is available
   useEffect(() => {
     if (gymsData && gymsData.length > 0) {
       setGyms(gymsData);
       
-      if (  !gym.id   ) {
+      if (  !gym?.id || gym?.id == ''   ) {
         
         
         setGym(gymsData.gyms);
@@ -65,20 +63,18 @@ const Dashboard = (props: Props) => {
   }, [gymsData, setGyms, setGym, gym, router]);
   
   
-  
-  // redirect to home page with gym.id 
-  if(gym.id){
-    router.push(`/dashboard/${gym.id}/home`)
+  // Redirect to home page with gym.id if gym.id exists
+  useEffect(() => {
+    if (gym?.id) {
+      router.push(`/dashboard/${gym?.id}/home`);
+    }
+  }, [gym, router]);
+
+
+  if (gyms.length === 0) {
+    return <EmptyGymShell />;
   }
 
-
-  //if (gyms.length === 0) {
-   // console.log(gymsData);
-    return <EmptyGymShell />;
-  // }
-  //  else {
-  //   redirect(`/dashboard/${gym?.id}ghjghjghj/home`);
-  // }
 };
 
 export default Dashboard;

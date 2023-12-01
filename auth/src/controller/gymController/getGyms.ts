@@ -37,7 +37,7 @@ export const createGym = async (req: Request, res: Response) => {
     });
     await gym.save();
 
-    await User.findOneAndUpdate({ id }, { $push: { gyms: gym.id } });
+    await User.findOneAndUpdate({ id }, { $push: { gyms: gym?.id } });
 
     res.status(201).send(gym);
   } catch (error) {
@@ -57,7 +57,7 @@ export const getAllGyms = async (req: Request, res: Response) => {
 
       res.status(200).send(gyms);
     } else if (role == 'member') {
-      const gyms: gymAttrs[] = await Gym.find({ users: id }).sort({
+      const gyms: gymAttrs[] = await Gym.find({ staffs: id }).sort({
         createdAt: -1,
       });
       res.status(200).send(gyms);

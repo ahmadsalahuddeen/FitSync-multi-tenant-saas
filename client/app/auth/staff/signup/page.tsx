@@ -115,15 +115,41 @@ const StaffSignup = (props: Props) => {
       router.refresh();
     },
   });
+
+  const { mutate: joinGym, isLoading: isLoadingJoin } = useMutation({
+    mutationFn: async () => {
+      const response = await axios.post("/api/auth/staff/join", {
+        userId: session?.user.id,
+        inviteCode,
+        
+      });
+      return response.data;
+    },
+
+    onError: (error: any) => {
+      error.response.data.errors.map((err: any) => {
+        toast.error(err.message);
+      });
+    },
+    onSuccess: async () => {
+      toast.success(`joined ${gymData?.name} successfully`);
+      router.push("/dashboard");
+    },
+  });
   async function onSubmit(input: Input) {
     if (input.confirmPassword !== input.password) {
       return toast.error("Confirm password does not match!");
     }
     await doRequest(input);
   }
-  if (session)
-    return (
-      <>
+  async function handleJoin() {
+    console.log('inside handleJoin')
+    await joinGym();
+  }
+
+  return (
+    <>
+      {session?.user ? (
         <div className="container flex h-screen w-screen flex-col items-center justify-center">
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
             <Card className="py-3 ">
@@ -137,60 +163,129 @@ const StaffSignup = (props: Props) => {
                 <Separator className="my-1 " />
               </CardContent>
               <CardFooter className="flex justify-between">
-                <Button className="flex-1">Join</Button>
+                <Button
+                onClick={handleJoin}
+                  disabled={isLoadingJoin}
+                  className="flex-1	"
+                  type="button"
+                >
+                  {isLoadingJoin ? "Joining.." : `Join ${gymData?.name}`}
+                  {isLoadingJoin ? (
+                    <Icons.spinner className="ml-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Icons.arrowRight className="ml-2 h-4 w-4 " />
+                  )}
+                </Button>
               </CardFooter>
             </Card>
           </div>
         </div>
-      </>
-    );
-  return (
-    <>
-      <div className="container flex h-auto w-screen flex-col items-center justify-center">
-        <div className="mx-auto my-[5rem] flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-          <Card className="border-none">
-            <CardHeader>
-              <div className="flex flex-col space-y-2 text-center">
-                <Icons.logo className="mx-auto h-6 w-6  text-green-600" />
-                <h1 className="text-2xl font-semibold tracking-tight">
-                  Staff account creation!
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Create an account to join {gymData?.name} through fitsync
-                </p>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className=" relative space-y-3  "
-                >
-                  {/* First Form Step  */}
-                  <div className={cn("space-y-3")}>
-                    {/* First and Last Name */}
-                    <div className="gap-4 md:flex">
+      ) : (
+        <div className="container flex h-auto w-screen flex-col items-center justify-center">
+          <div className="mx-auto my-[5rem] flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+            <Card className="border-none">
+              <CardHeader>
+                <div className="flex flex-col space-y-2 text-center">
+                  <Icons.logo className="mx-auto h-6 w-6  text-green-600" />
+                  <h1 className="text-2xl font-semibold tracking-tight">
+                    Staff account creation!
+                  </h1>
+                  <p className="text-sm text-muted-foreground">
+                    Create an account to join {gymData?.name} through fitsync
+                  </p>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className=" relative space-y-3  "
+                  >
+                    {/* First Form Step  */}
+                    <div className={cn("space-y-3")}>
+                      {/* First and Last Name */}
+                      <div className="gap-4 md:flex">
+                        <FormField
+                          control={form.control}
+                          name="firstName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>First Name</FormLabel>
+                              <FormControl>
+                                <Input placeholder="John" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="lastName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Last Name</FormLabel>
+                              <FormControl>
+                                <Input placeholder="Doe" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      {/* Email */}
                       <FormField
                         control={form.control}
-                        name="firstName"
+                        name="email"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>First Name</FormLabel>
+                            <FormLabel>Email Address</FormLabel>
                             <FormControl>
-                              <Input placeholder="John" {...field} />
+                              <Input
+                                placeholder="you@yourdomain.com"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              Please provide the email used for invitation
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Passoword */}
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Create Password</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder=""
+                                {...field}
+                                type="password"
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
+
+                      {/* confirm password */}
                       <FormField
                         control={form.control}
-                        name="lastName"
+                        name="confirmPassword"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Last Name</FormLabel>
+                            <FormLabel>Confirm Password</FormLabel>
                             <FormControl>
-                              <Input placeholder="Doe" {...field} />
+                              <Input
+                                placeholder=""
+                                {...field}
+                                type="password"
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -198,87 +293,36 @@ const StaffSignup = (props: Props) => {
                       />
                     </div>
 
-                    {/* Email */}
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email Address</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="you@yourdomain.com"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Please provide the email used for invitation
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="flex gap-4">
+                      <Button
+                        disabled={isLoading}
+                        className="flex-1	"
+                        type="submit"
+                      >
+                        {isLoading ? "submitting.." : "Create account"}
+                        {isLoading ? (
+                          <Icons.spinner className="ml-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <Icons.arrowRight className="ml-2 h-4 w-4 " />
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              </CardContent>
 
-                    {/* Passoword */}
-                    <FormField
-                      control={form.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Create Password</FormLabel>
-                          <FormControl>
-                            <Input placeholder="" {...field} type="password" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* confirm password */}
-                    <FormField
-                      control={form.control}
-                      name="confirmPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Confirm Password</FormLabel>
-                          <FormControl>
-                            <Input placeholder="" {...field} type="password" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="flex gap-4">
-                    <Button
-                      disabled={isLoading}
-                      className="flex-1	"
-                      type="submit"
-                    >
-                      {isLoading ? "submitting.." : "Create account"}
-                      {isLoading ? (
-                        <Icons.spinner className="ml-2 h-4 w-4 animate-spin" />
-                      ) : (
-                        <Icons.arrowRight className="ml-2 h-4 w-4 " />
-                      )}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </CardContent>
-
-            <p className="px-8 pb-6 text-center text-sm text-muted-foreground">
-              <Link
-                href="/auth/signin"
-                className="hover:text-brand underline underline-offset-4"
-              >
-                Already have an account? Sign In
-              </Link>
-            </p>
-          </Card>
+              <p className="px-8 pb-6 text-center text-sm text-muted-foreground">
+                <Link
+                  href="/auth/signin"
+                  className="hover:text-brand underline underline-offset-4"
+                >
+                  Already have an account? Sign In
+                </Link>
+              </p>
+            </Card>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

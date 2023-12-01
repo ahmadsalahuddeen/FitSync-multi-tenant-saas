@@ -47,7 +47,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       );
     }
   } catch (error) {
-    console.log('isAdmin error:', error);
+throw error
 
   }
   next();

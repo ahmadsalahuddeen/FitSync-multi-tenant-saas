@@ -89,7 +89,7 @@ export function StaffCreateButton({
 toast.error(err.response.data.errors[0].message)
     },
     onSuccess: (data) => {
-      toast.success(`gym created successfully`);
+      toast.success(`Invite in on the way!🚀`);
       setShowNewGymDialog(false);
 
 

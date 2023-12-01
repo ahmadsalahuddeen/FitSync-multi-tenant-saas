@@ -2,6 +2,7 @@
 import EmptyGymShell from '@/components/empty-gym-shell'
 import { getCurrentUser } from '@/lib/session'
 import { useGymStore } from '@/store/gym'
+import { Gym } from '@/types/types'
 import React from 'react'
 
 type Props = {}
@@ -19,7 +20,7 @@ const HomePage =  (props: Props) => {
     
     <div>
 
-<h1>{`${gym.name}`}</h1>
+<h1>{`${gym?.name}`}</h1>
     </div>
   )
 }

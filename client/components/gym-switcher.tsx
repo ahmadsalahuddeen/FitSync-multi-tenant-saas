@@ -110,7 +110,7 @@ const router = useRouter()
                         setGym(gymEl)
                         // setSelectedGym(gymEl)
                         setOpen(false)
-                        router.push(`/dashboard/${gym.id}/home`)
+                        router.push(`/dashboard/${gym?.id}/home`)
                         
                       }}
                       className="text-sm"

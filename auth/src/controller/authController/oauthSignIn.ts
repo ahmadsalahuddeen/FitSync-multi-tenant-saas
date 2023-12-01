@@ -9,6 +9,7 @@ export const oauthSignIn = async (req: Request, res: Response) => {
   try {
     let { email, name, image } = req.body;
     const userData = await User.findOne({ email });
+
     if (!userData) {
       const account = Account.build({
         subscriptionType: 'freeTrial',
@@ -72,7 +73,6 @@ export const oauthSignIn = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    console.log(error);
-    throw new BadRequestError('Error handling provider signin');
+throw error
   }
 };
