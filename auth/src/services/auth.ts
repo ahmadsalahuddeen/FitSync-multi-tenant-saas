@@ -66,19 +66,36 @@ export const sendEmailInviteStaff = async ({
   }
 };
 
+// check the invite code is valid (we can add expiry for invite and check that too in future if we want here!)
 export const isInviteCodeValid = async (inviteCode: string) => {
   try {
     const IsCodeExist = await Gym.findOne({ inviteCode });
     if (!IsCodeExist) throw new BadRequestError('invalid invite code!');
+
     return IsCodeExist
   } catch (error) {
 throw error
   }
 };
+
+// checks input email is in invited list the gym
 export const isValidInvitedEmail = async (email: string) => {
   try {
     const IsInviteEmailExist = await Gym.findOne({ inviteEmailList: email });
     if (!IsInviteEmailExist) throw new BadRequestError(`Your email is not currently on the invitation list. Kindly request a new invitation from the administrator`);
+
+  } catch (error) {
+throw error
+  }
+};
+
+// combining both isValidInvitedEmail and isInviteCodeValid
+export const checkEmailAndInviteCode = async (email: string, inviteCode: string) => {
+  try {
+    const IsInviteEmailExist = await Gym.findOne({ inviteEmailList: email });
+    if (!IsInviteEmailExist) throw new BadRequestError(`Your email is not currently on the invitation list. Kindly request a new invitation from the administrator`);
+if(IsInviteEmailExist.inviteCode !== inviteCode ) throw new BadRequestError('invalid invite code!');
+return IsInviteEmailExist
   } catch (error) {
 throw error
   }

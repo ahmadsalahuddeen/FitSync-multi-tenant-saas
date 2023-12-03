@@ -16,6 +16,10 @@ import useAxiosAuth from "@/hooks/useAxiosAuth";
 type Props = {};
 
 const Dashboard = (props: Props) => {
+  useEffect(() => {
+    useGymStore.persist.rehydrate();
+
+  }, []);
  const { data: session } = useSession();
   const axiosAuth = useAxiosAuth();
   const router = useRouter();
@@ -28,6 +32,7 @@ const Dashboard = (props: Props) => {
     status,
     error,
     data: gymsData,
+    refetch
   } = useQuery({
     queryKey: ["gymsData"],
     queryFn: async () => {
@@ -57,7 +62,7 @@ const Dashboard = (props: Props) => {
         
         
         setGym(gymsData.gyms);
-        router.push(`/dashboard/${gymsData[0].id}/home`);
+        redirect(`/dashboard/${gymsData[0].id}/home`);
       }
     }
   }, [gymsData, setGyms, setGym, gym, router]);
@@ -66,7 +71,7 @@ const Dashboard = (props: Props) => {
   // Redirect to home page with gym.id if gym.id exists
   useEffect(() => {
     if (gym?.id) {
-      router.push(`/dashboard/${gym?.id}/home`);
+      redirect(`/dashboard/${gym?.id}/home`);
     }
   }, [gym, router]);
 

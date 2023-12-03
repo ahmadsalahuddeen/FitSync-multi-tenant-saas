@@ -1,3 +1,4 @@
+
 import GymSwithcer from "@/components/gym-switcher";
 import { HeaderNav } from "@/components/header-nav";
 import { DashboardShell } from "@/components/dashboard-shell";
@@ -8,10 +9,11 @@ import { siteConfig } from "@/config/site";
 import { getCurrentUser } from "@/lib/session";
 import { Metadata } from "next";
 import { notFound, useParams } from "next/navigation";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { menuItems } from "@/config/dashboard";
 import { useGymStore } from "@/store/gym";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const metadata: Metadata = {
   title: `Dashboard - ${siteConfig.name}`,
@@ -26,6 +28,7 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: any;
 }) {
+ 
 
   const user = await getCurrentUser();
 
@@ -35,6 +38,7 @@ export default async function RootLayout({
 
   return (
     <>
+
       <div className="flex min-h-screen flex-col space-y-6">
         <header className="sticky top-0 z-40 border-b bg-background">
           <div className="container flex h-16 items-center justify-between py-4">
@@ -64,6 +68,16 @@ export default async function RootLayout({
         </div>
         <SiteFooter className="border-t" />
       </div>
+
+<div className="flex items-center space-x-4">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>
+
+
     </>
   );
 }

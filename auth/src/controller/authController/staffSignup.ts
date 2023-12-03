@@ -6,16 +6,19 @@ import jwt from 'jsonwebtoken';
 import { User } from '../../models/userSchema';
 import { getDateNDaysFromNow } from '../../lib/date';
 import { Gym } from '../../models/gymSchema';
-import { isInviteCodeValid, isValidInvitedEmail } from '../../services/auth';
+import {
+  checkEmailAndInviteCode,
+  isInviteCodeValid,
+  isValidInvitedEmail,
+} from '../../services/auth';
 
 export const staffInviteJoin = async (req: Request, res: Response) => {
   try {
     const { userId, inviteCode } = req.body;
-    const gym = await Gym.findOne({ inviteCode });
-    if (!gym) throw new BadRequestError('invalid invite code');
-
     const user = await User.findOne({ _id: userId });
     if (!user) throw new BadRequestError('invalid userId ');
+
+    const gym = await checkEmailAndInviteCode(user.email, inviteCode);
 
     user.gyms?.push(gym.id);
 
@@ -26,7 +29,7 @@ export const staffInviteJoin = async (req: Request, res: Response) => {
       { $pull: { inviteEmailList: user.email }, $push: { staffs: user.id } },
       { new: true }
     );
-    res.status(201).send({ success: true });
+    res.status(201).send(newGymData);
   } catch (error) {
     throw error;
   }
@@ -59,7 +62,7 @@ export const staffSignup = async (req: Request, res: Response) => {
 
   try {
     const user = User.build({
-      accountId: gymData?.accountId as string,
+      accountId: gymData?.accountId ,
       email,
       password,
       role,

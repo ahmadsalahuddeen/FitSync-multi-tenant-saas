@@ -41,7 +41,7 @@ export const createGym = async (req: Request, res: Response) => {
 
     res.status(201).send(gym);
   } catch (error) {
-    throw new BadRequestError('something went while creating gym ');
+throw error
   }
 };
 
@@ -57,13 +57,16 @@ export const getAllGyms = async (req: Request, res: Response) => {
 
       res.status(200).send(gyms);
     } else if (role == 'member') {
+
       const gyms: gymAttrs[] = await Gym.find({ staffs: id }).sort({
         createdAt: -1,
       });
+      console.log(gyms)
       res.status(200).send(gyms);
     }
+
   } catch (error) {
-    throw new DatabaseOperationError('Error while getting all gyms');
+throw error
   }
 };
 

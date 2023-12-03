@@ -11,7 +11,7 @@ const StaffPage = (props: Props) => {
     <DashboardHeader heading={`Staff Management`} >
     <StaffCreateButton />
     </DashboardHeader>
-
+    <DataTable data={tasks} columns={columns} />
 
 </DashboardShell>
   )

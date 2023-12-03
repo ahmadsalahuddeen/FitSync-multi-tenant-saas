@@ -47,6 +47,7 @@ import { signIn, useSession } from "next-auth/react";
 import { Separator } from "@/components/ui/separator";
 import axiosApi from "@/lib/axios";
 import { Gym } from "@/types/types";
+import { useGymStore, useGymsStore } from "@/store/gym";
 
 type Props = {};
 
@@ -56,6 +57,8 @@ const StaffSignup = (props: Props) => {
   const inviteCode = searchParams.get("inviteCode");
   const role = searchParams.get("role");
   const router = useRouter();
+  const {setGym} = useGymStore()
+  const {setOneGyms} = useGymsStore()
   const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false);
   const [isGoogleLoading, setIsGoogleLoading] = React.useState<boolean>(false);
   type Input = z.infer<typeof registerSchema>;
@@ -68,6 +71,7 @@ const StaffSignup = (props: Props) => {
       const response = await axiosApi.get(
         `/api/gym/get-gym-invite-code?inviteCode=${inviteCode}`,
       );
+      console.log(response.data)
       return response.data;
     },
   });
@@ -131,9 +135,12 @@ const StaffSignup = (props: Props) => {
         toast.error(err.message);
       });
     },
-    onSuccess: async () => {
+    onSuccess: async (data:any) => {
+      console.log(data , 'onSuccess data respoonse')
+setOneGyms(data)
+setGym(data)
       toast.success(`joined ${gymData?.name} successfully`);
-      router.push("/dashboard");
+      router.push(`/dashboard/${data.id}/home`);
     },
   });
   async function onSubmit(input: Input) {

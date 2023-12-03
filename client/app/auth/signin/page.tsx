@@ -72,6 +72,7 @@ const SignIn = (props: Props) => {
       if (response && !response.error) {
         
         router.push("/dashboard");
+        router.refresh()
       } else {
         setIsLoading(false);
         console.log("Error:", response);

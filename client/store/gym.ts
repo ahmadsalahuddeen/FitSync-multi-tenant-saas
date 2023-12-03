@@ -33,7 +33,8 @@ export const useGymStore = create<GymStore>()(
             },
           }),
       }),
-      { name: "gymStore" },
+      { name: "gymStore" ,
+      skipHydration: true},
     ),
   ),
 );
@@ -62,7 +63,8 @@ export const useGymsStore = create<GymsStore>()(
           set((state) => ({ gyms: state.gyms.filter((g) => g.id !== gymId) })),
         resetGyms: () => set({ gyms: [] }),
       }),
-      { name: "gymsStore" },
+      { name: "gymsStore", 
+      skipHydration: true },
     ),
   ),
 );

@@ -99,7 +99,7 @@ const router = useRouter()
         <PopoverContent className="w-[200px] p-0">
           <Command>
             <CommandList>
-              <CommandInput placeholder="Search team..." />
+              <CommandInput placeholder="Search gym..." />
               <CommandEmpty>No team found.</CommandEmpty>
               <CommandGroup heading={'gyms'}>
               {gyms.map((gymEl) => (

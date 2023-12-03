@@ -1,28 +1,32 @@
-'use client'
-import EmptyGymShell from '@/components/empty-gym-shell'
-import { getCurrentUser } from '@/lib/session'
-import { useGymStore } from '@/store/gym'
-import { Gym } from '@/types/types'
-import React from 'react'
+"use client";
+import EmptyGymShell from "@/components/empty-gym-shell";
+import { getCurrentUser } from "@/lib/session";
+import { useGymStore } from "@/store/gym";
+import { Gym } from "@/types/types";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
-type Props = {}
+type Props = {};
 
-const HomePage =  (props: Props) => {
+const HomePage = (props: Props) => {
+  useEffect(() => {
+    useGymStore.persist.rehydrate();
 
-  const {gym} = useGymStore()
+  }, []);
+  const router = useRouter();
+  const { gym } = useGymStore();
 
 
-  if(gym === null ){
-    console.log(gym)
-    return <EmptyGymShell/>
+  if (gym === null ) {
+    console.log(gym);
+    return <EmptyGymShell />;
   }
+
   return (
-    
     <div>
-
-<h1>{`${gym?.name}`}</h1>
+      <h1>{`${gym}`}</h1>
     </div>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;
