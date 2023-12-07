@@ -5,12 +5,15 @@ import adminAuth from '../middlewares/adminAuth';
 import { createGym } from '../controller/gymController/createGym';
 import checkIsmember from '../middlewares/memberAuth';
 import memberAuth from '../middlewares/memberAuth';
-import { inviteStaff} from '../controller/gymController/staff';
+import { getAllStaff, inviteStaff} from '../controller/gymController/staff';
 
 const gymRoute = require('express').Router();
 
 
 gymRoute.get('/gyms',memberAuth, getAllGyms);
+gymRoute.get('/staff/:id',adminAuth, getAllStaff);
+
+
 gymRoute.post('/create',adminAuth , createGym);
 gymRoute.post('/staff/invite',adminAuth , inviteStaff);
 

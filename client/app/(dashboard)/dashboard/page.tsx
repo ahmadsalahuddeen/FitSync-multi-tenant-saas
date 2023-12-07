@@ -16,10 +16,7 @@ import useAxiosAuth from "@/hooks/useAxiosAuth";
 type Props = {};
 
 const Dashboard = (props: Props) => {
-  useEffect(() => {
-    useGymStore.persist.rehydrate();
 
-  }, []);
  const { data: session } = useSession();
   const axiosAuth = useAxiosAuth();
   const router = useRouter();

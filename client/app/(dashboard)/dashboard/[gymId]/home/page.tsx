@@ -9,10 +9,7 @@ import React, { useEffect } from "react";
 type Props = {};
 
 const HomePage = (props: Props) => {
-  useEffect(() => {
-    useGymStore.persist.rehydrate();
 
-  }, []);
   const router = useRouter();
   const { gym } = useGymStore();
 
@@ -24,7 +21,7 @@ const HomePage = (props: Props) => {
 
   return (
     <div>
-      <h1>{`${gym}`}</h1>
+      {`${JSON.stringify(gym, null, 4)}`}
     </div>
   );
 };

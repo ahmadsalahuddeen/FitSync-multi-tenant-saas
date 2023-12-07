@@ -1,5 +1,6 @@
 import mongoose, { Mongoose, Schema, Types, mongo } from 'mongoose';
 import { Password } from '../lib/password';
+import { boolean } from 'zod';
 
 
 
@@ -18,6 +19,7 @@ export type userAttrs = {
   role: 'owner' | 'member';
   gyms?: string[]
   isInstructor?: boolean;
+isActive?: boolean
 
 
 
@@ -46,6 +48,7 @@ interface userDoc extends mongoose.Document {
 
   gyms?: string[]
   isInstructor?: boolean;
+  isActive?: boolean
 }
 
 const userSchema = new mongoose.Schema(
@@ -65,6 +68,10 @@ const userSchema = new mongoose.Schema(
       type: String,
 
       
+    },
+    isActive: {
+      type: Boolean,
+    default: true
     },
 name: {
   type: String,

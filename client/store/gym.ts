@@ -1,6 +1,7 @@
 import { Gym } from "@/types/types";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
+import { persistNSync } from "persist-and-sync";
 
 // interface for selected usegymstore
 interface GymStore {
@@ -33,8 +34,7 @@ export const useGymStore = create<GymStore>()(
             },
           }),
       }),
-      { name: "gymStore" ,
-      skipHydration: true},
+      { name: "gymStore" },
     ),
   ),
 );
@@ -63,8 +63,7 @@ export const useGymsStore = create<GymsStore>()(
           set((state) => ({ gyms: state.gyms.filter((g) => g.id !== gymId) })),
         resetGyms: () => set({ gyms: [] }),
       }),
-      { name: "gymsStore", 
-      skipHydration: true },
+      { name: "gymsStore"},
     ),
   ),
 );

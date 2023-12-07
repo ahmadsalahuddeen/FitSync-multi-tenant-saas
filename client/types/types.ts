@@ -44,11 +44,32 @@ export type Gym = {
     state?: string;
     formatted?: string;
     country: string;
-    timeZone?: string;
+    timeZone?: string; 
     isoCode?: string
   };
 
 } 
 
 
+
+export type Staff = {
+  id?: string
+  accountId?: string; 
+  name?: string
+
+  status?: string;
+  image?: string;
+  bio?: string,
+  forgotPasswordToken?: String,
+  forgotPasswordTokenExpiry?: Date,
+  email: string;
+  password?: string;
+  role: 'owner' | 'member';
+  gyms?: string[]
+  isInstructor?: boolean;
+  isActive?: boolean
+
+
+
+}
 

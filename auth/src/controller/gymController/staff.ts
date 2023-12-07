@@ -5,6 +5,7 @@ import { DatabaseOperationError } from '../../errors/databse-operation-error';
 import { sendEmailInviteStaff } from '../../services/auth';
 import { Gym } from '../../models/gymSchema';
 import { gymCreatorIdPopulated } from '../../types/types';
+import { User } from '../../models/userSchema';
 
 // send invite email to staff
 export const inviteStaff = async (req: Request, res: Response) => {
@@ -39,6 +40,24 @@ export const inviteStaff = async (req: Request, res: Response) => {
 
     res.status(201).send(gymData.inviteEmailList);
   } catch (error) {
-throw error
+    throw error;
+  }
+};
+
+// /staffs
+export const getAllStaff = async (req: Request, res: Response) => {
+  try {
+const {id} = req.params
+    console.log('dfdfdf', id)
+
+    if (!id) throw new BadRequestError('please include id in headers');
+
+    const userData = await User.find({ gyms: id });
+
+const InvitedStaff = await Gym.find({_id: id}, 'inviteEmailList')
+
+    res.status(200).send(inviteStaff);
+  } catch (error) {
+    throw error;
   }
 };
