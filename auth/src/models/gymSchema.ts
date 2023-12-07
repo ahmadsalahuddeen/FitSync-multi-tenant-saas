@@ -9,8 +9,8 @@ export interface gymAttrs {
   name: string;
   phoneNumber: string;
   inviteEmailList?: string[];
-  staffs?: string[] | userAttrs[];
-  creatorId: string | userAttrs;
+  staffs?: string[] ;
+  creatorId: string ;
   inviteCode: string;
 
   image?: string;
@@ -38,10 +38,10 @@ interface gymDoc extends mongoose.Document {
   accountId: string;
   name: string;
   phoneNumber: string;
-  staffs?: string[] | userAttrs[];
+  staffs?: string[] ;
 
   inviteEmailList?: string[];
-  creatorId: userAttrs | string;
+  creatorId:  string;
 
   inviteCode: string;
 
@@ -133,17 +133,16 @@ const gymSchema = new mongoose.Schema(
     },
   },
 
-  {
-    timestamps: true,
-    toJSON: {
-      transform(doc, ret, options) {
-        ret.id = ret._id;
-        delete ret._id;
-        delete ret.__v;
-        delete ret.password;
-      },
+  // Inside gymSchema
+{
+  toJSON: {
+    transform(doc, ret, options) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.__v;
     },
-  }
+  },
+}
 );
 
 gymSchema.statics.build = (attrs: gymAttrs) => {

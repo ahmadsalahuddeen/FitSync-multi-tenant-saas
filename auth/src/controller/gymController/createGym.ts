@@ -25,12 +25,14 @@ export const createGym = async (req: Request, res: Response) => {
       staffs: [id],
       inviteCode,
     });
-    await gym.save();
+ await gym.save();
 
-    await User.findOneAndUpdate({ id }, { $push: { gyms: gym.id } });
+    const userData = await User.findByIdAndUpdate(id, { $push: { gyms: gym.id } }, {new: true});
+    // console.log("userData:",userData , "gymId:" , gym.id)
 
     res.status(201).send(gym);
   } catch (error: any) {
-    console.log(error);
+    throw error
+
   }
 };

@@ -12,71 +12,84 @@ import { useQuery } from "react-query";
 
 import { redirect, useRouter } from "next/navigation";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
+import { toast } from "sonner";
+import { Gym } from "@/types/types";
+
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 
 type Props = {};
 
 const Dashboard = (props: Props) => {
-
- const { data: session } = useSession();
+  const { data: session } = useSession();
   const axiosAuth = useAxiosAuth();
   const router = useRouter();
-  const { setGyms, gyms } = useGymsStore();
-  const { setGym, gym } = useGymStore();
-  
-  
-  // api call to get all gyms tied to accoundID if role is "onwer" || user.id if role is "member"
-  const {
-    status,
-    error,
-    data: gymsData,
-    refetch
-  } = useQuery({
-    queryKey: ["gymsData"],
-    queryFn: async () => {
-      const res = await axiosAuth.get("/api/gym/gyms");
-      
-      return res.data;
-      
-    },
-  });
-  
-  
+  const { setGyms } = useGymsStore();
+  const { setGym } = useGymStore();
+
   // auth checks
   useEffect(() => {
     if (!session?.user) {
       return router.replace("/auth/signin");
     }
   }, [session, router]);
+
+  // api call to get all gyms tied to accoundID if role is "onwer" || user.id if role is "member"
   
   
-  
- // Set gyms and gym state if gymsData is available
-  useEffect(() => {
-    if (gymsData && gymsData.length > 0) {
-      setGyms(gymsData);
+  const { status, error, data, refetch, isLoading } = useQuery<Gym[]>({
+    queryKey: ["gymsDataHome", session?.user.id],
+    queryFn: async () => {
+      console.log('11')
+      const res = await axiosAuth.get("/api/gym/gyms");
+      console.log('22')
       
-      if (  !gym?.id || gym?.id == ''   ) {
-        
-        
-        setGym(gymsData.gyms);
-        redirect(`/dashboard/${gymsData[0].id}/home`);
-      }
-    }
-  }, [gymsData, setGyms, setGym, gym, router]);
+      console.log(res.data)
+      return res.data;
+    },
+    enabled: true, // Ensure that the query is enabled
+    
+    onError: (error: any) => {
+      error.response.data.errors.map((err: any) => {
+        toast.error(err.message);
+      });
+    },
+  });
   
   
-  // Redirect to home page with gym.id if gym.id exists
+  console.log(isLoading)
+  
   useEffect(() => {
-    if (gym?.id) {
-      redirect(`/dashboard/${gym?.id}/home`);
-    }
-  }, [gym, router]);
+    if(!isLoading){
 
-
-  if (gyms.length === 0) {
-    return <EmptyGymShell />;
-  }
-
+      if (data && data?.length > 0) {
+        setGyms(data);
+        setGym(data[0]);
+        redirect(`/dashboard/${data[0].id}/home`);
+      }}
+    }, [isLoading]);
+    
+    // Redirect to home page with gym.id if gym.id exists
+  if(isLoading) return(
+    <>
+     <Card>
+      <CardHeader className="gap-2">
+        <Skeleton className="h-5 w-1/5" />
+        <Skeleton className="h-4 w-4/5" />
+      </CardHeader>
+      <CardContent className="h-10" />
+      <CardFooter>
+        <Skeleton className="h-8 w-[120px]" />
+      </CardFooter>
+    </Card>
+    </>
+  )
+    if (!data || data?.length === 0)
+      return (
+        <>
+          <EmptyGymShell />
+        </>
+      );
 };
 
 export default Dashboard;

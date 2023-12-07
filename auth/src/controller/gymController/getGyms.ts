@@ -49,11 +49,12 @@ throw error
 export const getAllGyms = async (req: Request, res: Response) => {
   try {
     const { role, accountId, id } = req.currentUser;
-
+console.log('getting here ')
     if (role === 'owner') {
       const gyms: gymAttrs[] = await Gym.find({ accountId }).sort({
         createdAt: -1,
       });
+      console.log(gyms)
 
       res.status(200).send(gyms);
     } else if (role == 'member') {
@@ -66,6 +67,7 @@ export const getAllGyms = async (req: Request, res: Response) => {
     }
 
   } catch (error) {
+    console.log(error)
 throw error
   }
 };
@@ -78,5 +80,8 @@ export const getGymWithInviteCode = async (req: Request, res: Response) => {
     const gymData = await Gym.findOne({ inviteCode });
 if(!gymData) throw new BadRequestError('invalid invite code')
     res.status(200).send(gymData);
-  } catch (error) {}
+  } catch (error) {
+throw error
+
+  }
 };

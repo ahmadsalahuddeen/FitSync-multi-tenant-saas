@@ -9,30 +9,29 @@ import { useQuery } from "react-query";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import { toast } from "sonner";
 import { useGymStore, useGymsStore } from "@/store/gym";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Props = {};
 
 const StaffPage = (props: Props) => {
-  const {gym}   = useGymStore()
+  const { gym } = useGymStore();
   const axiosApi = useAxiosAuth();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["Staff"],
     queryFn: async () => {
-      console.log('gggg') 
-      try {
-        
-        const response = await axiosApi.get(`/api/gym/staff/${gym.id}`);
-        return response.data;
-      } catch (error) {
-        console.log(error)
-      }
-
+      
+      const response = await axiosApi.get(`/api/gym/staff/${gym.id}`);
+      return response.data;
     },
     onError: (error: any) => {
       error.response.data.errors.map((err: any) => {
         toast.error(err.message);
       });
+    },
+    onSuccess: (data) => {
+      // toast.success(data[0].name);
     },
   });
 
@@ -41,8 +40,23 @@ const StaffPage = (props: Props) => {
       <DashboardHeader heading={`Staff Management`}>
         <StaffCreateButton />
       </DashboardHeader>
-    {data}
-      {/* <StaffDataTable data={data} columns={columns} />  */}
+        {gym.id}
+      {isLoading ? (
+         <Card>
+         <CardHeader className="gap-2">
+           <Skeleton className="h-5 w-1/5" />
+           <Skeleton className="h-4 w-4/5" />
+         </CardHeader>
+         <CardContent className="h-10" />
+         <CardFooter>
+           <Skeleton className="h-8 w-[120px]" />
+         </CardFooter>
+       </Card>
+        ):(
+    
+
+      <StaffDataTable data={data} columns={columns} /> 
+      )}
     </DashboardShell>
   );
 };

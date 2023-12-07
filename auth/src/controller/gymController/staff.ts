@@ -3,7 +3,7 @@ import { BadRequestError } from '../../errors/bad-request-error';
 
 import { DatabaseOperationError } from '../../errors/databse-operation-error';
 import { sendEmailInviteStaff } from '../../services/auth';
-import { Gym } from '../../models/gymSchema';
+import { Gym, gymAttrs } from '../../models/gymSchema';
 import { gymCreatorIdPopulated } from '../../types/types';
 import { User } from '../../models/userSchema';
 
@@ -47,16 +47,13 @@ export const inviteStaff = async (req: Request, res: Response) => {
 // /staffs
 export const getAllStaff = async (req: Request, res: Response) => {
   try {
-const {id} = req.params
-    console.log('dfdfdf', id)
+    const { id } = req.params;
 
-    if (!id) throw new BadRequestError('please include id in headers');
 
-    const userData = await User.find({ gyms: id });
+    const gymData= await Gym.findById(id ).populate('staffs');
+if(!gymData) throw new BadRequestError('Empty data')
 
-const InvitedStaff = await Gym.find({_id: id}, 'inviteEmailList')
-
-    res.status(200).send(inviteStaff);
+    res.status(200).send(gymData?.staffs);
   } catch (error) {
     throw error;
   }
