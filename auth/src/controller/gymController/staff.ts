@@ -67,8 +67,7 @@ export const changeStaffStatus = async (req: Request, res: Response) => {
       { isActive },
       { new: true }
     );
-
-
+console.log('ggg')
     res.status(200).send({ success: true });
   } catch (error) {
     console.log(error);

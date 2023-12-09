@@ -19,8 +19,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 import { isatty } from "tty";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
+import { useGymStore } from "@/store/gym";
 
 // import { taskSchema } from "../data/schema"
 
@@ -42,6 +43,8 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
+  const queryClient = useQueryClient();
+  const { gym } = useGymStore();
   const axiosAuth = useAxiosAuth();
   const task = row.original;
   const status = row.getValue("isActive");
@@ -60,6 +63,7 @@ export function DataTableRowActions<TData>({
       toast.error(err.response.data.errors[0].message);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["Staff", gym.id] });
       toast.success(`Status updated!`);
     },
   });
@@ -70,9 +74,6 @@ export function DataTableRowActions<TData>({
     try {
       const isActive = status === true ? `false` : `true`;
       changeStaffStatus(isActive);
-      toast.success(`${status}`);
-
-      // await createStaffRequest(input);
     } catch (err) {
       console.log(err);
     }
