@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
-import { Row } from "@tanstack/react-table"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { Row } from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,8 +16,11 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-}from "@/components/ui/dropdown-menu"
-
+} from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
+import { isatty } from "tty";
+import { useMutation } from "react-query";
+import useAxiosAuth from "@/hooks/useAxiosAuth";
 
 // import { taskSchema } from "../data/schema"
 
@@ -30,17 +33,50 @@ export const labels = [
     value: "false",
     label: "InActive",
   },
-
-]
+];
 
 interface DataTableRowActionsProps<TData> {
-  row: Row<TData>
+  row: Row<TData>;
 }
 
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const task = row.original
+  const axiosAuth = useAxiosAuth();
+  const task = row.original;
+  const status = row.getValue("isActive");
+  const email = row.getValue("email");
+
+  const { mutate: changeStaffStatus } = useMutation({
+    mutationFn: async (isActive: string) => {
+      const response = await axiosAuth.post("/api/gym/staff/change-status", {
+        isActive,
+        email,
+      });
+
+      return response.data;
+    },
+    onError: (err: any) => {
+      toast.error(err.response.data.errors[0].message);
+    },
+    onSuccess: () => {
+      toast.success(`Status updated!`);
+    },
+  });
+
+  const name = row.getValue("name");
+
+  async function handleStatus() {
+    try {
+      const isActive = status === true ? `false` : `true`;
+      changeStaffStatus(isActive);
+      toast.success(`${status}`);
+
+      // await createStaffRequest(input);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <DropdownMenu>
@@ -54,20 +90,21 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
+        {/* {!name && (
+            
+            <DropdownMenuItem onClick={handleResendEmail}>Resend Email
+          </DropdownMenuItem>
+            )} */}
+        <DropdownMenuItem onClick={handleStatus}>
+          {status === true ? "InActive" : "Active"}
+        </DropdownMenuItem>
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem className="bg-red-500 bg-opacity-25">
           Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

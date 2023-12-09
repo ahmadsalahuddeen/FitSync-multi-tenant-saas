@@ -4,6 +4,7 @@ import { Staff } from '@/types/types'
 import {ColumnDef} from '@tanstack/react-table'
 import { DataTableColumnHeader } from './data-table-column-header'
 import { roles } from '../data/data'
+import { DataTableRowActions } from './data-table-row-actions'
 
 
 export const columns : ColumnDef<Staff>[] = [
@@ -61,9 +62,7 @@ export const columns : ColumnDef<Staff>[] = [
   },
   {
     id: 'actions',
-    cell: ()=>{
-
-    }
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   }
   
 ]

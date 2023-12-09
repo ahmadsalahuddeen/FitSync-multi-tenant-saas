@@ -49,12 +49,29 @@ export const getAllStaff = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-
-    const gymData= await Gym.findById(id ).populate('staffs');
-if(!gymData) throw new BadRequestError('Empty data')
+    const gymData = await Gym.findById(id).populate('staffs');
+    if (!gymData) throw new BadRequestError('Empty data');
 
     res.status(200).send(gymData?.staffs);
   } catch (error) {
+    throw error;
+  }
+};
+// gym/staff/change-status
+export const changeStaffStatus = async (req: Request, res: Response) => {
+  try {
+    const { isActive, email } = req.body;
+
+    const user = await User.findOneAndUpdate(
+      { email },
+      { isActive },
+      { new: true }
+    );
+
+
+    res.status(200).send({ success: true });
+  } catch (error) {
+    console.log(error);
     throw error;
   }
 };
