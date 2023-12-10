@@ -4,7 +4,10 @@ export type gymCreatorIdPopulated =  {
   accountId: string;
   name: string;
   phoneNumber: string;
-  inviteEmailList?: string[];
+  inviteEmailList?:  {
+    email: string,
+    role: string
+  }[];
   staffs?: string[] | userAttrs[];
   creatorId: userAttrs;
   inviteCode: string;

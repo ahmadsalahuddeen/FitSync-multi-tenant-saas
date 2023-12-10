@@ -26,7 +26,7 @@ export const staffInviteJoin = async (req: Request, res: Response) => {
 
     const newGymData = await Gym.findOneAndUpdate(
       { inviteCode },
-      { $pull: { inviteEmailList: user.email }, $push: { staffs: user.id } },
+      { $pull: { inviteEmailList:{email: user.email }}, $push: { staffs: user.id } },
       { new: true }
     );
     res.status(201).send(newGymData);
@@ -73,7 +73,7 @@ export const staffSignup = async (req: Request, res: Response) => {
 
     const newGymData = await Gym.findOneAndUpdate(
       { inviteCode },
-      { $pull: { inviteEmailList: email }, $push: { staffs: user.id } },
+      { $pull: { inviteEmailList: { email} }, $push: { staffs: user.id } },
       { new: true }
     );
 

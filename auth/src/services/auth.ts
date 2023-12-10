@@ -9,7 +9,7 @@ import { gymCreatorIdPopulated } from '../types/types';
 export const sendEmailInviteStaff = async ({
   email,
   gymData,
-  role
+  role,
 }: {
   email: string;
   role: string;
@@ -70,33 +70,48 @@ export const sendEmailInviteStaff = async ({
 export const isInviteCodeValid = async (inviteCode: string) => {
   try {
     const IsCodeExist = await Gym.findOne({ inviteCode });
-    if (!IsCodeExist) throw new BadRequestError('invalid invite code!');
 
-    return IsCodeExist
+    if (!IsCodeExist) {throw new BadRequestError('invalid invite code!')}
+
+    return IsCodeExist;
   } catch (error) {
-throw error
+    throw error;
   }
 };
 
 // checks input email is in invited list the gym
 export const isValidInvitedEmail = async (email: string) => {
   try {
-    const IsInviteEmailExist = await Gym.findOne({ inviteEmailList: email });
-    if (!IsInviteEmailExist) throw new BadRequestError(`Your email is not currently on the invitation list. Kindly request a new invitation from the administrator`);
-
+    const IsInviteEmailExist = await Gym.findOne({
+      'inviteEmailList.email': email,
+    });
+    if (!IsInviteEmailExist)
+      throw new BadRequestError(
+        `Your email is not currently on the invitation list. Kindly request a new invitation from the administrator`
+      );
   } catch (error) {
-throw error
+    throw error;
   }
 };
 
 // combining both isValidInvitedEmail and isInviteCodeValid
-export const checkEmailAndInviteCode = async (email: string, inviteCode: string) => {
+export const checkEmailAndInviteCode = async (
+  email: string,
+  inviteCode: string
+) => {
   try {
-    const IsInviteEmailExist = await Gym.findOne({ inviteEmailList: email });
-    if (!IsInviteEmailExist) throw new BadRequestError(`Your email is not currently on the invitation list. Kindly request a new invitation from the administrator`);
-if(IsInviteEmailExist.inviteCode !== inviteCode ) throw new BadRequestError('invalid invite code!');
-return IsInviteEmailExist
+    const IsInviteEmailExist = await Gym.findOne({
+      'inviteEmailList.email': email,
+      inviteCode
+    });
+
+    if (!IsInviteEmailExist)
+      throw new BadRequestError(
+        `Your email is not currently on the invitation list. Kindly request a new invitation from the administrator`
+      );
+
+    return IsInviteEmailExist;
   } catch (error) {
-throw error
+    throw error;
   }
 };

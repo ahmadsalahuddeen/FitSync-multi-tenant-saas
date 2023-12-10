@@ -41,10 +41,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { staffcreationSchema } from "@/validators/auth";
 import { z } from "zod";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import { toast } from "sonner";
 import { Divide } from "lucide-react";
+import { useGymStore } from "@/store/gym";
 
 interface StaffCreateButtonProps extends ButtonProps {}
 
@@ -54,7 +55,9 @@ export function StaffCreateButton({
   ...props
 }: StaffCreateButtonProps) {
   const axiosAuth = useAxiosAuth();
+  const queryClient = useQueryClient()
   const router = useRouter();
+  const { gym} = useGymStore()
   const [showNewGymDialog, setShowNewGymDialog] = React.useState(false);
 
   type Input = z.infer<typeof staffcreationSchema>;
@@ -88,7 +91,9 @@ export function StaffCreateButton({
 
 toast.error(err.response.data.errors[0].message)
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
+
+      queryClient.invalidateQueries({queryKey:  ["Staff", gym.id]})
       toast.success(`Invite in on the way!🚀`);
       setShowNewGymDialog(false);
 

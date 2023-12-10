@@ -46,9 +46,10 @@ export function DataTableRowActions<TData>({
   const queryClient = useQueryClient();
   const { gym } = useGymStore();
   const axiosAuth = useAxiosAuth();
-  const task = row.original;
+  const staff = row.original;
   const status = row.getValue("isActive");
-  const email = row.getValue("email");
+  const email = row.getValue("email") as string;
+
 
   const { mutate: changeStaffStatus } = useMutation({
     mutationFn: async (isActive: string) => {
@@ -78,6 +79,14 @@ export function DataTableRowActions<TData>({
       console.log(err);
     }
   }
+  async function handleResendEmail() {
+    try {
+      const isActive = status === true ? `false` : `true`;
+      changeStaffStatus(isActive);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <DropdownMenu>
@@ -91,20 +100,25 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        {/* {!name && (
-            
-            <DropdownMenuItem onClick={handleResendEmail}>Resend Email
+        <DropdownMenuItem onClick={()=>{
+          navigator.clipboard.writeText(email)
+        }}>Copy email</DropdownMenuItem>
+        {!name ? (
+          <DropdownMenuItem onClick={handleResendEmail}>
+            Resend Invite
           </DropdownMenuItem>
-            )} */}
-        <DropdownMenuItem onClick={handleStatus}>
-          {status === true ? "InActive" : "Active"}
-        </DropdownMenuItem>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem className="bg-red-500 bg-opacity-25">
-          Delete
-        </DropdownMenuItem>
+        ) : (
+          <>
+            <DropdownMenuItem onClick={handleStatus}>
+              {status === true ? "InActive" : "Active"}
+            </DropdownMenuItem>
+            <DropdownMenuItem>Favorite</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="bg-red-500 bg-opacity-25">
+              Delete
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

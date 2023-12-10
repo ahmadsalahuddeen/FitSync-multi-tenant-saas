@@ -17,7 +17,7 @@ export const inviteStaff = async (req: Request, res: Response) => {
 
     const isInviteExist = await Gym.findOne({
       _id: gymId,
-      inviteEmailList: email,
+      "inviteEmailList.email": email,
     });
     if (isInviteExist) {
       throw new BadRequestError('Invite Email is Already sent!');
@@ -35,7 +35,7 @@ export const inviteStaff = async (req: Request, res: Response) => {
       gymData,
     });
 
-    gymData.inviteEmailList?.push(email);
+    gymData.inviteEmailList?.push({email, role});
     await gymData.save();
 
     res.status(201).send(gymData.inviteEmailList);
@@ -51,8 +51,11 @@ export const getAllStaff = async (req: Request, res: Response) => {
 
     const gymData = await Gym.findById(id).populate('staffs');
     if (!gymData) throw new BadRequestError('Empty data');
+const staffs = [...gymData.staffs, ...gymData.inviteEmailList ?? [] ]
+console.log('\n \n\n data:')
+console.log(JSON.stringify(staffs, null, 4))
 
-    res.status(200).send(gymData?.staffs);
+    res.status(200).send(staffs);
   } catch (error) {
     throw error;
   }

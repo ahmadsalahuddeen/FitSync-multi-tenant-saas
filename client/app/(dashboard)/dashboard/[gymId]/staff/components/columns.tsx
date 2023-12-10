@@ -8,17 +8,21 @@ import { DataTableRowActions } from './data-table-row-actions'
 
 
 export const columns : ColumnDef<Staff>[] = [
+  // {
+  //   header: "ID",
+  //   accessorKey : "id"
+  // },
   {
-    header: "ID",
-    accessorKey : "id"
-  },
-  {
-    header: "Name",
-    accessorKey : "name"
-  },
-  {
-    header: "Email",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Email" />
+    ),
     accessorKey : "email"
+  },
+  {
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Name" />
+    ),
+    accessorKey : "name"
   },
   {
     accessorKey: "role",
@@ -48,11 +52,17 @@ export const columns : ColumnDef<Staff>[] = [
     },
   },
   {
-    header: "Status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
     accessorKey : "isActive",
     cell: ({row} ) =>{
+      if(!row.getValue('name')){
+        
+        return 'Invite Pending' 
+      }
       const isActive = row.getValue('isActive')
-      const label = isActive === true ? 'Active' : 'InActive'
+      const label = isActive === true ? 'Active' :   'InActive'
       return label
     },
     

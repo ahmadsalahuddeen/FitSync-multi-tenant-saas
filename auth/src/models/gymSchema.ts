@@ -8,9 +8,12 @@ export interface gymAttrs {
   accountId: string;
   name: string;
   phoneNumber: string;
-  inviteEmailList?: string[];
-  staffs?: string[] ;
-  creatorId: string ;
+  inviteEmailList?: {
+    email: string;
+    role: string;
+  }[];
+  staffs: string[] ;
+  creatorId: string;
   inviteCode: string;
 
   image?: string;
@@ -38,10 +41,13 @@ interface gymDoc extends mongoose.Document {
   accountId: string;
   name: string;
   phoneNumber: string;
-  staffs?: string[] ;
+  staffs: string[] ;
 
-  inviteEmailList?: string[];
-  creatorId:  string;
+  inviteEmailList?: {
+    email: string;
+    role: string;
+  }[];
+  creatorId: string;
 
   inviteCode: string;
 
@@ -95,7 +101,8 @@ const gymSchema = new mongoose.Schema(
     ],
     inviteEmailList: [
       {
-        type: String,
+        email: String,
+        role: String,
       },
     ],
     // TODO: update after creating customer logic
@@ -134,15 +141,15 @@ const gymSchema = new mongoose.Schema(
   },
 
   // Inside gymSchema
-{
-  toJSON: {
-    transform(doc, ret, options) {
-      ret.id = ret._id;
-      delete ret._id;
-      delete ret.__v;
+  {
+    toJSON: {
+      transform(doc, ret, options) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+      },
     },
-  },
-}
+  }
 );
 
 gymSchema.statics.build = (attrs: gymAttrs) => {
