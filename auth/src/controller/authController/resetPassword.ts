@@ -41,7 +41,7 @@ export const verifyOtp = async (req: Request, res: Response) => {
 //   api/auth/reset-password
 export const resetPassword = async (req: Request, res: Response) => {
   try {
-    console.log('aaaaaaaaaaa', req.body)
+
     const { email, otp, password } = req.body;
 
     if (!(email && otp && password)) {
@@ -53,6 +53,6 @@ export const resetPassword = async (req: Request, res: Response) => {
     res.status(200).send({ email, success: true });
   } catch (error: any) {
     console.log(error);
-    res.status(400).send(error.message);
+throw error
   }
 };

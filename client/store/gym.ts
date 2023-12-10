@@ -21,6 +21,8 @@ export const useGymStore = create<GymStore>()(
           name: "",
           phoneNumber: "",
           creatorId: "",
+  inviteCode: ""
+
         },
         setGym: (newGym: Gym) => set({ gym: newGym }),
         resetGym: () =>
@@ -31,6 +33,8 @@ export const useGymStore = create<GymStore>()(
               name: "",
               phoneNumber: "",
               creatorId: "",
+  inviteCode: ""
+
             },
           }),
       }),

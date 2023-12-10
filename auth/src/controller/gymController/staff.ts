@@ -10,14 +10,12 @@ import { User } from '../../models/userSchema';
 // send invite email to staff
 export const inviteStaff = async (req: Request, res: Response) => {
   try {
-    // console.log('headers log in auth middlware', req.headers)
-
     const { email, role } = req.body;
     const gymId: any = req.headers['gymid'];
 
     const isInviteExist = await Gym.findOne({
       _id: gymId,
-      "inviteEmailList.email": email,
+      'inviteEmailList.email': email,
     });
     if (isInviteExist) {
       throw new BadRequestError('Invite Email is Already sent!');
@@ -35,7 +33,7 @@ export const inviteStaff = async (req: Request, res: Response) => {
       gymData,
     });
 
-    gymData.inviteEmailList?.push({email, role});
+    gymData.inviteEmailList?.push({ email, role });
     await gymData.save();
 
     res.status(201).send(gymData.inviteEmailList);
@@ -43,15 +41,12 @@ export const inviteStaff = async (req: Request, res: Response) => {
     throw error;
   }
 };
+
 // send invite email to staff
 export const resendInviteStaff = async (req: Request, res: Response) => {
   try {
-    // console.log('headers log in auth middlware', req.headers)
-
     const { email, role } = req.body;
     const gymId: any = req.headers['gymid'];
-
-
 
     const gymData = await Gym.findOne({ _id: gymId });
 
@@ -65,9 +60,25 @@ export const resendInviteStaff = async (req: Request, res: Response) => {
       gymData,
     });
 
+    res.status(201).send({ success: true });
+  } catch (error) {
+    throw error;
+  }
+};
 
+// send invite email to staff
+export const cancelInviteStaff = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    const gymId: any = req.headers['gymid'];
 
-    res.status(201).send({success: true});
+    // remove inviteemaillist object with provided email
+    const gymData = await Gym.findOneAndUpdate(
+      { _id: gymId, 'inviteEmailList.email': email },
+      { $pull: { inviteEmailList: { email } } }
+    );
+
+    res.status(201).send({ success: true });
   } catch (error) {
     throw error;
   }
@@ -80,9 +91,7 @@ export const getAllStaff = async (req: Request, res: Response) => {
 
     const gymData = await Gym.findById(id).populate('staffs');
     if (!gymData) throw new BadRequestError('Empty data');
-const staffs = [...gymData.staffs, ...gymData.inviteEmailList ?? [] ]
-console.log('\n \n\n data:')
-console.log(JSON.stringify(staffs, null, 4))
+    const staffs = [...gymData.staffs, ...(gymData.inviteEmailList ?? [])];
 
     res.status(200).send(staffs);
   } catch (error) {
@@ -99,7 +108,7 @@ export const changeStaffStatus = async (req: Request, res: Response) => {
       { isActive },
       { new: true }
     );
-console.log('ggg')
+    console.log('ggg');
     res.status(200).send({ success: true });
   } catch (error) {
     console.log(error);

@@ -4,6 +4,20 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { Row } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
+import { CopyIcon } from "@radix-ui/react-icons";
+
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,9 +63,11 @@ export function DataTableRowActions<TData>({
   const staff = row.original;
   const status = row.getValue("isActive");
   const name = row.getValue("name");
+  const role = row.getValue("role") as string;
+
   const email = row.getValue("email") as string;
 
-
+  // change status
   const { mutate: changeStaffStatus } = useMutation({
     mutationFn: async (isActive: string) => {
       const response = await axiosAuth.post("/api/gym/staff/change-status", {
@@ -70,19 +86,49 @@ export function DataTableRowActions<TData>({
     },
   });
 
+  async function handleStatus() {
+    try {
+      const isActive = status === true ? `false` : `true`;
+      changeStaffStatus(isActive);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  // --------------
 
-
-
+  // resend invite email
   const { mutate: resendInviteEmail } = useMutation({
-    mutationFn: async (role: string) => {
+    mutationFn: async () => {
       const response = await axiosAuth.post("/api/gym/staff/resend-invite", {
         role,
         email,
       });
-   
       return response.data;
     },
+    onError: (err: any) => {
+      toast.error(err.response.data.errors[0].message);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["Staff", gym.id] });
+      toast.success(`A new Invite has been emailed!`);
+    },
+  });
+  async function handleResendEmail() {
+    try {
+      resendInviteEmail();
+    } catch (err) {
+      console.log(err);
+    }
+  } // ----------------------
 
+  // handle invite email cancel
+  const { mutate: cancelInviteEmailReq } = useMutation({
+    mutationFn: async () => {
+      const response = await axiosAuth.post("/api/gym/staff/cancel-invite", {
+        email,
+      });
+      return response.data;
+    },
     onError: (err: any) => {
       toast.error(err.response.data.errors[0].message);
     },
@@ -92,68 +138,100 @@ export function DataTableRowActions<TData>({
     },
   });
 
-
-
-
-  async function handleStatus() {
+  async function cancelInviteEmail() {
     try {
-      const isActive = status === true ? `false` : `true`;
-      changeStaffStatus(isActive);
+      cancelInviteEmailReq();
     } catch (err) {
       console.log(err);
     }
-  }
-  async function handleResendEmail() {
-    try {
-const role = row.getValue('role') as string
-
-      resendInviteEmail(role);
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  } // -------------------
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-        >
-          <DotsHorizontalIcon className="h-4 w-4" />
-          <span className="sr-only">Open menu</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={()=>{
-          navigator.clipboard.writeText(email)
-        }}>Copy email</DropdownMenuItem>
-
-
-        {!name ? (
-          <>
-          <DropdownMenuItem onClick={handleResendEmail}>
-            Resend Invite
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+          >
+            <DotsHorizontalIcon className="h-4 w-4" />
+            <span className="sr-only">Open menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-[160px]">
+          <DropdownMenuItem
+            onClick={() => {
+              navigator.clipboard.writeText(email);
+            }}
+          >
+            Copy email
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
 
-          <DropdownMenuItem className="bg-red-500 bg-opacity-25" onClick={handleResendEmail}>
-            Cancel Invite
-          </DropdownMenuItem>
-          </>
-        ) : (
-          <>
-            <DropdownMenuItem onClick={handleStatus}>
-              {status === true ? "InActive" : "Active"}
-            </DropdownMenuItem>
-            <DropdownMenuItem>Favorite</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="bg-red-500 bg-opacity-25">
-              Delete
-            </DropdownMenuItem>
-          </>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+          {!name ? (
+            <>
+              <DropdownMenuItem onClick={handleResendEmail}>
+                Resend Invite
+              </DropdownMenuItem>
+              <DialogTrigger asChild>
+                <DropdownMenuItem>Share invite link</DropdownMenuItem>
+              </DialogTrigger>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem
+                className="bg-red-500 bg-opacity-25"
+                onClick={cancelInviteEmail}
+              >
+                Cancel Invite
+              </DropdownMenuItem>
+            </>
+          ) : (
+            <>
+              <DropdownMenuItem onClick={handleStatus}>
+                {status === true ? "InActive" : "Active"}
+              </DropdownMenuItem>
+              <DropdownMenuItem>Favorite</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="bg-red-500 bg-opacity-25">
+                Delete
+              </DropdownMenuItem>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Share link</DialogTitle>
+          <DialogDescription>
+            Anyone who has this link will be able to view this.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex items-center space-x-2">
+          <div className="grid flex-1 gap-2">
+            <Label htmlFor="link" className="sr-only">
+              Link
+            </Label>
+            <Input
+              id="link"
+              defaultValue="https://ui.shadcn.com/docs/installation"
+              readOnly
+            />
+          </div>
+          <Button type="button" onClick={()=>{
+            navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/staff/signup?inviteCode=${gym.inviteCode}&role=${role}`)
+          }} size="sm" className="px-3">
+            <span className="sr-only">Copy</span>
+            <CopyIcon className="h-4 w-4" />
+          </Button>
+        </div>
+        <DialogFooter className="sm:justify-start">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

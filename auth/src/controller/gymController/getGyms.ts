@@ -49,12 +49,11 @@ throw error
 export const getAllGyms = async (req: Request, res: Response) => {
   try {
     const { role, accountId, id } = req.currentUser;
-console.log('getting here ')
+
     if (role === 'owner') {
       const gyms: gymAttrs[] = await Gym.find({ accountId }).sort({
         createdAt: -1,
       });
-      console.log(gyms)
 
       res.status(200).send(gyms);
     } else if (role == 'member') {
@@ -62,7 +61,6 @@ console.log('getting here ')
       const gyms: gymAttrs[] = await Gym.find({ staffs: id }).sort({
         createdAt: -1,
       });
-      console.log(gyms)
       res.status(200).send(gyms);
     }
 

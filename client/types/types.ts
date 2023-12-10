@@ -36,6 +36,8 @@ export type Gym = {
   phoneNumber: string;
   staffs?: string ;
   creatorId?: string ;
+  inviteCode: string;
+
   image?: string
   address?: {
     streetAddressOne?: string;
