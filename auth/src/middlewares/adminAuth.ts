@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { CustomError } from '../errors/custom-error';
 import { BadRequestError } from '../errors/bad-request-error';
 import { NotAuthorizedError } from '../errors/not-authorized-error';
+import { User } from '../models/userSchema';
 
 type userPayload = {
   accountId: string;
@@ -32,8 +33,9 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     }
 
     const payload = jwt.verify(token, process.env.JWT_KEY!) as userPayload;
+const userData = await User.findOne({_id: payload.id})
 
-    if (payload.role !== 'owner') {
+    if (userData?.role !== 'owner') {
       throw new NotAuthorizedError(
         'sorry, only admins or staffs are allowed, your are not authorized!🪲'
       );

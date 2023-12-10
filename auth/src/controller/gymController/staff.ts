@@ -43,6 +43,35 @@ export const inviteStaff = async (req: Request, res: Response) => {
     throw error;
   }
 };
+// send invite email to staff
+export const resendInviteStaff = async (req: Request, res: Response) => {
+  try {
+    // console.log('headers log in auth middlware', req.headers)
+
+    const { email, role } = req.body;
+    const gymId: any = req.headers['gymid'];
+
+
+
+    const gymData = await Gym.findOne({ _id: gymId });
+
+    if (!gymData) throw new BadRequestError('cannot find your gym ');
+
+    if (!(email && role)) throw new BadRequestError('provide email and role ');
+
+    await sendEmailInviteStaff({
+      email,
+      role,
+      gymData,
+    });
+
+
+
+    res.status(201).send({success: true});
+  } catch (error) {
+    throw error;
+  }
+};
 
 // /staffs
 export const getAllStaff = async (req: Request, res: Response) => {

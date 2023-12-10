@@ -48,6 +48,7 @@ export function DataTableRowActions<TData>({
   const axiosAuth = useAxiosAuth();
   const staff = row.original;
   const status = row.getValue("isActive");
+  const name = row.getValue("name");
   const email = row.getValue("email") as string;
 
 
@@ -69,7 +70,30 @@ export function DataTableRowActions<TData>({
     },
   });
 
-  const name = row.getValue("name");
+
+
+
+  const { mutate: resendInviteEmail } = useMutation({
+    mutationFn: async (role: string) => {
+      const response = await axiosAuth.post("/api/gym/staff/resend-invite", {
+        role,
+        email,
+      });
+   
+      return response.data;
+    },
+
+    onError: (err: any) => {
+      toast.error(err.response.data.errors[0].message);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["Staff", gym.id] });
+      toast.success(`A new Invite has been emailed!`);
+    },
+  });
+
+
+
 
   async function handleStatus() {
     try {
@@ -81,8 +105,9 @@ export function DataTableRowActions<TData>({
   }
   async function handleResendEmail() {
     try {
-      const isActive = status === true ? `false` : `true`;
-      changeStaffStatus(isActive);
+const role = row.getValue('role') as string
+
+      resendInviteEmail(role);
     } catch (err) {
       console.log(err);
     }
@@ -103,10 +128,19 @@ export function DataTableRowActions<TData>({
         <DropdownMenuItem onClick={()=>{
           navigator.clipboard.writeText(email)
         }}>Copy email</DropdownMenuItem>
+
+
         {!name ? (
+          <>
           <DropdownMenuItem onClick={handleResendEmail}>
             Resend Invite
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem className="bg-red-500 bg-opacity-25" onClick={handleResendEmail}>
+            Cancel Invite
+          </DropdownMenuItem>
+          </>
         ) : (
           <>
             <DropdownMenuItem onClick={handleStatus}>
