@@ -127,20 +127,22 @@ export const removeStaff = async (req: Request, res: Response) => {
       throw new BadRequestError('Provide valid credentials');
     }
 
-const gym = await Gym.findById(gymId)
-if(gym?.creatorId == userId) {
-  throw new BadRequestError('Not allowed to remove the creator account')
-}
+    const gym = await Gym.findById(gymId);
+    if (gym?.creatorId == userId) {
+      throw new BadRequestError('Not allowed to remove the creator account');
+    }
     const userData = await User.findOneAndUpdate(
       { _Id: userId },
       { $pull: { gyms: gymId } },
       { new: true }
     );
-    const gymData = await Gym.findOneAndUpdate({_id: gymId}, {
-      $pull: {staffs: userId}
-    })
+    const gymData = await Gym.findOneAndUpdate(
+      { _id: gymId },
+      {
+        $pull: { staffs: userId },
+      }
+    );
 
-    
     res.status(200).send({ success: true });
   } catch (error) {
     console.log(error);
@@ -148,12 +150,11 @@ if(gym?.creatorId == userId) {
   }
 };
 
-
 //   api/auth/change-email
 export const changeEmail = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-console.log(req.currentUser)
+    console.log(req.currentUser);
     const userId = req.currentUser.id;
 
     if (!(email && userId && password)) {
@@ -172,6 +173,45 @@ console.log(req.currentUser)
         throw new BadRequestError('wrong password');
       }
       userData.email = email;
+      await userData.save();
+    } else {
+      throw new BadRequestError('cannot find the user');
+    }
+
+    res.status(200).send({ success: true });
+  } catch (error: any) {
+    console.log(error);
+    throw error;
+  }
+};
+//   api/auth/change-password
+export const changePassword = async (req: Request, res: Response) => {
+  try {
+    const { password, newPassword, confirmNewPassword } = req.body;
+
+    const userId = req.currentUser.id;
+    // check if there is all data passed
+    if (!(newPassword && userId && password && confirmNewPassword)) {
+      throw new BadRequestError('Empty credentials are not allowed.');
+    }
+    const userData = await User.findOne({ _id: userId });
+
+    if (userData) {
+      // compare stored and current password
+      const isValidPassword = await Password.compare(
+        password,
+        userData?.password
+      );
+
+      if (!isValidPassword) {
+        throw new BadRequestError('wrong current password');
+      }
+      // validate password
+      if (newPassword !== confirmNewPassword) {
+        throw new BadRequestError('Confirm password does not matches!');
+      }
+
+      userData.password = newPassword;
       await userData.save();
     } else {
       throw new BadRequestError('cannot find the user');

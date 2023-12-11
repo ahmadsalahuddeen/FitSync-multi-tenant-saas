@@ -8,7 +8,7 @@ import auth from '../middlewares/adminAuth';
 import { oauthSignIn } from '../controller/authController/oauthSignIn';
 import {  requestOtp, resetPassword, verifyOtp } from '../controller/authController/resetPassword';
 import { staffInviteJoin, staffSignup } from '../controller/authController/staffSignup';
-import { changeEmail } from '../controller/gymController/staff';
+import { changeEmail, changePassword } from '../controller/gymController/staff';
 import memberAuth from '../middlewares/memberAuth';
 
 const authRoute = require('express').Router();
@@ -41,6 +41,8 @@ authRoute.post('/verify-otp', verifyOtp);
 authRoute.post('/reset-password', resetPassword);
 // change  email
 authRoute.post('/change-email', memberAuth, changeEmail);
+// change  password
+authRoute.post('/change-password', memberAuth, changePassword);
 
 authRoute.post(
   '/tenant/signup',
