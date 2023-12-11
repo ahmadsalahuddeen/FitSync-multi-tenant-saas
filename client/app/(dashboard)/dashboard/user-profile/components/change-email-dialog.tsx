@@ -14,17 +14,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "@/components/ui/select";
 
 
-import { Input } from "./ui/input";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -33,7 +33,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
+} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { staffcreationSchema } from "@/validators/auth";
@@ -43,31 +43,38 @@ import useAxiosAuth from "@/hooks/useAxiosAuth";
 import { toast } from "sonner";
 import { useGymStore } from "@/store/gym";
 
-interface StaffCreateButtonProps extends ButtonProps {}
+interface ChangeEmailButoonProps extends ButtonProps {}
 
-export function StaffCreateButton({
+
+const changeEmailSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8).max(100),
+
+})
+
+export function ChangeEmailButoon({
   className,
   variant,
   ...props
-}: StaffCreateButtonProps) {
+}: ChangeEmailButoonProps) {
   const axiosAuth = useAxiosAuth();
   const queryClient = useQueryClient();
 
   const { gym } = useGymStore();
   const [showNewGymDialog, setShowNewGymDialog] = React.useState(false);
 
-  type Input = z.infer<typeof staffcreationSchema>;
+  type Input = z.infer<typeof changeEmailSchema>;
 
   const form = useForm<Input>({
-    resolver: zodResolver(staffcreationSchema),
+    resolver: zodResolver(changeEmailSchema),
     defaultValues: {
       email: "",
-      role: "member",
+      password: "",
     },
   });
 
   const {
-    mutate: createStaffRequest,
+    mutate: changeEmailRequest,
 
     isError,
     isLoading,
@@ -76,7 +83,7 @@ export function StaffCreateButton({
     mutationFn: async (input: Input) => {
       const response = await axiosAuth.post("/api/gym/staff/invite", {
         email: input.email,
-        role: input.role,
+        password: input.password,
       });
       console.log(response, "respones");
       return response.data;
@@ -93,7 +100,7 @@ export function StaffCreateButton({
 
   async function onSubmit(input: Input) {
     try {
-      await createStaffRequest(input);
+      await changeEmailRequest(input);
     } catch (err) {
       console.log(err);
     }
@@ -102,21 +109,16 @@ export function StaffCreateButton({
   return (
     <Dialog open={showNewGymDialog} onOpenChange={setShowNewGymDialog}>
       <DialogTrigger asChild>
-        <Button variant="default">
-          {isLoading ? (
-            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <Icons.add className="mr-2 h-4 w-4" />
-          )}
-          Add Staff
+        <Button variant="outline" size='sm' className="text-xs text-primary font-normal border-primary" >
+    
+          Change Email
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle> Invite a new staff</DialogTitle>
+          <DialogTitle>Change Email</DialogTitle>
           <DialogDescription>
-            An invitation will be sent to the provided email, guiding them
-            through the onboarding process.
+          This will change your email across all of your FitSync sites.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -127,7 +129,7 @@ export function StaffCreateButton({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email Address</FormLabel>
+                    <FormLabel>New Email Address</FormLabel>
                     <FormControl>
                       <Input placeholder="youname@gmail.com" {...field} />
                     </FormControl>
@@ -135,43 +137,24 @@ export function StaffCreateButton({
                   </FormItem>
                 )}
               />
-              <div className="">
-                <FormField
-                  control={form.control}
-                  name="role"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Role</FormLabel>
-                      <FormControl>
-                        <Select defaultValue="member">
-                          <SelectTrigger
-                            id="security-level"
-                            className="line-clamp-1 w-1/2 truncate"
-                          >
-                            <SelectValue
-                              className=" teamaspace-y-1 flex flex-col items-start px-4 py-2"
-                              placeholder="Select level"
-                            />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="owner">Owner</SelectItem>
-                            <SelectItem value="member">Member</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormDescription>
-                        Owners have admin-level access, while members have
-                        limited access.
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
             </div>
             <DialogFooter>
               <Button disabled={isLoading} type="submit">
-                Send Invitation
+                Change Email
                 {isLoading ? (
                   <Icons.spinner className="ml-2 h-4 w-4 animate-spin" />
                 ) : (

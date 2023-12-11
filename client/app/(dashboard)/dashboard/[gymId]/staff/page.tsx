@@ -12,6 +12,7 @@ import { useGymStore, useGymsStore } from "@/store/gym";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CardSkeleton } from "@/components/card-skeleton";
+import { Separator } from "@/components/ui/separator";
 
 type Props = {};
 
@@ -38,10 +39,11 @@ const StaffPage = (props: Props) => {
 
   return (
     <DashboardShell>
-      <DashboardHeader heading={`Staff Management`}>
+      <DashboardHeader heading={`Staff Management`} text="Add and manage you staff's here ">
         <StaffCreateButton />
       </DashboardHeader>
-        {gym.id}
+      <Separator className="my-6" />
+
       {isLoading ? (
       <CardSkeleton />
         ):(

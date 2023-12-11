@@ -10,7 +10,9 @@ export interface User   {
   image?: string,
   role: string;
   gyms?: string[];
-  id: string;
+  id: string; 
+  bio?: string,
+
 }
 
 interface BackendTokens {
