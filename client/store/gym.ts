@@ -21,8 +21,7 @@ export const useGymStore = create<GymStore>()(
           name: "",
           phoneNumber: "",
           creatorId: "",
-  inviteCode: ""
-
+          inviteCode: "",
         },
         setGym: (newGym: Gym) => set({ gym: newGym }),
         resetGym: () =>
@@ -33,8 +32,7 @@ export const useGymStore = create<GymStore>()(
               name: "",
               phoneNumber: "",
               creatorId: "",
-  inviteCode: ""
-
+              inviteCode: "",
             },
           }),
       }),
@@ -67,7 +65,7 @@ export const useGymsStore = create<GymsStore>()(
           set((state) => ({ gyms: state.gyms.filter((g) => g.id !== gymId) })),
         resetGyms: () => set({ gyms: [] }),
       }),
-      { name: "gymsStore"},
+      { name: "gymsStore" },
     ),
   ),
 );

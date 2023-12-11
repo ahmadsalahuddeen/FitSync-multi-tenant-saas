@@ -5,7 +5,7 @@ import adminAuth from '../middlewares/adminAuth';
 import { createGym } from '../controller/gymController/createGym';
 import checkIsmember from '../middlewares/memberAuth';
 import memberAuth from '../middlewares/memberAuth';
-import { cancelInviteStaff, changeStaffStatus, getAllStaff, inviteStaff, resendInviteStaff} from '../controller/gymController/staff';
+import { cancelInviteStaff, changeStaffStatus, getAllStaff, inviteStaff, removeStaff, resendInviteStaff} from '../controller/gymController/staff';
 
 const gymRoute = require('express').Router();
 
@@ -19,6 +19,7 @@ gymRoute.post('/staff/invite',adminAuth , inviteStaff);
 gymRoute.post('/staff/resend-invite',adminAuth , resendInviteStaff);
 gymRoute.post('/staff/cancel-invite',adminAuth , cancelInviteStaff);
 gymRoute.post('/staff/change-status',memberAuth , changeStaffStatus);
+gymRoute.post('/staff/remove',adminAuth , removeStaff);
 
 gymRoute.get('/get-gym-invite-code', getGymWithInviteCode);
 

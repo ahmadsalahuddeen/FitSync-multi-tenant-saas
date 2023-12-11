@@ -113,5 +113,36 @@ export const changeStaffStatus = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error);
     throw error;
+    1;
+  }
+};
+// gym/staff/change-status
+export const removeStaff = async (req: Request, res: Response) => {
+  try {
+    const gymId: any = req.headers['gymid'];
+    const { userId } = req.body;
+
+    if (!(userId && gymId)) {
+      throw new BadRequestError('Provide valid credentials');
+    }
+
+const gym = await Gym.findById(gymId)
+if(gym?.creatorId == userId) {
+  throw new BadRequestError('Not allowed to remove the creator account')
+}
+    const userData = await User.findOneAndUpdate(
+      { _Id: userId },
+      { $pull: { gyms: gymId } },
+      { new: true }
+    );
+    const gymData = await Gym.findOneAndUpdate({_id: gymId}, {
+      $pull: {staffs: userId}
+    })
+
+    
+    res.status(200).send({ success: true });
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 };
