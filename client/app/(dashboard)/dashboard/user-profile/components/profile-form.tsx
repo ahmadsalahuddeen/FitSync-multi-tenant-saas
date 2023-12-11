@@ -36,6 +36,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
 import { useSession } from "next-auth/react"
 import { ChangeEmailButoon } from "./change-email-dialog"
+import { ChangePasswordButoon } from "./change-password-dialog"
 
 const profileFormSchema = z.object({
   name: z
@@ -46,34 +47,21 @@ const profileFormSchema = z.object({
     .max(30, {
       message: "name must not be longer than 30 characters.",
     }),
-  email: z
-    .string({
-      required_error: "Please select an email to display.",
-    })
-    .email(),
-  bio: z.string().max(160).min(4),
-  urls: z
-    .array(
-      z.object({
-        value: z.string().url({ message: "Please enter a valid URL." }),
-      })
-    )
-    .optional(),
+  
+  bio: z.string().max(300).optional(),
+
 })
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
 
 export function ProfileForm() {
-  const {data: session} = useSession()
+  const {data: session, update} = useSession()
   // This can come from your database or API.
   const defaultValues: Partial<ProfileFormValues> = {
-    
+    name: session?.user.name,
     bio: session?.user.bio,
-    urls: [
-      { value: "https://shadcn.com" },
-      { value: "http://twitter.com/shadcn" },
-    ],
+
   }
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -81,10 +69,7 @@ export function ProfileForm() {
     mode: "onChange",
   })
 
-  const { fields, append } = useFieldArray({
-    name: "urls",
-    control: form.control,
-  })
+
 
   function onSubmit(data: ProfileFormValues) {
     toast({
@@ -99,42 +84,39 @@ export function ProfileForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="ml-1 space-y-8">
         
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
+        
+      <FormItem>
               <FormLabel>Email</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a verified email to display" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="m@example.com">m@example.com</SelectItem>
-                  <SelectItem value="m@google.com">m@google.com</SelectItem>
-                  <SelectItem value="m@support.com">m@support.com</SelectItem>
-                </SelectContent>
-              </Select>
+              <FormControl>
+                <Input   className="border-0 pl-0   focus-visible:ring-0 focus-visible:ring-offset-0" readOnly placeholder={session?.user.email}  />
+              </FormControl>
               <FormDescription>
-
-<ChangeEmailButoon />
+              <ChangeEmailButoon />
               </FormDescription>
               <FormMessage />
             </FormItem>
-          )}
-        />
+
+      <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input   className="border-0 pl-0   focus-visible:ring-0 focus-visible:ring-offset-0" readOnly placeholder='********'  />
+              </FormControl>
+              <FormDescription>
+              <ChangePasswordButoon />
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+       
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>name</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="swalahkenb" {...field} />
+                <Input placeholder="" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name. It can be your real name or a
@@ -158,45 +140,13 @@ export function ProfileForm() {
                 />
               </FormControl>
               <FormDescription>
-                You can <span>@mention</span> other users and organizations to
-                link to them.
+               
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div>
-          {fields.map((field, index) => (
-            <FormField
-              control={form.control}
-              key={field.id}
-              name={`urls.${index}.value`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={cn(index !== 0 && "sr-only")}>
-                    URLs
-                  </FormLabel>
-                  <FormDescription className={cn(index !== 0 && "sr-only")}>
-                    Add links to your website, blog, or social media profiles.
-                  </FormDescription>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="mt-2"
-            onClick={() => append({ value: "" })}
-          >
-            Add URL
-          </Button>
-        </div>
+
         <Button type="submit">Update profile</Button>
       </form>
     </Form>

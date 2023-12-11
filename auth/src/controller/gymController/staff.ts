@@ -6,6 +6,7 @@ import { sendEmailInviteStaff } from '../../services/auth';
 import { Gym, gymAttrs } from '../../models/gymSchema';
 import { gymCreatorIdPopulated } from '../../types/types';
 import { User } from '../../models/userSchema';
+import { Password } from '../../lib/password';
 
 // send invite email to staff
 export const inviteStaff = async (req: Request, res: Response) => {
@@ -142,6 +143,42 @@ if(gym?.creatorId == userId) {
     
     res.status(200).send({ success: true });
   } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+
+//   api/auth/change-email
+export const changeEmail = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+console.log(req.currentUser)
+    const userId = req.currentUser.id;
+
+    if (!(email && userId && password)) {
+      throw new BadRequestError('Empty credentials are not allowed.');
+    }
+
+    const userData = await User.findOne({ _id: userId });
+
+    if (userData) {
+      const isValidPassword = await Password.compare(
+        password,
+        userData?.password
+      );
+
+      if (!isValidPassword) {
+        throw new BadRequestError('wrong password');
+      }
+      userData.email = email;
+      await userData.save();
+    } else {
+      throw new BadRequestError('cannot find the user');
+    }
+
+    res.status(200).send({ success: true });
+  } catch (error: any) {
     console.log(error);
     throw error;
   }

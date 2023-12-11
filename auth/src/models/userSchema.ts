@@ -15,7 +15,7 @@ export type userAttrs = {
   forgotPasswordToken?: String,
   forgotPasswordTokenExpiry?: Date,
   email: string;
-  password?: string;
+  password: string ;
   role: 'owner' | 'member';
   gyms?: string[]
   isInstructor?: boolean;
@@ -43,7 +43,7 @@ interface userDoc extends mongoose.Document {
   forgotPasswordToken?: String,
   forgotPasswordTokenExpiry?: Date,
   email: string;
-  password?: string;
+  password: string ;
   role: 'owner' | 'member';
 
   gyms?: string[]

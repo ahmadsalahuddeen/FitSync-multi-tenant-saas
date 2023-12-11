@@ -5,6 +5,8 @@ import {
   verifyOtpHelper,
 } from '../../services/otp';
 import { BadRequestError } from '../../errors/bad-request-error';
+import { User } from '../../models/userSchema';
+import { Password } from '../../lib/password';
 
 //   api/auth/forgot-password
 export const requestOtp = async (req: Request, res: Response) => {
@@ -41,7 +43,6 @@ export const verifyOtp = async (req: Request, res: Response) => {
 //   api/auth/reset-password
 export const resetPassword = async (req: Request, res: Response) => {
   try {
-
     const { email, otp, password } = req.body;
 
     if (!(email && otp && password)) {
@@ -53,6 +54,6 @@ export const resetPassword = async (req: Request, res: Response) => {
     res.status(200).send({ email, success: true });
   } catch (error: any) {
     console.log(error);
-throw error
+    throw error;
   }
 };

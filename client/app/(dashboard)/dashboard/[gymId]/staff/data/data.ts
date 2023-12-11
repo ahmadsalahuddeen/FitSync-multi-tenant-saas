@@ -14,12 +14,12 @@ export const statuses = [
   {
     label: "Active",
     value: true,
-    icon: QuestionMarkCircledIcon,
+    icon: CheckCircledIcon,
   },
   {
     label: 'InActive',
     value: false,
-    icon: CircleIcon,
+    icon: QuestionMarkCircledIcon,
   },
  
 ]

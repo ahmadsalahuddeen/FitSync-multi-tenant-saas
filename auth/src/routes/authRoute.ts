@@ -6,8 +6,10 @@ import { userSignIn } from '../controller/authController/signin';
 import { getCurrentUser } from '../controller/authController/current-user';
 import auth from '../middlewares/adminAuth';
 import { oauthSignIn } from '../controller/authController/oauthSignIn';
-import { requestOtp, resetPassword, verifyOtp } from '../controller/authController/resetPassword';
+import {  requestOtp, resetPassword, verifyOtp } from '../controller/authController/resetPassword';
 import { staffInviteJoin, staffSignup } from '../controller/authController/staffSignup';
+import { changeEmail } from '../controller/gymController/staff';
+import memberAuth from '../middlewares/memberAuth';
 
 const authRoute = require('express').Router();
 
@@ -37,6 +39,8 @@ authRoute.post('/verify-otp', verifyOtp);
 
 // reset password
 authRoute.post('/reset-password', resetPassword);
+// change  email
+authRoute.post('/change-email', memberAuth, changeEmail);
 
 authRoute.post(
   '/tenant/signup',
