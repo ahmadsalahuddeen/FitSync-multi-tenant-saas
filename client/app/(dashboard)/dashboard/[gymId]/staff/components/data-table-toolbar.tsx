@@ -2,21 +2,25 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Cross2Icon } from "@radix-ui/react-icons"
+import { Cross2Icon, MixerHorizontalIcon } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
 import { DataTableFacetedFilter } from "./data-table-faceted-filter"
 import { DataTableViewOptions } from "./data-table-view-options"
 import { roles, statuses } from "../data/data"
+import { Download } from "lucide-react"
+import { downloadToExcel } from "@/lib/xlsx"
 
 
 
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
+  data: TData[]
 }
 
 export function DataTableToolbar<TData>({
   table,
+  data
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
 
@@ -56,6 +60,15 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
+      <Button
+      onClick={()=>downloadToExcel(data)}
+          variant="outline"
+          size="sm"
+          className="ml-auto mr-4 hidden h-8 lg:flex border-green-700"
+        >
+          <Download className="mr-2 h-4 w-4" />
+          Export to Excel
+        </Button>
       <DataTableViewOptions table={table} />
     </div>
   )
