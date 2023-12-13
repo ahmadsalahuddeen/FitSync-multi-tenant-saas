@@ -160,6 +160,8 @@ export const changeEmail = async (req: Request, res: Response) => {
     if (!(email && userId && password)) {
       throw new BadRequestError('Empty credentials are not allowed.');
     }
+const isEmailExist = await User.findOne({email})
+if(isEmailExist) {throw new BadRequestError(`Account created with ${email} address already exist `)}
 
     const userData = await User.findOne({ _id: userId });
 
@@ -178,7 +180,7 @@ export const changeEmail = async (req: Request, res: Response) => {
       throw new BadRequestError('cannot find the user');
     }
 
-    res.status(200).send({ success: true });
+    res.status(200).send(userData);
   } catch (error: any) {
     console.log(error);
     throw error;

@@ -42,7 +42,6 @@ export const authOptions: NextAuthOptions = {
         const user = response?.data;
 
         if (user) {
-          
           return user;
         } else {
           throw new Error(
@@ -54,16 +53,12 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-     
     async signIn({ user, account, profile }) {
-      
       if (account?.provider == "credentials") {
         return true;
       }
 
       if (account?.provider === "google" || account?.provider === "github") {
-
-
         const email = profile?.email;
         const image = profile?.image;
         const name = profile?.name;
@@ -76,16 +71,18 @@ export const authOptions: NextAuthOptions = {
 
         if (response.data.error) console.log("errro", response.data.error);
         const userData = response?.data;
-        
-     
-         await  Object.assign(user, userData);
-          return true;
-        
+
+        await Object.assign(user, userData);
+        return true;
       }
-      
+
       return false;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+
+      if (trigger === "update" && session) {
+        return { ...token, ...session?.user };
+      }
       if (user) return { ...token, ...user };
       return token;
     },
@@ -94,7 +91,6 @@ export const authOptions: NextAuthOptions = {
       session.backendTokens = token.backendTokens;
       return session;
     },
-
   },
 };
 

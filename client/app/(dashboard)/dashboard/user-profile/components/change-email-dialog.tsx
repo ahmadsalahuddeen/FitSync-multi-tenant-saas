@@ -42,25 +42,28 @@ import { useMutation, useQueryClient } from "react-query";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import { toast } from "sonner";
 import { useGymStore } from "@/store/gym";
+import { useSession } from "next-auth/react";
 
 interface ChangeEmailButoonProps extends ButtonProps {}
 
 
 const changeEmailSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8).max(100),
+  password: z.string().min(8,'Password must have at least 8 character(s)').max(100),
 
 })
 
 export function ChangeEmailButoon({
   className,
   variant,
+  
   ...props
 }: ChangeEmailButoonProps) {
-  const axiosAuth = useAxiosAuth();
+  const {data: session} = useSession()
   const queryClient = useQueryClient();
-
+  
   const { gym } = useGymStore();
+  const axiosApi = useAxiosAuth();
   const [showNewGymDialog, setShowNewGymDialog] = React.useState(false);
 
   type Input = z.infer<typeof changeEmailSchema>;
@@ -81,19 +84,19 @@ export function ChangeEmailButoon({
     error,
   } = useMutation({
     mutationFn: async (input: Input) => {
-      const response = await axiosAuth.post("/api/gym/staff/invite", {
+      const response = await axiosApi.post("/api/auth/change-email", {
         email: input.email,
         password: input.password,
       });
-      console.log(response, "respones");
+
       return response.data;
     },
     onError: (err: any) => {
       toast.error(err.response.data.errors[0].message);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["Staff", gym.id] });
-      toast.success(`Invite in on the way!🚀`);
+    onSuccess:async (data) => {
+
+      toast.success(`Email has been changed ${session?.user}`);
       setShowNewGymDialog(false);
     },
   });

@@ -10,6 +10,8 @@ import {  requestOtp, resetPassword, verifyOtp } from '../controller/authControl
 import { staffInviteJoin, staffSignup } from '../controller/authController/staffSignup';
 import { changeEmail, changePassword } from '../controller/gymController/staff';
 import memberAuth from '../middlewares/memberAuth';
+import { changeRole } from '../controller/authController/controller';
+import adminAuth from '../middlewares/adminAuth';
 
 const authRoute = require('express').Router();
 
@@ -36,6 +38,8 @@ authRoute.post('/forgot-password', requestOtp);
 
 // verify otp
 authRoute.post('/verify-otp', verifyOtp);
+// change role
+authRoute.post('/staff/change-role',  adminAuth, changeRole);
 
 // reset password
 authRoute.post('/reset-password', resetPassword);
@@ -74,6 +78,6 @@ authRoute.post('/staff/join' , staffInviteJoin);
 
 
 authRoute.post('/users/signout', signout);
-authRoute.get('/users/currentuser', auth, getCurrentUser);
+authRoute.get('/users/currentuser', memberAuth, getCurrentUser);
 
 export { authRoute };

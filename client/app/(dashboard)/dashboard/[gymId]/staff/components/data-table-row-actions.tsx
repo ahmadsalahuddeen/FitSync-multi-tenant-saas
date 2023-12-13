@@ -263,6 +263,7 @@ export function DataTableRowActions<TData>({
             <Button
               type="button"
               onClick={() => {
+                toast.success('Share link added copied to clipboard')
                 navigator.clipboard.writeText(
                   `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/staff/signup?inviteCode=${gym.inviteCode}&role=${role}`,
                 );

@@ -61,6 +61,7 @@ setGym( {
   name: '',
   phoneNumber: '',
   creatorId: '',
+  inviteCode: ''
 
 },)
 setGyms([])
