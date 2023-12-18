@@ -33,6 +33,7 @@ export const oauthSignIn = async (req: Request, res: Response) => {
         id: user.id,
         email: user.email,
         role: user.role,
+
       };
 
       const accessToken = jwt.sign(payload, process.env.JWT_KEY!);

@@ -43,6 +43,19 @@ export const menuItems = (gymId: string) => [
     href: `/dashboard/${gymId}/settings`,
     disabled: false,
     icon: <Icons.settings className="mr-2 h-4 w-4" />,
+    submenu: true,
+    subMenuItems: [
+      {
+        title: `General Settings`,
+        href: `/dashboard/${gymId}/settings/general-settings`,
+        disabled: false,
+      },
+      {
+        title: `Venue`,
+        href: `/dashboard/${gymId}/settings/venue`,
+        disabled: false,
+      },
+    ],
   },
   {
     title: `Billing`,

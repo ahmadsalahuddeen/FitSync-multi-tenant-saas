@@ -42,6 +42,8 @@ import { useQuery } from "react-query";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import { Staff } from "@/types/types";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Label } from "@/components/ui/label";
 
 const profileFormSchema = z.object({
   name: z
@@ -54,35 +56,34 @@ const profileFormSchema = z.object({
     }),
 
   bio: z.string().max(300).optional(),
+  image: z.string().optional()
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
-
-
 // ------ start
 export function ProfileForm() {
   const { data: session, update } = useSession();
-  const axiosApi = useAxiosAuth()
+  const axiosApi = useAxiosAuth();
 
-const {data: userData} = useQuery({
-  queryKey: ["getCurrentUser", session?.user.id],
-  queryFn: async ()=>{
-    const res = await axiosApi.get('/api/users/currentUser')
-    return res.data
+  const { data: userData } = useQuery<Staff>({
+    queryKey: ["getCurrentUser", session?.user.id],
+    queryFn: async () => {
+      const res = await axiosApi.get("/api/auth/users/currentUser");
+      return res.data;
+    },
+    onError: (error: any) => {
+      error.response.data.errors.map((err: any) => {
+        toast.error(err.message);
+      });
+    },
+  });
 
-  },
-  onError: (error: any) => {
-    error.response.data.errors.map((err: any) => {
-      toast.error(err.message);
-    });
-  },
-})
-  
   // This can come from your database or API.
   const defaultValues: Partial<ProfileFormValues> = {
-    name: session?.user.name,
-    bio: session?.user.bio,
+    name: userData?.name,
+    bio: userData?.bio || "",
+    image: userData?.image
   };
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -103,15 +104,16 @@ const {data: userData} = useQuery({
 
   return (
     <Form {...form}>
-
+      {session?.user.name[0]}
+      {JSON.stringify(session?.user, null, 4)}
       <form onSubmit={form.handleSubmit(onSubmit)} className="ml-1 space-y-8">
-        <FormItem>
+        {/* <FormItem>
           <FormLabel>Email</FormLabel>
           <FormControl>
             <Input
               className="border-0 pl-0   focus-visible:ring-0 focus-visible:ring-offset-0"
               readOnly
-              placeholder={session?.user.email}
+              placeholder={userData?.email}
               // value={userData.email}
             />
           </FormControl>
@@ -134,7 +136,7 @@ const {data: userData} = useQuery({
             <ChangePasswordButoon />
           </FormDescription>
           <FormMessage />
-        </FormItem>
+        </FormItem> */}
 
         <FormField
           control={form.control}
@@ -143,7 +145,7 @@ const {data: userData} = useQuery({
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="" {...field} />
+                <Input defaultValue={userData?.name} {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name. It can be your real name or a
@@ -158,10 +160,34 @@ const {data: userData} = useQuery({
           name="bio"
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Profile Image</FormLabel>
+              <FormControl>
+                <div className="flex items-center  space-x-4">
+                  <Avatar>
+                    <AvatarImage src={session?.user?.image} alt="Image" />
+                    <AvatarFallback>
+                      {session?.user.name[0].toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <Input className="max-w-sm" id="picture" type="file"  defaultValue={session?.user.image}/>
+                </div>
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="bio"
+          render={({ field }) => (
+            <FormItem>
               <FormLabel>Bio</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Tell us a little bit about yourself"
+                  defaultValue={userData?.bio}
                   className="resize-none"
                   {...field}
                 />

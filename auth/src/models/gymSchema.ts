@@ -1,6 +1,6 @@
 import mongoose, { Mongoose, Types, mongo } from 'mongoose';
 import { Password } from '../lib/password';
-import { Schema } from 'zod';
+import { Schema, number } from 'zod';
 import { userAttrs } from './userSchema';
 
 //interface that describes the properties to create a new Gym
@@ -15,7 +15,8 @@ export interface gymAttrs {
   staffs: string[] ;
   creatorId: string;
   inviteCode: string;
-
+  venues?: string[];
+customerCount?: string;
   image?: string;
   address?: {
     streetAddressOne?: string;
@@ -48,7 +49,8 @@ interface gymDoc extends mongoose.Document {
     role: string;
   }[];
   creatorId: string;
-
+  venues?: string[];
+customerCount?: string;
   inviteCode: string;
 
   image?: string;
@@ -74,7 +76,10 @@ const gymSchema = new mongoose.Schema(
     image: {
       type: String,
     },
-
+customerCount: {
+  type: Number, 
+  default: 1,
+},
     name: {
       type: String,
       required: true,
@@ -83,7 +88,24 @@ const gymSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
+    venues: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Venue',
+      },
+    ],
+    // classAppointments: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'ClassAppointment',
+    //   },
+    // ],
+    // memberships: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Membership',
+    //   },
+    // ],
     phoneNumber: {
       type: String,
       required: true,

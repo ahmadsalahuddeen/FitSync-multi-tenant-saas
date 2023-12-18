@@ -83,9 +83,10 @@ status: {
 
     image: {
       type: String,
-    },
+    }, 
     bio: {
       type: String,
+      default: ''
     },
     isInstructor: {
 type: Boolean

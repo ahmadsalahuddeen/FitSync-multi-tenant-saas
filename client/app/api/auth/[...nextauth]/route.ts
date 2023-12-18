@@ -5,6 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import { toast } from "sonner";
 import { CloudFog } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -69,7 +70,10 @@ export const authOptions: NextAuthOptions = {
           name,
         });
 
-        if (response.data.error) console.log("errro", response.data.error);
+        if (response.data.errors) { 
+          toast.error(response.data.errors[0].message);
+          redirect('/')
+          console.log("errro", response.data.error);}
         const userData = response?.data;
 
         await Object.assign(user, userData);
