@@ -37,13 +37,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { useSession } from "next-auth/react";
 import { ChangeEmailButoon } from "./change-email-dialog";
 import { ChangePasswordButoon } from "./change-password-dialog";
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import useAxiosAuth from "@/hooks/useAxiosAuth";
 import { Staff } from "@/types/types";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
+const MAX_FILE_SIZE = 5000000;
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 const profileFormSchema = z.object({
   name: z
@@ -56,14 +63,22 @@ const profileFormSchema = z.object({
     }),
 
   bio: z.string().max(300).optional(),
-  image: z.string().optional()
+  image: z
+    .any()
+    .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
+    .refine(
+      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
+      "Only .jpg, .jpeg, .png and .webp formats are supported."
+    )
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 // ------ start
 export function ProfileForm() {
+
   const { data: session, update } = useSession();
+  const [image, setImage] = useState('');
   const axiosApi = useAxiosAuth();
 
   const { data: userData } = useQuery<Staff>({
@@ -83,8 +98,8 @@ export function ProfileForm() {
   const defaultValues: Partial<ProfileFormValues> = {
     name: userData?.name,
     bio: userData?.bio || "",
-    image: userData?.image
-  };
+    image: userData?.image,
+  };ahmad salhuddem is her after all is here 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
@@ -101,7 +116,15 @@ export function ProfileForm() {
     //   ),
     // });
   }
-
+  const convert2base64 = (file: any) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (reader.readyState === 2) {
+        setImage(reader?.result.toString());
+      }
+      reader.readAsDataURL(file)
+    };
+  };
   return (
     <Form {...form}>
       {session?.user.name[0]}
@@ -157,7 +180,7 @@ export function ProfileForm() {
         />
         <FormField
           control={form.control}
-          name="bio"
+          name="image"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Profile Image</FormLabel>
@@ -170,7 +193,15 @@ export function ProfileForm() {
                     </AvatarFallback>
                   </Avatar>
 
-                  <Input className="max-w-sm" id="picture" type="file"  defaultValue={session?.user.image}/>
+                  <Input
+                    className="max-w-sm"
+                    id="picture"
+                    type="file"
+                    onChange={(e) => {
+                      onChange;
+                      field.onChange(e.target.value);
+                    }}
+                  />
                 </div>
               </FormControl>
               <FormDescription></FormDescription>

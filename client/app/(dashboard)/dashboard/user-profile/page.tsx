@@ -11,7 +11,7 @@ import { ProfileForm } from "./components/profile-form";
 
 type Props = {};
 const UserProfilePage = (props: Props) => {
-
+                                         
   const session = getServerSession()
 
   
@@ -24,7 +24,7 @@ const UserProfilePage = (props: Props) => {
       <Separator className="my-6" />
       <div className="lg:max-w-2xl">
 
-      <ProfileForm />
+      <ProfilseForm />
       </div>
 
     </>

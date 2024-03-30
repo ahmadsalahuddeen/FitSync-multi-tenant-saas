@@ -2,7 +2,7 @@ import express from 'express'
 import 'express-async-errors'
 import { json } from 'express'
 const cors = require('cors');
-
+var path = require('path');
 require('dotenv').config()
 
 
@@ -22,12 +22,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, authorization");
-//   res.setHeader("Access-Control-Allow-Methods", "GET, PATCH, POST, DELETE, PUT, OPTIONS");
-//   next();
-// });
+app.use(express.static(path.resolve('./public')));
 
 
 
