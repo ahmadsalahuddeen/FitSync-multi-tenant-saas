@@ -29,7 +29,6 @@ export const createGym = async (req: Request, res: Response) => {
 
     const userData = await User.findByIdAndUpdate(id, { $push: { gyms: gym.id } }, {new: true});
 
-1`1134v`
     res.status(201).send(gym);
   } catch (error: any) {
     throw error
